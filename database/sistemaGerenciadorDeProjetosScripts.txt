@@ -1,4 +1,4 @@
-CREATE DATABASE projectman_bd
+CREATE DATABASE sistemagdp
   WITH OWNER = postgres
        ENCODING = 'UTF8'
        TABLESPACE = pg_default
@@ -6,38 +6,49 @@ CREATE DATABASE projectman_bd
        LC_CTYPE = 'pt_BR.UTF-8'
        CONNECTION LIMIT = -1;
 
-
-
-
-CREATE TABLE gerente_de_projeto
+CREATE TABLE usuario
 (
-   id integer NOT NULL, 
-   nome character varying(100) NOT NULL, 
-   login character varying(100) NOT NULL, 
-   senha character varying(255) NOT NULL, 
-   data_de_aniversario date, 
-   CONSTRAINT pk_gerente_de_projeto PRIMARY KEY (id), 
-   CONSTRAINT unique_login_gerente_de_projeto UNIQUE (login)
+  id_Usuario integer NOT NULL,
+  login character varying(100) NOT NULL,
+  senha character varying(255) NOT NULL,
+  tipo smallint NOT NULL,
+  CONSTRAINT pk_Usuario PRIMARY KEY (id_Usuario)
 ) 
 WITH (
   OIDS = FALSE
 )
 ;
-ALTER TABLE gerente_de_projeto OWNER TO postgres;
+ALTER TABLE usuario OWNER TO postgres;
+
+
+CREATE TABLE gerente_De_Projeto
+(
+   id_Ger_De_Proj integer NOT NULL, 
+   nome character varying(100) NOT NULL, 
+   data_De_Aniversario date, 
+   fk_Usuario integer NOT NULL,
+   CONSTRAINT pk_gerente_De_Projeto PRIMARY KEY (id_Ger_De_Proj),
+   CONSTRAINT fk_gerente_de_projeto FOREIGN KEY (fk_Usuario) REFERENCES usuario (id_Usuario) ON UPDATE NO ACTION ON DELETE NO ACTION
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+ALTER TABLE gerente_De_Projeto OWNER TO postgres;
 
 
 
 
 CREATE TABLE projeto
 (
-   id integer NOT NULL, 
+   id_projeto integer NOT NULL, 
    nome character varying(100) NOT NULL, 
    orcamento double precision, 
    data_de_cadastro date NOT NULL, 
    descricao text, 
-   id_gerente integer NOT NULL, 
-   CONSTRAINT pk_projeto PRIMARY KEY (id), 
-   CONSTRAINT fk_gerente_de_projeto FOREIGN KEY (id_gerente) REFERENCES gerente_de_projeto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+   fk_gerente integer NOT NULL, 
+   CONSTRAINT pk_projeto PRIMARY KEY (id_projeto), 
+   CONSTRAINT fk_gerente_De_Projeto FOREIGN KEY (fk_gerente) REFERENCES gerente_De_Projeto (id_ger_de_proj) ON UPDATE NO ACTION ON DELETE NO ACTION
 ) 
 WITH (
   OIDS = FALSE
@@ -46,18 +57,36 @@ WITH (
 ALTER TABLE projeto OWNER TO postgres;
 
 
+CREATE TABLE membro
+(
+  id_Membro integer NOT NULL,
+  nome character varying(100) NOT NULL,
+  data_De_Nascimento date,
+  funcao character varying(100) NOT NULL,
+  fk_Usuario integer NOT NULL,
+  CONSTRAINT pk_membro PRIMARY KEY (id_Membro),
+  CONSTRAINT fk_membro FOREIGN KEY (fk_Usuario) REFERENCES usuario (id_Usuario) ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE membro
+  OWNER TO postgres;
+
+
+
 
 CREATE TABLE despesa
 (
-  id integer NOT NULL,
+  id_Despesa integer NOT NULL,
   nome character varying(100) NOT NULL,
   valor double precision NOT NULL,
   descricao text,
-  id_projeto integer NOT NULL,
-  CONSTRAINT pk_despesa PRIMARY KEY (id ),
-  CONSTRAINT fk_projeto FOREIGN KEY (id_projeto)
-      REFERENCES projeto (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  fk_Projeto integer NOT NULL,
+  fk_Membro integer NOT NULL,
+  CONSTRAINT pk_despesa PRIMARY KEY (id_Despesa),
+  CONSTRAINT fk_Projeto_Desp FOREIGN KEY (fk_Projeto) REFERENCES projeto (id_Projeto) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Membro_Desp FOREIGN KEY (fk_Membro) REFERENCES membro (id_Membro) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
@@ -66,20 +95,17 @@ ALTER TABLE despesa
   OWNER TO postgres;
 
 
+
 CREATE TABLE recurso
 (
-  id integer NOT NULL,
+  id_Recurso integer NOT NULL,
   nome character varying(100) NOT NULL,
   descricao text,
-  id_projeto integer NOT NULL,
-  id_despesa integer NOT NULL,
-  CONSTRAINT pk_recurso PRIMARY KEY (id ),
-  CONSTRAINT fk_despesa FOREIGN KEY (id_despesa)
-      REFERENCES despesa (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fk_projeto FOREIGN KEY (id_projeto)
-      REFERENCES projeto (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  fk_Projeto integer NOT NULL,
+  fk_Despesa integer NOT NULL,
+  CONSTRAINT pk_Recurso PRIMARY KEY (id_Recurso),
+  CONSTRAINT fk_Despesa_recur FOREIGN KEY (fk_Despesa) REFERENCES despesa (id_despesa) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Projeto_recur FOREIGN KEY (fk_Projeto) REFERENCES projeto (id_projeto) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
@@ -90,34 +116,15 @@ ALTER TABLE recurso
 
 
 
-CREATE TABLE membro
-(
-  id integer NOT NULL,
-  nome character varying(100) NOT NULL,
-  login character varying(100) NOT NULL,
-  senha character varying(255) NOT NULL,
-  data_de_nascimento date,
-  funcao character varying(100) NOT NULL,
-  CONSTRAINT pk_membro PRIMARY KEY (id ),
-  CONSTRAINT unique_login_membro UNIQUE (login )
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE membro
-  OWNER TO postgres;
-
-
-
 CREATE TABLE cronograma
 (
-   id integer NOT NULL, 
-   data_inicio_projeto date NOT NULL, 
-   data_limite_projeto date NOT NULL, 
-   data_fim date, 
-   id_projeto integer NOT NULL, 
-   CONSTRAINT pk_cronograma PRIMARY KEY (id), 
-   CONSTRAINT fk_projeto_cronograma FOREIGN KEY (id_projeto) REFERENCES projeto (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+   id_Cronograma integer NOT NULL, 
+   data_Inicio_Projeto date NOT NULL, 
+   data_Limite_Projeto date NOT NULL, 
+   data_Fim date, 
+   fk_Projeto integer NOT NULL, 
+   CONSTRAINT pk_Cronograma PRIMARY KEY (id_Cronograma), 
+   CONSTRAINT fk_Projeto_Crono FOREIGN KEY (fk_Projeto) REFERENCES projeto (id_projeto) ON UPDATE NO ACTION ON DELETE NO ACTION
 ) 
 WITH (
   OIDS = FALSE
@@ -129,27 +136,24 @@ ALTER TABLE cronograma OWNER TO postgres;
 
 CREATE TABLE atividade
 (
-  id integer NOT NULL,
-  data_inicio_atividade date NOT NULL,
-  data_limite_atividade date NOT NULL,
-  data_fim_atividade date,
-  nome_atividade date NOT NULL,
-  descricao_atividade text NOT NULL,
-  id_projeto integer NOT NULL,
-  id_cronograma integer NOT NULL,
-  CONSTRAINT pk_atividade PRIMARY KEY (id ),
-  CONSTRAINT fk_cronograma_atividade FOREIGN KEY (id_cronograma)
-      REFERENCES cronograma (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fk_projeto_atividade FOREIGN KEY (id_projeto)
-      REFERENCES projeto (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  id_Atividade integer NOT NULL,
+  data_Inicio_Atividade date NOT NULL,
+  data_Limite_Atividade date NOT NULL,
+  data_Fim_Atividade date,
+  nome_Atividade date NOT NULL,
+  descricao_Atividade text NOT NULL,
+  fk_Projeto integer NOT NULL,
+  fk_Cronograma integer NOT NULL,
+  CONSTRAINT pk_Atividade PRIMARY KEY (id_Atividade),
+  CONSTRAINT fk_cronograma_atividade FOREIGN KEY (fk_cronograma) REFERENCES cronograma (id_Cronograma) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_projeto_atividade FOREIGN KEY (fk_projeto) REFERENCES projeto (id_Projeto) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE atividade
   OWNER TO postgres;
+___________________________________________________________________________________________________________________
 
 
 
