@@ -26,11 +26,12 @@ CREATE TABLE usuario
 CREATE TABLE membro
 (
   id_membro SERIAL NOT NULL,
-  data_de_nascimento DATE, --TODO
+  data_de_nascimento DATE,
   funcao CHARACTER VARYING(100),
   fk_usuario INTEGER NOT NULL,
   CONSTRAINT pk_membro PRIMARY KEY (id_membro),
-  CONSTRAINT fk_membro FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
+  CONSTRAINT fk_membro FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario),
+  CONSTRAINT check_data_de_nascimento CHECK (data_de_nascimento::text ~* '^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$')
 );
 
 CREATE TABLE projeto
@@ -38,13 +39,14 @@ CREATE TABLE projeto
    id_projeto SERIAL NOT NULL, 
    nome CHARACTER VARYING(100) NOT NULL, 
    orcamento NUMERIC(20,4), 
-   data_de_cadastro DATE NOT NULL, --TODO
+   data_de_cadastro DATE NOT NULL,
    descricao text, 
    fk_gerente INTEGER NOT NULL, 
    CONSTRAINT pk_projeto PRIMARY KEY (id_projeto), 
    CONSTRAINT fk_gerente_de_projeto FOREIGN KEY (fk_gerente) REFERENCES membro (id_membro),
    CONSTRAINT check_nome CHECK (length(nome) >= 5),
-   CONSTRAINT check_orcamento CHECK (orcamento >= 0.0)
+   CONSTRAINT check_orcamento CHECK (orcamento >= 0.0),
+   CONSTRAINT check_data_de_cadastro CHECK (data_de_cadastro::text ~* '^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$')
 );
 
 
@@ -79,20 +81,15 @@ CREATE TABLE recurso
 CREATE TABLE cronograma
 (
    id_cronograma SERIAL NOT NULL, 
-   data_inicio_projeto DATE NOT NULL, --  TODO
-   data_limite_projeto DATE NOT NULL, -- TODO
-   data_fim DATE, --TODO
+   data_inicio_projeto DATE NOT NULL,
+   data_limite_projeto DATE NOT NULL,
+   data_fim DATE,
    fk_projeto INTEGER NOT NULL, 
    CONSTRAINT pk_cronograma PRIMARY KEY (id_cronograma), 
-   CONSTRAINT fk_projeto_crono FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto)
+   CONSTRAINT fk_projeto_crono FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
+   CONSTRAINT check_data_inicio_projeto CHECK (data_inicio_projeto::text ~* '^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$'),
+   CONSTRAINT check_data_limite_projeto CHECK (data_limite_projeto::text ~* '^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$')
 );
-
-
-CREATE TEMPORARY TABLE dates (
-	dia DATE, 
-	CHECK (dia::text ~ '^(0\\d|3[01])/\\d|1[012])/([012]\\d{4}$')
-);
-
 
 CREATE TABLE atividade
 (
