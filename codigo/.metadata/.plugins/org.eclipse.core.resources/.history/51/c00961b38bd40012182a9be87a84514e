@@ -8,12 +8,10 @@
 		<script type="text/javascript" src="../resources/js/jquery-2.0.2.js"></script>
 		<script type="text/javascript" src="../resources/js/bootstrap.js"></script>
 		<link href="../resources/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap-responsive.css" />
-		<link rel="stylesheet" type="text/css" href="../resources/css/main.css" />
+		<link href="../resources/css/bootstrap-responsive.css" />
 	</head>
 	<body>
 		<header>
-			<h1>ProjectFree</h1>
 			<nav>
 			</nav>
 		</header>
