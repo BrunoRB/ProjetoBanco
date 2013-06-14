@@ -1,0 +1,17 @@
+
+
+<?php 
+
+class Header {
+	private $title;
+	
+	public function __construct() {
+		
+	}
+	
+	private function loadHtml() {
+		
+	}
+}
+
+?>

@@ -1,0 +1,11 @@
+
+body {
+    font-family: Times New Roman;
+    background: url(../img/blue.jpg) no-repeat center center fixed;
+    background-size: cover;
+	margin: 2% !important;
+}
+
+.verticalCenter {
+	margin-top: 10%;
+}

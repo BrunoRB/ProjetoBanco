@@ -1,0 +1,15 @@
+
+
+body {
+    font-size: medium;
+    font-family: Times New Roman;
+    background: url(../img/blue.jpg) no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+	margin: 2% !important;
+}
+
+.verticalCenter {
+	position: relative;
+	margin-top: 50\;
+}

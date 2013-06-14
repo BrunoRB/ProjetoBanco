@@ -1,0 +1,16 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+<div class="container">
+	
+	<div class="pagination-centered">
+    	
+	
+	</div>
+	
+</div>
+<?php
+
+include_once '../templates/footer.php';

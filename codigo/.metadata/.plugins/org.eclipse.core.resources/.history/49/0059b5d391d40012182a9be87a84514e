@@ -1,0 +1,14 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div class="asfdsfd">
+	<input type="button" value="Faça login!" class="btn btn-large dropdown-toggle" />
+	<input type="button" value="Realize seu cadastro!" />
+</div>
+
+<?php
+
+include_once '../templates/footer.php';

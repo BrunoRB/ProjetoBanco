@@ -1,0 +1,16 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+	<button type="button" class="btn btn-primary">Large Button</button>
+	<input type="button" value="Realize seu cadastro!" />
+
+
+<button type="button" class="btn btn-success">Success</button>
+                <td><code>btn btn-success</code></td>
+                <td>Indicates a successful or positive action</td>
+
+<?php
+
+include_once '../templates/footer.php';

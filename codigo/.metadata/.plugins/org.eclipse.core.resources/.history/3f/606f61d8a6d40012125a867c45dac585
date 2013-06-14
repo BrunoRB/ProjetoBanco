@@ -1,0 +1,13 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div class="container">
+	<input type="text" placeholder="Text input" />
+</div>
+
+<?php
+
+include_once '../templates/footer.php';

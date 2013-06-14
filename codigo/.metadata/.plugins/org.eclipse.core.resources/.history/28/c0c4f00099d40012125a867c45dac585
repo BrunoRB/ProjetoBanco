@@ -1,0 +1,13 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+<div>
+<button type="button" class="btn btn-primary">primary</button>
+		<button type="button" class="btn btn-info">primary</button>
+		<button type="button" class="btn btn-sucess">primary</button>
+</div>
+<?php
+
+include_once '../templates/footer.php';

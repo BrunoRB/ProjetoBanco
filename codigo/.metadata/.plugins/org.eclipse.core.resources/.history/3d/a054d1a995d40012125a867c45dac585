@@ -1,0 +1,14 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div class="asfdsfd">
+	<button type="button" class="btn btn-large btn-primary"></button>
+	<input type="button" class="btn btn-primary" value="Realize seu cadastro!" />
+</div>	
+
+<?php
+
+include_once '../templates/footer.php';
