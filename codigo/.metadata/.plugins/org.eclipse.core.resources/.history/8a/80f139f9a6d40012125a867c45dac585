@@ -1,0 +1,14 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div class="container">
+	<label for="nome">Nome: </label>
+	<input id="nome" type="text" placeholder="Text input" />
+</div>
+
+<?php
+
+include_once '../templates/footer.php';

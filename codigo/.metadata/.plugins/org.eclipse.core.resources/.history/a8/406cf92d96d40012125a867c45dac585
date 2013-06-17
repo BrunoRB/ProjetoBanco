@@ -1,0 +1,24 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div class="asfdsfd">
+	<button type="button" class="">Large Button</button>
+	<input type="button" class="btn btn-primary" value="Realize seu cadastro!" />
+</div>	
+
+<div class="row">
+  <div class="span9">
+    Level 1 column
+    <div class="row">
+      <div class="span6">Level 2</div>
+      <div class="span3">Level 2</div>
+    </div>
+  </div>
+</div>
+
+<?php
+
+include_once '../templates/footer.php';

@@ -1,0 +1,14 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div>
+	<input type="button" value="Faça login" /> <br />
+	<input type="button" value="Cadastrece" />
+</div>
+
+<?php
+
+include_once '../templates/footer.php';

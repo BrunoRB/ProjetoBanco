@@ -1,0 +1,14 @@
+<?php
+
+include_once '../templates/header.php';
+
+?>
+
+<div>
+	<input type="button" /> <br />
+	<input type="button" />
+</div>
+
+<?php
+
+include_once '../templates/footer.php';
