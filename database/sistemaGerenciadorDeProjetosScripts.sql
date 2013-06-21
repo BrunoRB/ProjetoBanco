@@ -1,4 +1,4 @@
-CREATE DATABASE Sistemagdp;
+CREATE DATABASE projectfree;
 
 CREATE TABLE tipo
 (
@@ -6,7 +6,7 @@ CREATE TABLE tipo
   tipo CHARACTER VARYING(100) NOT NULL,
   CONSTRAINT pk_tipo PRIMARY KEY (id_tipo), 
   CONSTRAINT unique_tipo UNIQUE (tipo),
-  CONSTRAINT check_tipo CHECK (tipo LIKE 'membro' OR tipo LIKE 'cliente' OR tipo LIKE 'administrador')
+  CONSTRAINT check_tipo CHECK (tipo ~* '^membro$' OR tipo ~* '^cliente$' OR tipo ~* 'administrador$')
 );
 
 CREATE TABLE usuario
@@ -19,8 +19,8 @@ CREATE TABLE usuario
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_login UNIQUE (login),
   CONSTRAINT fk_tipo_usu FOREIGN KEY (fk_tipo) REFERENCES tipo (id_tipo),
-  CONSTRAINT check_login_length CHECK (length(login) >= 5),
-  CONSTRAINT check_senha_length CHECK (length(senha) >= 5)
+  CONSTRAINT check_login_length CHECK (login ~ '\d{5}'),
+  CONSTRAINT check_senha_length CHECK (login ~ '\d{5}')
 );
 
 CREATE TABLE membro
