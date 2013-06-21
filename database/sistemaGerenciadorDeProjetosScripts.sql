@@ -6,7 +6,7 @@ CREATE TABLE tipo
   tipo CHARACTER VARYING(100) NOT NULL,
   CONSTRAINT pk_tipo PRIMARY KEY (id_tipo), 
   CONSTRAINT unique_tipo UNIQUE (tipo),
-  CONSTRAINT check_tipo CHECK (tipo ~* '^membro$' OR tipo ~* '^cliente$' OR tipo ~* 'administrador$')
+  CONSTRAINT check_tipo CHECK (tipo ~* '^membro$' OR tipo ~* '^cliente$' OR tipo ~* '^administrador$')
 );
 
 CREATE TABLE usuario
@@ -19,8 +19,8 @@ CREATE TABLE usuario
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_login UNIQUE (login),
   CONSTRAINT fk_tipo_usu FOREIGN KEY (fk_tipo) REFERENCES tipo (id_tipo),
-  CONSTRAINT check_login_length CHECK (login ~ '\d{5}'),
-  CONSTRAINT check_senha_length CHECK (login ~ '\d{5}')
+  CONSTRAINT check_login_length CHECK (login ~ '\w{5,}'),
+  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,}')
 );
 
 CREATE TABLE membro
@@ -43,8 +43,8 @@ CREATE TABLE projeto
    fk_gerente INTEGER NOT NULL, 
    CONSTRAINT pk_projeto PRIMARY KEY (id_projeto), 
    CONSTRAINT fk_gerente_de_projeto FOREIGN KEY (fk_gerente) REFERENCES membro (id_membro),
-   CONSTRAINT check_nome CHECK (length(nome) >= 5),
-   CONSTRAINT check_orcamento CHECK (orcamento >= 0.0),
+   CONSTRAINT check_nome CHECK (nome ~ '\w{5,}'),
+   CONSTRAINT check_orcamento CHECK (orcamento::text ~* '^\d'),
    CONSTRAINT check_data_de_cadastro CHECK (data_de_cadastro::text ~* '^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$')
 );
 
@@ -58,8 +58,8 @@ CREATE TABLE despesa
   fk_projeto INTEGER NOT NULL,
   CONSTRAINT pk_despesa PRIMARY KEY (id_despesa),
   CONSTRAINT fk_projeto_desp FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
-  CONSTRAINT check_nome CHECK (length(nome) >= 5),
-  CONSTRAINT check_valor CHECK (valor > 0.0)
+  CONSTRAINT check_nome CHECK (nome ~* '\w{5,}'),
+  CONSTRAINT check_valor CHECK (valor::text ~ '^\d')
 );
 
 
@@ -73,7 +73,7 @@ CREATE TABLE recurso
   CONSTRAINT pk_recurso PRIMARY KEY (id_recurso),
   CONSTRAINT fk_despesa_recur FOREIGN KEY (fk_despesa) REFERENCES despesa (id_despesa),
   CONSTRAINT fk_projeto_recur FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
-  CONSTRAINT check_nome CHECK (length(nome) >= 5)
+  CONSTRAINT check_nome CHECK (nome ~ '\w{5,}')
 );
 
 
@@ -103,7 +103,7 @@ CREATE TABLE atividade
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),
   CONSTRAINT fk_cronograma_atividade FOREIGN KEY (fk_cronograma) REFERENCES cronograma (id_cronograma),
   CONSTRAINT fk_projeto_atividade FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
-  CONSTRAINT check_nome_atividade CHECK (length(nome_atividade) >= 5)
+  CONSTRAINT check_nome_atividade CHECK (nome_atividade ~* '\w{5,}')
 );
 
 
@@ -158,12 +158,12 @@ CREATE TABLE projeto_cliente
 
 CREATE TABLE forma_de_contato
 (
-  id_forma_de_contato	 SERIAL NOT NULL,
+  id_forma_de_contato SERIAL NOT NULL,
   tipo CHARACTER VARYING(100) NOT NULL,
   valor CHARACTER VARYING(100) NOT NULL,
   fk_usuario INTEGER NOT NULL,
   CONSTRAINT pk_forma_de_contato PRIMARY KEY (id_forma_de_contato),
-  CONSTRAINT fk_usuario_forma FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT fk_usuario_forma FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
 );
 
 
@@ -180,7 +180,7 @@ CREATE TABLE mensagem
 CREATE TABLE usuario_mensagem
 (
    id_usuario_mensagem SERIAL NOT NULL, 
-   data_hora_envio TIMESTAMP NOT NULL, --TODO
+   data_hora_envio TIMESTAMP NOT NULL,
    fk_destinatario INTEGER NOT NULL, 
    fk_mensagem INTEGER NOT NULL, 
    fk_usuario INTEGER NOT NULL, 

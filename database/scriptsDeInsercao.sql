@@ -1,7 +1,7 @@
 
 INSERT INTO tipo (tipo) VALUES ('administrador'), ('membro'), ('cliente');
 
-INSERT INTO usuario VALUES (2, 'gerente do projeto', 'gerente 1', 'gerente', (SELECT id_tipo FROM tipo WHERE tipo = 'membro'));
+INSERT INTO usuario VALUES (2, 'gerente do projeto', 'gerente', 'admin', (SELECT id_tipo FROM tipo WHERE tipo = 'membro'));
 
 INSERT INTO membro VALUES (1, '05/05/2012', 2);
 
