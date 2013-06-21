@@ -3,7 +3,7 @@ INSERT INTO tipo (tipo) VALUES ('administrador'), ('membro'), ('cliente');
 
 INSERT INTO usuario VALUES (2, 'gerente do projeto', 'gerente 1', 'gerente', (SELECT id_tipo FROM tipo WHERE tipo = 'membro'));
 
-INSERT INTO membro VALUES (1, '05/05/2012', 'gerente de desenvolvimento', 2);
+INSERT INTO membro VALUES (1, '05/05/2012', 2);
 
 INSERT INTO projeto VALUES (1, 'Sistema gerenciador de projetos', 30.000, now(), 'descrição do projeto', 1);
 
@@ -37,5 +37,5 @@ INSERT INTO mensagem VALUES (1, 'assunto da mensagem', 'Texto da mensagem');
 
 INSERT INTO usuario_mensagem VALUES (1, '05-05-2012', 1, 1, 2);
 
-INSERT INTO membro_do_projeto VALUES (1, 1);
+INSERT INTO membro_do_projeto VALUES (1, 1, 'gerente de desenvolvimento');
 

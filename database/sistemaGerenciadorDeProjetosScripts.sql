@@ -27,7 +27,6 @@ CREATE TABLE membro
 (
   id_membro SERIAL NOT NULL,
   data_de_nascimento DATE,
-  funcao CHARACTER VARYING(100),
   fk_usuario INTEGER NOT NULL,
   CONSTRAINT pk_membro PRIMARY KEY (id_membro),
   CONSTRAINT fk_membro FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario),
