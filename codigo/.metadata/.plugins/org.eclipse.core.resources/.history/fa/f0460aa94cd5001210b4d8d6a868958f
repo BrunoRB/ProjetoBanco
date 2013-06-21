@@ -1,0 +1,11 @@
+<?php
+
+function x() {
+	echo 'k';
+};
+
+
+function xy() {
+	x();
+	echo 'x';
+} xy();

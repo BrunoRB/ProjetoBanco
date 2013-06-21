@@ -1,10 +1,7 @@
 <?php
 
-include_once '../templates/header.php';
+include_once '../templates/body.php';
 
-?>
+class Cadastro extends Body {
 
-
-<?php
-
-include_once '../templates/footer.php';
+} new Cadastro();

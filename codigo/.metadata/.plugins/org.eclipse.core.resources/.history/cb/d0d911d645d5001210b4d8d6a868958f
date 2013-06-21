@@ -1,0 +1,11 @@
+<?php
+
+include_once '../templates/body.php';
+
+class Index extends Body {
+
+	private function loadBody() {
+		parent::loadBody();
+	}
+	
+}

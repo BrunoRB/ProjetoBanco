@@ -1,0 +1,26 @@
+
+<!DOCTYPE HTML>
+
+<html lang="pt-BR">
+	<head>
+		<meta charset='utf-8' />
+		<title><?php echo $title ? $title . ' | ' : '';?>Project Free</title>
+		<link rel="stylesheet" type="text/css" href="../resources/css/main.css" />
+	</head>
+	<body>
+		<h1>
+<?php
+
+$w = true ? print "tru33e" : print "fals33e";
+
+
+$arr = new Pessoa();
+
+var_dump($arr);
+
+?>
+		</h1>
+	</body>
+</html>
+
+

@@ -1,0 +1,37 @@
+<?php
+
+include_once 'header.php';
+include_once 'footer.php';
+
+class Body {
+	private $title;
+	
+	public function __construct() {
+		
+	}
+	
+	public function loadBody() {
+		echo 'k';
+	}
+	
+	public function init() {
+		Header::loadHead($this->title);
+		echo '<div id="container">';
+		$this->loadBody();
+		echo '</div>';
+		Footer::loadFooter();
+	}
+	
+	public function getTitle() {
+		return $this->title;
+	}
+	
+	public function setTtile($title) {
+		$this->title = $title;
+	}
+}
+
+function callBody() {
+	$body = new Body();
+	$body->loadTemplates();
+} callBody();

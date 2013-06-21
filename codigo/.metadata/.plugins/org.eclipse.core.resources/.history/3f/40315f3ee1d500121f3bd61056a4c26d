@@ -1,0 +1,10 @@
+<?php
+
+include_once '../templates/body.php';
+
+class Login extends Body {
+	
+public function loadBody() {
+		echo 'kdf';	
+	}
+}

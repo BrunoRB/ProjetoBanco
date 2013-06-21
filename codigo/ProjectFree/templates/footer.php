@@ -1,6 +1,9 @@
+<?php 
 
-
-	
+class Footer {
+	public static function loadFooter() {
+		?>
+		
 		<footer class="footer navbar-fixed-bottom">
 			<div class="pagination-centered">
 				<strong>&copy;Copyright</strong> <br />
@@ -9,3 +12,7 @@
 		</footer>
 	</body>
 </html>
+		<?php
+	}
+}	
+		
