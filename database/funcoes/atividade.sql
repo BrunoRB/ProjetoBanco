@@ -1,0 +1,9 @@
+
+
+CREATE OR REPLACE FUNCTION concluirAtividade(id INTEGER)
+RETURNS INTEGER AS $$
+BEGIN
+	UPDATE atividade SET fim_atividade = CURRENT_DATE WHERE id_atividade = id;
+	RETURN 1;
+END;
+$$ LANGUAGE PLPGSQL;
