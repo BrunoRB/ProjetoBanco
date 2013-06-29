@@ -148,11 +148,27 @@ RETURNS VOID AS $membroCadastra$
 DECLARE
 	tipo_id INT;
 	usuario_id INT;
+	confirm_usuario INT;
+	confirm_membro INT;
+	nome ALIAS FOR $1;
+login ALIAS FOR $2;
+	senha ALIAS FOR $3;
+data_nascimento ALIAS FOR $4;
+funcao ALIAS FOR $5;
+
 BEGIN 
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'membro';
-	PERFORM usuarioInsert ($1, $2, $3, tipo_id);
-	SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-PERFORM membroInsert ($4, $5, usuario_id);
+	confirm_usuario := usuarioInsert (nome, login, senha, tipo_id);
+	IF confirm_usuario = 0 THEN
+RAISE NOTICE 'Erro ao cadastrar membro';
+	ELSE 
+SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
+confirm_membro := membroInsert (data_nascimento, funcao, usuario_id);
+IF confirm_membro = 0 THEN
+		RAISE NOTICE 'Erro ao cadastrar membro';
+	ELSE
 RAISE NOTICE 'Membro cadastrado com sucesso!';
+		END IF;
+END IF;
 END;
 $membroCadastra$ LANGUAGE PLPGSQL;
