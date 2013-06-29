@@ -98,12 +98,25 @@ RETURNS VOID AS $clienteCadastra$
 DECLARE
 	tipo_id INT;
 	usuario_id INT;
+	confirm_usuario INT;
+	confirm_cliente INT;
+	nome ALIAS FOR $1;
+login ALIAS FOR $2;
+	senha ALIAS FOR $3;
 BEGIN 
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
-	PERFORM usuarioInsert ($1, $2, $3, tipo_id);
-	SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-PERFORM clienteInsert (usuario_id);
+	confirm_usuario := usuarioInsert (nome, login, senha, tipo_id);
+	IF confirm_usuario = 0 THEN
+RAISE NOTICE 'Erro ao cadastrar cliente';
+	ELSE
+		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
+confirm_cliente := clienteInsert (usuario_id);
+IF confirm_cliente = 0 THEN
+		RAISE NOTICE 'Erro ao cadastrar cliente';
+	ELSE
 RAISE NOTICE 'Cliente cadastrado com sucesso!';
+		END IF;
+	END IF;
 END;
 $clienteCadastra$ LANGUAGE PLPGSQL;
 
