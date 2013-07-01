@@ -115,9 +115,9 @@ CREATE TABLE cronograma
 CREATE TABLE atividade
 (
   id_atividade SERIAL NOT NULL,
-  data_inicio_atividade TIMESTAMP NOT NULL, --TODO
-  data_limite_atividade TIMESTAMP NOT NULL, --TODO
-  data_fim_atividade TIMESTAMP, --TODO
+  inicio_atividade TIMESTAMP NOT NULL, --TODO
+  limite_atividade TIMESTAMP NOT NULL, --TODO
+  fim_atividade TIMESTAMP, --TODO
   nome_atividade CHARACTER VARYING(100) NOT NULL,
   descricao_atividade TEXT,
   fk_projeto INTEGER NOT NULL,
@@ -133,11 +133,13 @@ CREATE TABLE atividade
 CREATE TABLE comentario
 (
   id_comentario SERIAL NOT NULL,
-  descricao TEXT,
-  data_horario_envio TIMESTAMP, --TODO
+  descricao TEXT NOT NULL,
+  data_horario_envio TIMESTAMP NOT NULL DEFAULT NOW(),
   fk_atividade INTEGER NOT NULL,
+  fk_membro INTEGER NOT NULL,
   CONSTRAINT pk_comentario PRIMARY KEY (id_comentario),
-  CONSTRAINT pk_atividade_nota FOREIGN KEY (fk_atividade) REFERENCES atividade (id_atividade)
+  CONSTRAINT fk_atividade_comentario FOREIGN KEY (fk_atividade) REFERENCES atividade (id_atividade),
+  CONSTRAINT fk_membro FOREIGN KEY (fk_membro) REFERENCES membro (id_membro)
 );
 
 CREATE TABLE administrador
