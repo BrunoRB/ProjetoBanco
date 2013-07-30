@@ -135,7 +135,7 @@ BEGIN
 	SET ROLE delete;
 	confirm_cliente := cienteDelete (cliente_id);
 	IF confirm_cliente = 0 THEN
-		RAISE NOTICE 'Erro ao excluir cliente';~
+		RAISE NOTICE 'Erro ao excluir cliente';
 	ELSE
 		confirm_usuario := usuarioDelete (usuario_id);
 		IF confirm_usuario = 0 THEN
