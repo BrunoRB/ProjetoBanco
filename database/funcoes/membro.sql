@@ -185,7 +185,7 @@ BEGIN
 	SET ROLE delete;
 	confirm_membro := membroDelete (membro_id);
 	IF confirm_cliente = 0 THEN
-		RAISE NOTICE 'Erro ao excluir Membro';~
+		RAISE NOTICE 'Erro ao excluir Membro';
 	ELSE
 		confirm_usuario := usuarioDelete (usuario_id);
 		IF confirm_usuario = 0 THEN
@@ -198,7 +198,7 @@ END;
 $membroExclui$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION membroAtualiza (nome VARCHAR, login VARCHAR, senha VARCHAR, nasc DATE, func VARCHAR)
-RETURNS VOID AS $clienteAtualiza$
+RETURNS VOID AS $membroAtualiza$
 DECLARE
 	tipo_id INT;
 	usuario_id INT;
