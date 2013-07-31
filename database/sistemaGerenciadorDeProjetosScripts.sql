@@ -20,8 +20,8 @@ CREATE TABLE usuario
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_login UNIQUE (login),
   CONSTRAINT fk_tipo_usu FOREIGN KEY (fk_tipo) REFERENCES tipo (id_tipo),
-  CONSTRAINT check_login_length CHECK (login ~ '\w{5,}'),
-  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,}')
+  CONSTRAINT check_login_length CHECK (login ~ '\w{5, 100}'),
+  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5, 255}')
 );
 
 CREATE TABLE fale_conosco
@@ -66,7 +66,7 @@ CREATE TABLE projeto
    fk_gerente INTEGER NOT NULL, 
    CONSTRAINT pk_projeto PRIMARY KEY (id_projeto), 
    CONSTRAINT fk_gerente_de_projeto FOREIGN KEY (fk_gerente) REFERENCES membro (id_membro),
-   CONSTRAINT check_nome CHECK (nome ~ '\w{5,}'),
+   CONSTRAINT check_nome CHECK (nome ~ '\w{5, 100}'),
    CONSTRAINT check_orcamento CHECK (orcamento::TEXT ~* '^\d'),
    CONSTRAINT check_data_de_cadastro CHECK (data_de_cadastro::TEXT ~* '^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$')
 );
@@ -81,7 +81,7 @@ CREATE TABLE despesa
   fk_projeto INTEGER NOT NULL,
   CONSTRAINT pk_despesa PRIMARY KEY (id_despesa),
   CONSTRAINT fk_projeto_desp FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
-  CONSTRAINT check_nome CHECK (nome ~* '\w{5,}'),
+  CONSTRAINT check_nome CHECK (nome ~* '\w{5, 100}'),
   CONSTRAINT check_valor CHECK (valor::TEXT ~ '^\d')
 );
 
@@ -96,7 +96,7 @@ CREATE TABLE recurso
   CONSTRAINT pk_recurso PRIMARY KEY (id_recurso),
   CONSTRAINT fk_despesa_recur FOREIGN KEY (fk_despesa) REFERENCES despesa (id_despesa),
   CONSTRAINT fk_projeto_recur FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
-  CONSTRAINT check_nome CHECK (nome ~ '\w{5,}')
+  CONSTRAINT check_nome CHECK (nome ~ '\w{5, 100}')
 );
 
 
@@ -127,7 +127,7 @@ CREATE TABLE atividade
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),
   CONSTRAINT fk_cronograma_atividade FOREIGN KEY (fk_cronograma) REFERENCES cronograma (id_cronograma),
   CONSTRAINT fk_projeto_atividade FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
-  CONSTRAINT check_nome_atividade CHECK (nome_atividade ~* '\w{5,}')
+  CONSTRAINT check_nome_atividade CHECK (nome_atividade ~* '\w{5, 100}')
 );
 
 
