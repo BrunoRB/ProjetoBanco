@@ -1,10 +1,10 @@
-CREATE OR REPLACE FUNCTION clienteInsert (INTEGER, INTEGER)
+CREATE OR REPLACE FUNCTION clienteInsert (id INTEGER, usuario INTEGER)
 RETURNS INTEGER AS $clienteInsert$
 DECLARE
 	confirm INT;
 BEGIN 
-	INSERT INTO cliente (id_usuario, fk_usuario)
-		VALUES ($1, $2);
+	INSERT INTO cliente (id_cliente, fk_usuario)
+		VALUES (id, usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -23,13 +23,13 @@ END;
 $clienteInsert$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION clienteInsert (INTEGER)
+CREATE OR REPLACE FUNCTION clienteInsert (usuario INTEGER)
 RETURNS INTEGER AS $clienteInsert$
 DECLARE
 	confirm INT;
 BEGIN 
 	INSERT INTO cliente (fk_usuario)
-		VALUES ($1);
+		VALUES (usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -47,12 +47,12 @@ EXCEPTION
 END;
 $clienteInsert$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION clienteUpdate (INTEGER, VARCHAR, INTEGER)
+CREATE OR REPLACE FUNCTION clienteUpdate (id INTEGER, usuario INTEGER)
 RETURNS INTEGER AS $clienteUpdate$
 DECLARE
 	confirm INT;
 BEGIN 
-UPDATE cliente SET fk_tipo = $2 WHERE id_cliente = ($1);
+UPDATE cliente SET fk_usuario = usuario WHERE id_cliente = (id);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -70,12 +70,12 @@ EXCEPTION
 END;
 $clienteUpdate$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION cienteDelete (INTEGER)
+CREATE OR REPLACE FUNCTION cienteDelete (id INTEGER)
 RETURNS INTEGER AS $clienteDel$
 DECLARE
 	confirm INT;
 BEGIN 
-	DELETE FROM cliente WHERE id_cliente = ($1);
+	DELETE FROM cliente WHERE id_cliente = (id);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -93,43 +93,77 @@ EXCEPTION
 END;
 $clienteDel$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION clienteCadastra (VARCHAR, VARCHAR, VARCHAR)
+CREATE OR REPLACE FUNCTION clienteCadastra (nome VARCHAR, login VARCHAR, senha VARCHAR)
 RETURNS VOID AS $clienteCadastra$
 DECLARE
 	tipo_id INT;
 	usuario_id INT;
 	confirm_usuario INT;
 	confirm_cliente INT;
-	nome ALIAS FOR $1;
-login ALIAS FOR $2;
-	senha ALIAS FOR $3;
 BEGIN 
+	SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
+	SET ROLE insert;
 	confirm_usuario := usuarioInsert (nome, login, senha, tipo_id);
 	IF confirm_usuario = 0 THEN
-RAISE NOTICE 'Erro ao cadastrar cliente';
-	ELSE
-		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-confirm_cliente := clienteInsert (usuario_id);
-IF confirm_cliente = 0 THEN
 		RAISE NOTICE 'Erro ao cadastrar cliente';
 	ELSE
-RAISE NOTICE 'Cliente cadastrado com sucesso!';
+		SET ROLE retrieve;
+		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
+		SET ROLE insert;
+		confirm_cliente := clienteInsert (usuario_id);
+		IF confirm_cliente = 0 THEN
+			RAISE NOTICE 'Erro ao cadastrar cliente';
+		ELSE
+			RAISE NOTICE 'Cliente atualizado com sucesso!';
 		END IF;
 	END IF;
 END;
 $clienteCadastra$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION clienteExclui (VARCHAR)
+CREATE OR REPLACE FUNCTION clienteExclui (login VARCHAR)
 RETURNS VOID AS $clienteExclui$
 DECLARE
 	usuario_id INT;
 	cliente_id INT;
+	confirm_usuario INT;
+	confirm_cliente INT;
 BEGIN 
-	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = $1;
-SELECT INTO cliente_id id_cliente FROM cliente WHERE fk_usuario = usuario_id;
-PERFORM cienteDelete (cliente_id);
-PERFORM usuarioDelete (usuario_id);
-RAISE NOTICE 'Cliente excluído com sucesso!';
+	SET ROLE retrieve;
+	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
+	SELECT INTO cliente_id id_cliente FROM cliente WHERE fk_usuario = usuario_id;
+	SET ROLE delete;
+	confirm_cliente := cienteDelete (cliente_id);
+	IF confirm_cliente = 0 THEN
+		RAISE NOTICE 'Erro ao excluir cliente';
+	ELSE
+		confirm_usuario := usuarioDelete (usuario_id);
+		IF confirm_usuario = 0 THEN
+			RAISE NOTICE 'Erro ao excluir cliente';
+		ELSE
+			RAISE NOTICE 'Cliente excluído com sucesso!';
+		END IF;
+	END IF;
 END;
 $clienteExclui$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION clienteAtualiza (nome VARCHAR, login VARCHAR, senha VARCHAR)
+RETURNS VOID AS $clienteAtualiza$
+DECLARE
+	tipo_id INT;
+	usuario_id INT;
+	confirm_usuario INT;
+	confirm_cliente INT;
+BEGIN 
+	SET ROLE retrieve;
+	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
+	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
+	SET ROLE update;
+	confirm_usuario := usuarioUpdate (usuario_id, nome, login, senha, tipo_id);
+	IF confirm_usuario = 0 THEN
+		RAISE NOTICE 'Erro ao atualizar cliente';
+	ELSE
+		RAISE NOTICE 'Cliente atualizado com sucesso!';
+	END IF;
+END;
+$clienteAtualiza$ LANGUAGE PLPGSQL;

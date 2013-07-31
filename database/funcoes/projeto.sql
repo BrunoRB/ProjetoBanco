@@ -43,7 +43,7 @@ $$ LANGUAGE PLPGSQL;
 --UPDATES;
 
 CREATE OR REPLACE FUNCTION projetoUpdate (id INTEGER, nome VARCHAR(100), orcamento NUMERIC(10, 2), data_de_cadastro DATE, descricao TEXT, fk_gerente INTEGER)
-RETURN INTEGER AS $$
+RETURNS INTEGER AS $$
 BEGIN
 	IF id > 0 THEN
 		UPDATE projeto SET projeto.nome=nome, projeto.orcamento = orcamento, 
@@ -57,7 +57,7 @@ $$ LANGUAGE PLPGSQL;
 --DELETES;
 
 CREATE OR REPLACE FUNCTION projetoDelete (id INTEGER)
-RETURN INTEGER AS $$
+RETURNS INTEGER AS $$
 BEGIN
 	IF id > 0 THEN
 		DELETE FROM projeto WHERE projeto.id = id;
@@ -78,7 +78,7 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION projetoSelect (id INTEGER)
-RETURN SETOF projeto AS $$
+RETURNS SETOF projeto AS $$
 BEGIN
 	IF id > 0 THEN
 		RETURN QUERY EXECUTE 'SELECT nome, orcamento, data_de_cadastro, descricao FROM projeto WHERE projeto.id_projeto = id';

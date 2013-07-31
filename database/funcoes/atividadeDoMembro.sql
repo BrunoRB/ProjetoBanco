@@ -8,7 +8,7 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION desatribuirAtividade (fk_membro INTEGER, fk_atividade INTEGER)
-RETURN BOOLEAN AS $$
+RETURNS BOOLEAN AS $$
 BEGIN
 	DELETE FROM atividade_membro WHERE atividade_membro.fk_membro = fk_membro AND atividade_membro.fk_atividade = fk_atividade;
 	RETURN FOUND;
@@ -16,7 +16,7 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION buscarAtividadesAtribuidas (fk_membro INTEGER)
-RETURN SETOF atividade_membro AS $$
+RETURNS SETOF atividade_membro AS $$
 BEGIN
 	RETURN SELECT inicio_atividade, limite_atividade, nome_atividade, descricao_atividade FROM atividade 
 	INNER JOIN atividade_do_membro 

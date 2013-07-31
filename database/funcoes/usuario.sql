@@ -1,10 +1,10 @@
-CREATE OR REPLACE FUNCTION usuarioInsert (INTEGER, VARCHAR, VARCHAR, VARCHAR, INTEGER)
+CREATE OR REPLACE FUNCTION usuarioInsert (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, tipo INTEGER)
 RETURNS INTEGER AS $usuarioInsert$
 DECLARE
 	confirm INT;
 BEGIN 
 	INSERT INTO usuario (id_usuario, nome, login, senha, fk_tipo)
-		VALUES ($1, $2, $3, $4, $5);
+		VALUES (id, nome, login, senha, tipo);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -23,13 +23,13 @@ END;
 $usuarioInsert$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION usuarioInsert (VARCHAR, VARCHAR, VARCHAR, INTEGER)
+CREATE OR REPLACE FUNCTION usuarioInsert (nome VARCHAR, login VARCHAR, senha VARCHAR, tipo INTEGER)
 RETURNS INTEGER AS $usuarioInsert$
 DECLARE
 	confirm INT;
 BEGIN 
 	INSERT INTO usuario (nome, login, senha, fk_tipo)
-		VALUES ($1, $2, $3, $4);
+		VALUES (nome, login, senha, tipo);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -47,12 +47,12 @@ EXCEPTION
 END;
 $usuarioInsert$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION usuarioUpdate (INTEGER, VARCHAR, VARCHAR, VARCHAR, INTEGER)
+CREATE OR REPLACE FUNCTION usuarioUpdate (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, tipo INTEGER)
 RETURNS INTEGER AS $usuarioUpdate$
 DECLARE
 	confirm INT;
 BEGIN 
-UPDATE usuario SET nome = $2, login = $3, senha = $4, fk_tipo = $5 WHERE id_usuario = ($1);
+UPDATE usuario SET nome = nome, login = login, senha = senha, fk_tipo = tipo WHERE id_usuario = (id);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -70,12 +70,12 @@ EXCEPTION
 END;
 $usuarioUpdate$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION usuarioDelete (INTEGER)
+CREATE OR REPLACE FUNCTION usuarioDelete (id INTEGER)
 RETURNS INTEGER AS $usuarioDel$
 DECLARE
 	confirm INT;
 BEGIN 
-	DELETE FROM usuario WHERE id_usuario = ($1);
+	DELETE FROM usuario WHERE id_usuario = (id);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
