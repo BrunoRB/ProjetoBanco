@@ -24,3 +24,4 @@ BEGIN
 	WHERE atividade_do_membro.fk_membro = fk_membro;
 END;
 $$ LANGUAGE PLPGSQL;
+

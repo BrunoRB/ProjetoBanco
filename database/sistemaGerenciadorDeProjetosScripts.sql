@@ -15,6 +15,7 @@ CREATE TABLE usuario
   nome CHARACTER VARYING(100) NOT NULL, 
   login CHARACTER VARYING(100) NOT NULL,
   senha CHARACTER VARYING(255) NOT NULL,
+  inativo BOOLEAN NOT NULL DEFAULT FALSE,
   fk_tipo INTEGER NOT NULL,
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_login UNIQUE (login),
@@ -120,6 +121,7 @@ CREATE TABLE atividade
   fim_atividade TIMESTAMP, --TODO
   nome_atividade CHARACTER VARYING(100) NOT NULL,
   descricao_atividade TEXT,
+  finalizada BOOLEAN NOT NULL DEFAULT FALSE,
   fk_projeto INTEGER NOT NULL,
   fk_cronograma INTEGER NOT NULL,
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),

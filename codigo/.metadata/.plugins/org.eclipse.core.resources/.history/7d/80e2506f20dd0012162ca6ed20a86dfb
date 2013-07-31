@@ -1,0 +1,10 @@
+<?php
+
+include_once '../templates/body.php';
+
+class FaleConosco extends Body {
+
+		public function loadBody() {
+			echo 'asdfasdf';
+		}
+} new FaleConosco();

@@ -1,0 +1,14 @@
+<?php
+
+include_once '../templates/body.php';
+
+class FaleConosco extends Body {
+
+	public function loadBody() {
+		$var = 10;
+		$heredoc = <<<EOF
+		<h1>HELLO $var</h1>
+EOF;
+		echo $heredoc;
+	}
+} new FaleConosco();

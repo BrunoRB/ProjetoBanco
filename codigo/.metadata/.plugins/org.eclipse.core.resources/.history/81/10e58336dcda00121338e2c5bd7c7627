@@ -1,0 +1,15 @@
+<?php
+
+
+class PostgresConnect{
+	protected $host;
+	protected $port;
+	protected $databaseName;
+	protected $user;
+	protected $password;
+
+	public function __construct($host, $databaseName, $user, $password) {
+		$this->host = $host;
+		$this->port = $port;
+	}
+}

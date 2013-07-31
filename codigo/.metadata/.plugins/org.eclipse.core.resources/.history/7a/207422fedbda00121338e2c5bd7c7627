@@ -1,0 +1,9 @@
+<?php
+
+
+class PostgresConnect{
+	protected $database;
+	protected $host;
+	protected $user;
+	protected $password;
+}
