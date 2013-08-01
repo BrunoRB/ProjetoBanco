@@ -1,0 +1,10 @@
+<?php
+
+include_once '../templates/body.php';
+
+class FaleConosco extends Body {
+
+	private function loadBody() {
+
+	}
+} new FaleConosco();
