@@ -6,7 +6,7 @@ CREATE TABLE tipo
   tipo CHARACTER VARYING(100) NOT NULL,
   CONSTRAINT pk_tipo PRIMARY KEY (id_tipo), 
   CONSTRAINT unique_tipo UNIQUE (tipo),
-  CONSTRAINT check_tipo CHECK (tipo ~* '^membro$' OR tipo ~* '^cliente$' OR tipo ~* '^administrador$')
+  CONSTRAINT check_tipo CHECK (tipo ~* '^membro$' OR tipo ~* '^cliente$')
 );
 
 CREATE TABLE usuario
@@ -151,15 +151,6 @@ CREATE TABLE comentario
   CONSTRAINT fk_atividade_comentario FOREIGN KEY (fk_atividade) REFERENCES atividade (id_atividade),
   CONSTRAINT fk_membro FOREIGN KEY (fk_membro) REFERENCES membro (id_membro)
 );
-
-CREATE TABLE administrador
-(
-  id_administrador SERIAL NOT NULL,
-  fk_usuario INTEGER NOT NULL,
-  CONSTRAINT pk_administrador PRIMARY KEY (id_administrador),
-  CONSTRAINT pk_usuario_admin FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
-);
-
 
 CREATE TABLE log_de_erro
 (

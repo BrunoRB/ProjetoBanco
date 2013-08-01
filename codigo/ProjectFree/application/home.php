@@ -5,13 +5,13 @@ include_once '../templates/body.php';
 class Home extends Body {
 
 	public function __construct() {
-		$this->setTtile('Projeto');
+		$this->setTtile('Home');
 		parent::__construct();
 	}
 
 	public function loadBody() {
 		?>
-			bem vindo
+			<div class="pull-right white">Bem vindo xxx</div>
 		<?php
 	}
 

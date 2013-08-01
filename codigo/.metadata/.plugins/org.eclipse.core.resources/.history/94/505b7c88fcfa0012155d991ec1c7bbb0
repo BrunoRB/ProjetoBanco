@@ -1,0 +1,18 @@
+<?php
+
+include_once '../templates/body.php';
+
+class Home extends Body {
+
+	public function __construct() {
+		$this->setTtile('Projeto');
+		parent::__construct();
+	}
+
+	public function loadBody() {
+		?>
+			<div class="pull-right">Bem vindo xxx</div>
+		<?php
+	}
+
+} new Home();
