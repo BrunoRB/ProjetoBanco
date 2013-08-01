@@ -24,6 +24,14 @@ CREATE TABLE usuario
   CONSTRAINT check_senha_length CHECK (senha ~ '\w{5, 255}')
 );
 
+CREATE TABLE tentativas_de_login
+(
+  id_usuario INTEGER,
+  tempo VARCHAR(30),
+  CONSTRAINT pk_fk_usuario PRIMARY KEY (id_usuario),
+  CONSTRAINT fk_pk_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)
+);
+
 CREATE TABLE fale_conosco
 (
 	id_forma_de_contato SERIAL NOT NULL,
