@@ -170,7 +170,6 @@ CREATE TABLE cliente
 );
 
 
-
 CREATE TABLE projeto_cliente
 (
   fk_projeto INTEGER NOT NULL,
@@ -230,6 +229,7 @@ CREATE TABLE atividade_do_membro
 
 CREATE TABLE membro_do_projeto
 (
+   funcao VARCHAR(100),
    fk_projeto INTEGER NOT NULL, 
    fk_membro INTEGER NOT NULL, 
    CONSTRAINT pk_membro_do_projeto PRIMARY KEY (fk_projeto, fk_membro), 
