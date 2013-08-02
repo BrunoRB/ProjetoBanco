@@ -19,8 +19,6 @@ INSERT INTO atividade_do_membro VALUES (1, 1);
 
 INSERT INTO comentario VALUES (1, 'comantario teste', '23-05-2013', 1);
 
-INSERT INTO usuario VALUES (1, 'administrador', 'admin', 'admin', (SELECT id_tipo FROM tipo WHERE tipo = 'administrador'));
-
 INSERT INTO administrador VALUES (1, 1);
 
 INSERT INTO log_de_erro VALUES (1, 'administrador', 'teste de erro');
