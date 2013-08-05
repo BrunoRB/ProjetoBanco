@@ -101,16 +101,16 @@ DECLARE
 	confirm_usuario INT;
 	confirm_cliente INT;
 BEGIN 
-	-- SET ROLE retrieve;
+	--SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
-	-- SET ROLE insert;
+	--SET ROLE insert;
 	confirm_usuario := usuarioInsert (nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao cadastrar cliente';
 	ELSE
-		-- SET ROLE retrieve;
+		--SET ROLE retrieve;
 		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-		-- SET ROLE insert;
+		--SET ROLE insert;
 		confirm_cliente := clienteInsert (usuario_id);
 		IF confirm_cliente = 0 THEN
 			RAISE NOTICE 'Erro ao cadastrar cliente';
@@ -128,9 +128,9 @@ DECLARE
 	cliente_id INT;
 	confirm_usuario INT;
 BEGIN 
-	-- SET ROLE retrieve;
+	--SET ROLE retrieve;
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
-	-- SET ROLE delete;
+	--SET ROLE delete;
 	confirm_usuario := usuarioUpdate (usuario_id, TRUE);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao excluir cliente';
@@ -148,10 +148,10 @@ DECLARE
 	confirm_usuario INT;
 	confirm_cliente INT;
 BEGIN 
-	-- SET ROLE retrieve;
+	--SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
-	-- SET ROLE update;
+	--SET ROLE update;
 	confirm_usuario := usuarioUpdate (usuario_id, nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao atualizar cliente';
