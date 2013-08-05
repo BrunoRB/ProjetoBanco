@@ -4,7 +4,7 @@ DECLARE
 	confirm INT;
 BEGIN 
 	INSERT INTO membro (id_membro, data_de_nascimento, fk_usuario)
-		VALUES (id, nasc, func, usuario);
+		VALUES (id, nasc, usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -29,7 +29,7 @@ DECLARE
 	confirm INT;
 BEGIN 
 	INSERT INTO membro (data_de_nascimento, fk_usuario)
-		VALUES (nasc, func, usuario);
+		VALUES (nasc, usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -53,8 +53,8 @@ RETURNS INTEGER AS $membroInsert$
 DECLARE
 	confirm INT;
 BEGIN 
-	INSERT INTO membro (funcao, fk_usuario)
-		VALUES (func, usuario);
+	INSERT INTO membro (fk_usuario)
+		VALUES (usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -138,7 +138,7 @@ BEGIN
 		--SET ROLE insert;
 		confirm_membro := membroInsert (nasc, usuario_id);
 		IF confirm_membro = 0 THEN
-			RAISE NOTICE 'Erro ao cadastrar membro';
+			RAISE NOTICE 	;
 		ELSE
 			RAISE NOTICE 'Membro cadastrado com sucesso!';
 		END IF;
