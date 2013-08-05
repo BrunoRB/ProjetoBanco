@@ -69,7 +69,7 @@ CREATE TABLE projeto
    id_projeto SERIAL NOT NULL, 
    nome CHARACTER VARYING(100) NOT NULL, 
    orcamento NUMERIC(11,2), 
-   data_de_cadastro DATE NOT NULL,
+   data_de_cadastro DATE NOT NULL DEFAULT CURRENT_DATE,
    descricao TEXT, 
    fk_gerente INTEGER NOT NULL, 
    CONSTRAINT pk_projeto PRIMARY KEY (id_projeto), 

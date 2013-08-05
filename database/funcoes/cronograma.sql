@@ -1,4 +1,5 @@
 
+--INSERTS;
 
 CREATE OR REPLACE FUNCTION cronogramaInsert (inicio_projeto DATE, limite_projeto DATE, id_projeto INTEGER) RETURNS INTEGER AS $$
 DECLARE
@@ -13,6 +14,10 @@ BEGIN
 	END IF;
 END;
 $$ LANGUAGE PLPGSQL;
+
+--END INSERTS;
+
+--UPDATES;
 
 CREATE OR REPLACE FUNCTION cronogramaUpdate (inicio_projeto DATE, limite_projeto DATE, fim DATE, id_projeto INTEGER) RETURNS INTEGER AS $$
 BEGIN
@@ -29,14 +34,24 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL;
 
+--END UPDATES;
+
+--DELETES;
+
 CREATE OR REPLACE FUNCTION cronogramaDelete(id_projeto INTEGER) RETURNS INTEGER AS $$
 BEGIN
 	DELETE FROM cronograma WHERE fk_projeto = id_projeto;
 END;
 $$ LANGUAGE PLPGSQL;
 
+--END DELETES;
+
+--SELECTS;
+
 CREATE OR REPLACE FUNCTION cronogramaSelect(id_projeto INTEGER) RETURNS SETOF cronograma AS $$
 BEGIN
 	RETURN QUERY EXECUTE 'SELECT data_inicio_projeto, data_limite_projeto, data_fim FROM cronograma WHERE fk_projeto = id_projeto';
 END;
 $$ LANGUAGE PLPGSQL;
+
+--END SELECTS;

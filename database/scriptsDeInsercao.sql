@@ -3,6 +3,8 @@ INSERT INTO tipo (tipo) VALUES ('administrador'), ('membro'), ('cliente');
 
 membroCadastra (Maikon, maikonmarin, 123maikon, 14/09/1992);
 
+SELECT projetoInsert(1, 'Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador', 10);
+
 INSERT INTO projeto VALUES (1, 'Sistema gerenciador de projetos', 30.000, now(), 'descrição do projeto', 1);
 
 INSERT INTO despesa VALUES (1, 'salario', 10.000, 'Descrição da despesa', 1);
