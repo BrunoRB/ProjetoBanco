@@ -1,9 +1,7 @@
-
+﻿
 INSERT INTO tipo (tipo) VALUES ('administrador'), ('membro'), ('cliente');
 
-INSERT INTO usuario VALUES (2, 'gerente do projeto', 'gerente', 'admin', (SELECT id_tipo FROM tipo WHERE tipo = 'membro'));
-
-INSERT INTO membro VALUES (1, '05/05/2012', 2);
+membroCadastra (Maikon, maikonmarin, 123maikon, 14/09/1992);
 
 INSERT INTO projeto VALUES (1, 'Sistema gerenciador de projetos', 30.000, now(), 'descrição do projeto', 1);
 
@@ -25,7 +23,7 @@ INSERT INTO log_de_erro VALUES (1, 'administrador', 'teste de erro');
 
 INSERT INTO usuario VALUES (4, 'cliente', 'cliente', 'adm', (SELECT id_tipo FROM tipo WHERE tipo = 'cliente'));
 
-INSERT INTO cliente VALUES (1, 4);
+clienteCadastra (Cliente, login, 123);
 
 INSERT INTO projeto_cliente VALUES (1, 1);
 
