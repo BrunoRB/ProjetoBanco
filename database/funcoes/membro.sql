@@ -126,16 +126,16 @@ DECLARE
 	confirm_usuario INT;
 	confirm_membro INT;
 BEGIN 
-	SET ROLE retrieve;
+	--SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'membro';
-	SET ROLE insert;
+	--SET ROLE insert;
 	confirm_usuario := usuarioInsert (nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao cadastrar membro';
 	ELSE 
-		SET ROLE retrieve;
+		--SET ROLE retrieve;
 		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-		SET ROLE insert;
+		--SET ROLE insert;
 		confirm_membro := membroInsert (nasc, usuario_id);
 		IF confirm_membro = 0 THEN
 			RAISE NOTICE 'Erro ao cadastrar membro';
@@ -153,9 +153,9 @@ DECLARE
 	membro_id INT;
 	confirm_usuario INT;
 BEGIN 
-	SET ROLE retrieve;
+	--SET ROLE retrieve;
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
-	SET ROLE delete;
+	--SET ROLE delete;
 	confirm_usuario := usuarioUpdate (usuario_id, TRUE);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao excluir Membro';
@@ -174,11 +174,11 @@ DECLARE
 	confirm_usuario INT;
 	confirm_membro INT;
 BEGIN 
-	SET ROLE retrieve;
+	--SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'membro';
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
 	SELECT INTO membro_id id_membro FROM membro WHERE fk_usuario = usuario_id;
-	SET ROLE update;
+	--SET ROLE update;
 	confirm_membro := membroUpdate (membro_id, nasc, usuario_id);
 	IF confirm_membro = 0 THEN
 		RAISE NOTICE 'Erro ao atualizar Membro';
