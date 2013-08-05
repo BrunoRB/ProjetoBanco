@@ -13,6 +13,32 @@ Membros:
 Atuais tasks:
 -------------
 
+- Documento de requisitos funcionais / não funcionais
+
+<table>
+	<tr>
+		<th>Responsável</th>
+		<th>Completa?</th>
+	</tr>
+	<tr>
+		<td>Rafael Ebara</td>
+		<td>Não</td>
+	</tr>
+</table>
+
+- Atualizar, corrigir e complementar diagrama de classes.
+
+<table>
+	<tr>
+		<th>Responsável</th>
+		<th>Completa?</th>
+	</tr>
+	<tr>
+		<td>Fabricio</td>
+		<td>Não</td>
+	</tr>
+</table>
+
 - Definir funções para regras de negócios e criar páginas php para as entidade abaixo listadas.
 	
 <table>
@@ -39,11 +65,6 @@ Atuais tasks:
   	<tr>
     		<td>atividade_do_membro</td>
     		<td>Bruno</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Cliente</td>
-    		<td>Maikon</td>
     		<td>Não</td>
   	</tr>
   	<tr>
@@ -88,11 +109,6 @@ Atuais tasks:
   	</tr>
   	<tr>
     		<td>membro_do_projeto</td>
-    		<td>Roberto</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>projeto_cliente</td>
     		<td>Roberto</td>
     		<td>Não</td>
   	</tr>
