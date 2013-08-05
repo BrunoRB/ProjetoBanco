@@ -1,60 +1,10 @@
-CREATE OR REPLACE FUNCTION membroInsert (id INTEGER, nasc DATE, func VARCHAR, usuario INTEGER)
+CREATE OR REPLACE FUNCTION membroInsert (id INTEGER, nasc DATE, usuario INTEGER)
 RETURNS INTEGER AS $membroInsert$
 DECLARE
 	confirm INT;
 BEGIN 
-	INSERT INTO membro (id_membro, data_de_nascimento, funcao, fk_usuario)
+	INSERT INTO membro (id_membro, data_de_nascimento, fk_usuario)
 		VALUES (id, nasc, func, usuario);
-		GET DIAGNOSTICS confirm = ROW_COUNT;
-		RETURN confirm;
-EXCEPTION 
-	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
-		RETURN 0;
-	WHEN UNDEFINED_COLUMN THEN
-		RAISE NOTICE 'Undefined column: Coluna solicitada 
-			nao corresponde aos campos da tabela.';
-		RETURN 0;
-	WHEN OTHERS THEN
-		RAISE NOTICE 'Others: Erro ao inserir.';
-		RETURN 0;
-END;
-$membroInsert$ LANGUAGE PLPGSQL;
-
-
-CREATE OR REPLACE FUNCTION membroInsert (nasc DATE, func VARCHAR, usuario INTEGER)
-RETURNS INTEGER AS $membroInsert$
-DECLARE
-	confirm INT;
-BEGIN 
-	INSERT INTO membro (data_de_nascimento, funcao, fk_usuario)
-		VALUES (nasc, func, usuario);
-		GET DIAGNOSTICS confirm = ROW_COUNT;
-		RETURN confirm;
-EXCEPTION 
-	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
-		RETURN 0;
-	WHEN UNDEFINED_COLUMN THEN
-		RAISE NOTICE 'Undefined column: Coluna solicitada 
-			nao corresponde aos campos da tabela.';
-		RETURN 0;
-	WHEN OTHERS THEN
-		RAISE NOTICE 'Others: Erro ao inserir.';
-		RETURN 0;
-END;
-$membroInsert$ LANGUAGE PLPGSQL;
-
-
-CREATE OR REPLACE FUNCTION membroInsert (func VARCHAR, usuario INTEGER)
-RETURNS INTEGER AS $membroInsert$
-DECLARE
-	confirm INT;
-BEGIN 
-	INSERT INTO membro (funcao, fk_usuario)
-		VALUES (func, usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -79,7 +29,7 @@ DECLARE
 	confirm INT;
 BEGIN 
 	INSERT INTO membro (data_de_nascimento, fk_usuario)
-		VALUES (nasc, usuario);
+		VALUES (nasc, func, usuario);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -97,12 +47,37 @@ EXCEPTION
 END;
 $membroInsert$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION membroUpdate (id INTEGER, nasc DATE, func VARCHAR, usuario INTEGER)
+
+CREATE OR REPLACE FUNCTION membroInsert (usuario INTEGER)
+RETURNS INTEGER AS $membroInsert$
+DECLARE
+	confirm INT;
+BEGIN 
+	INSERT INTO membro (funcao, fk_usuario)
+		VALUES (func, usuario);
+		GET DIAGNOSTICS confirm = ROW_COUNT;
+		RETURN confirm;
+EXCEPTION 
+	WHEN CHECK_VIOLATION THEN
+		RAISE NOTICE 'Check violation: Parametros de entrada 
+			nao correspondem as exigencias dos atributos.';
+		RETURN 0;
+	WHEN UNDEFINED_COLUMN THEN
+		RAISE NOTICE 'Undefined column: Coluna solicitada 
+			nao corresponde aos campos da tabela.';
+		RETURN 0;
+	WHEN OTHERS THEN
+		RAISE NOTICE 'Others: Erro ao inserir.';
+		RETURN 0;
+END;
+$membroInsert$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION membroUpdate (id INTEGER, nasc DATE, usuario INTEGER)
 RETURNS INTEGER AS $membroUpdate$
 DECLARE
 	confirm INT;
 BEGIN 
-UPDATE membro SET data_de_nascimento = nasc, funcao = func, fk_tipo = usuario WHERE id_membro = (id);
+UPDATE membro SET data_de_nascimento = nasc, fk_tipo = usuario WHERE id_membro = (id);
 		GET DIAGNOSTICS confirm = ROW_COUNT;
 		RETURN confirm;
 EXCEPTION 
@@ -143,7 +118,7 @@ EXCEPTION
 END;
 $membroDel$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION membroCadastra (nome VARCHAR, login VARCHAR, senha VARCHAR, nasc DATE, func VARCHAR)
+CREATE OR REPLACE FUNCTION membroCadastra (nome VARCHAR, login VARCHAR, senha VARCHAR, nasc DATE)
 RETURNS VOID AS $membroCadastra$
 DECLARE
 	tipo_id INT;
@@ -161,7 +136,7 @@ BEGIN
 		SET ROLE retrieve;
 		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
 		SET ROLE insert;
-		confirm_membro := membroInsert (nasc, func, usuario_id);
+		confirm_membro := membroInsert (nasc, usuario_id);
 		IF confirm_membro = 0 THEN
 			RAISE NOTICE 'Erro ao cadastrar membro';
 		ELSE
@@ -190,7 +165,7 @@ BEGIN
 END;
 $membroExclui$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION membroAtualiza (nome VARCHAR, login VARCHAR, senha VARCHAR, nasc DATE, func VARCHAR)
+CREATE OR REPLACE FUNCTION membroAtualiza (nome VARCHAR, login VARCHAR, senha VARCHAR, nasc DATE)
 RETURNS VOID AS $membroAtualiza$
 DECLARE
 	tipo_id INT;
@@ -204,7 +179,7 @@ BEGIN
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
 	SELECT INTO membro_id id_membro FROM membro WHERE fk_usuario = usuario_id;
 	SET ROLE update;
-	confirm_membro := membroUpdate (membro_id, nasc, func, usuario_id);
+	confirm_membro := membroUpdate (membro_id, nasc, usuario_id);
 	IF confirm_membro = 0 THEN
 		RAISE NOTICE 'Erro ao atualizar Membro';
 	ELSE
