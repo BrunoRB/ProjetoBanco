@@ -154,7 +154,7 @@ BEGIN
 	SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'membro';
 	SET ROLE insert;
-	confirm_usuario := usuarioInsert (nome, login, senha, tipo_id);
+	confirm_usuario := usuarioInsert (nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao cadastrar membro';
 	ELSE 
@@ -177,22 +177,15 @@ DECLARE
 	usuario_id INT;
 	membro_id INT;
 	confirm_usuario INT;
-	confirm_membro INT;
 BEGIN 
 	SET ROLE retrieve;
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
-	SELECT INTO membro_id id_membro FROM membro WHERE fk_usuario = usuario_id;
 	SET ROLE delete;
-	confirm_membro := membroDelete (membro_id);
-	IF confirm_cliente = 0 THEN
+	confirm_usuario := usuarioUpdate (usuario_id, TRUE);
+	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao excluir Membro';
 	ELSE
-		confirm_usuario := usuarioDelete (usuario_id);
-		IF confirm_usuario = 0 THEN
-			RAISE NOTICE 'Erro ao excluir Membro';
-		ELSE
-			RAISE NOTICE 'Membro excluído com sucesso!';
-		END IF;
+		RAISE NOTICE 'Membro excluído com sucesso!';
 	END IF;
 END;
 $membroExclui$ LANGUAGE PLPGSQL;
@@ -215,7 +208,7 @@ BEGIN
 	IF confirm_membro = 0 THEN
 		RAISE NOTICE 'Erro ao atualizar Membro';
 	ELSE
-		confirm_usuario := usuarioUpdate (usuario_id, nome, login, senha, tipo_id);
+		confirm_usuario := usuarioUpdate (usuario_id, nome, login, senha, FALSE, tipo_id);
 		IF confirm_usuario = 0 THEN
 			RAISE NOTICE 'Erro ao atualizar Membro';
 		ELSE

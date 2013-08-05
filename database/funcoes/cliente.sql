@@ -104,7 +104,7 @@ BEGIN
 	SET ROLE retrieve;
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
 	SET ROLE insert;
-	confirm_usuario := usuarioInsert (nome, login, senha, tipo_id);
+	confirm_usuario := usuarioInsert (nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao cadastrar cliente';
 	ELSE
@@ -127,22 +127,15 @@ DECLARE
 	usuario_id INT;
 	cliente_id INT;
 	confirm_usuario INT;
-	confirm_cliente INT;
 BEGIN 
 	SET ROLE retrieve;
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
-	SELECT INTO cliente_id id_cliente FROM cliente WHERE fk_usuario = usuario_id;
 	SET ROLE delete;
-	confirm_cliente := cienteDelete (cliente_id);
-	IF confirm_cliente = 0 THEN
+	confirm_usuario := usuarioUpdate (usuario_id, TRUE);
+	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao excluir cliente';
 	ELSE
-		confirm_usuario := usuarioDelete (usuario_id);
-		IF confirm_usuario = 0 THEN
-			RAISE NOTICE 'Erro ao excluir cliente';
-		ELSE
-			RAISE NOTICE 'Cliente excluído com sucesso!';
-		END IF;
+		RAISE NOTICE 'Cliente excluído com sucesso!';
 	END IF;
 END;
 $clienteExclui$ LANGUAGE PLPGSQL;
@@ -159,7 +152,7 @@ BEGIN
 	SELECT INTO tipo_id id_tipo FROM tipo WHERE tipo = 'cliente';
 	SELECT INTO usuario_id id_usuario FROM usuario WHERE login = login;
 	SET ROLE update;
-	confirm_usuario := usuarioUpdate (usuario_id, nome, login, senha, tipo_id);
+	confirm_usuario := usuarioUpdate (usuario_id, nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao atualizar cliente';
 	ELSE
