@@ -131,9 +131,7 @@ CREATE TABLE atividade
   descricao_atividade TEXT,
   finalizada BOOLEAN NOT NULL DEFAULT FALSE,
   fk_projeto INTEGER NOT NULL,
-  fk_cronograma INTEGER NOT NULL,
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),
-  CONSTRAINT fk_cronograma_atividade FOREIGN KEY (fk_cronograma) REFERENCES cronograma (id_cronograma),
   CONSTRAINT fk_projeto_atividade FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
   CONSTRAINT check_nome_atividade CHECK (nome_atividade ~* '\w{5, 100}')
 );
