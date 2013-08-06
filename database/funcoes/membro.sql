@@ -69,7 +69,7 @@ BEGIN
 		--SET ROLE insert;
 		confirm_membro := membroInsert (nasc, usuario_id);
 		IF confirm_membro = 0 THEN
-			RAISE NOTICE 	;
+			RAISE NOTICE 'Erro ao cadastrar membro';
 		ELSE
 			RAISE NOTICE 'Membro cadastrado com sucesso!';
 		END IF;
