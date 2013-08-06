@@ -50,10 +50,11 @@ $membroInsert$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION membroCadastra (nome VARCHAR, login VARCHAR, senha VARCHAR, nasc DATE)
-RETURNS VOID AS $membroCadastra$
+RETURNS INTEGER AS $membroCadastra$
 DECLARE
 	tipo_id INT;
 	usuario_id INT;
+	membro_id INT;
 	confirm_usuario INT;
 	confirm_membro INT;
 BEGIN 
@@ -63,6 +64,7 @@ BEGIN
 	confirm_usuario := usuarioInsert (nome, login, senha, FALSE, tipo_id);
 	IF confirm_usuario = 0 THEN
 		RAISE NOTICE 'Erro ao cadastrar membro';
+		RETURN 0;
 	ELSE 
 		--SET ROLE retrieve;
 		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
@@ -70,8 +72,11 @@ BEGIN
 		confirm_membro := membroInsert (nasc, usuario_id);
 		IF confirm_membro = 0 THEN
 			RAISE NOTICE 'Erro ao cadastrar membro';
+			RETURN 0;
 		ELSE
 			RAISE NOTICE 'Membro cadastrado com sucesso!';
+			SELECT INTO membro_id last_value FROM membro_id_membro_seq;
+			RETURN membro_id;
 		END IF;
 	END IF;
 END;
