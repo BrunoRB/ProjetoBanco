@@ -1,11 +1,11 @@
 CREATE OR REPLACE FUNCTION clienteInsert (id INTEGER, usuario INTEGER)
 RETURNS INTEGER AS $clienteInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO cliente (id_cliente, fk_usuario)
-		VALUES (id, usuario);
-		RETURN confirm;
+		VALUES (id, usuario) RETURNING id_cliente INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
@@ -18,11 +18,11 @@ $clienteInsert$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION clienteInsert (usuario INTEGER)
 RETURNS INTEGER AS $clienteInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO cliente (fk_usuario)
-		VALUES (usuario);
-		RETURN confirm;
+		VALUES (usuario) RETURNING id_membro INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
