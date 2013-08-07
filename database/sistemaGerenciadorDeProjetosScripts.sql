@@ -196,8 +196,8 @@ CREATE TABLE forma_de_contato
 CREATE TABLE mensagem
 (
    id_mensagem SERIAL NOT NULL, 
-   assunto CHARACTER VARYING(100), 
-   TEXTo TEXT, 
+   assunto CHARACTER VARYING(100) NOT NULL, 
+   texto TEXT NOT NULL, 
    CONSTRAINT pk_mensagem PRIMARY KEY (id_mensagem)
 );
 
