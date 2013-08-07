@@ -88,7 +88,6 @@ CREATE OR REPLACE FUNCTION membroCadastra (nome VARCHAR, login VARCHAR, senha VA
 RETURNS INTEGER AS $membroCadastra$
 DECLARE
 	tipo_id INT;
-	usuario_id INT;
 	confirm_usuario INT;
 	confirm_membro INT;
 BEGIN 
@@ -100,10 +99,7 @@ BEGIN
 		RAISE NOTICE 'Erro ao cadastrar membro';
 		RETURN 0;
 	ELSE 
-		--SET ROLE retrieve;
-		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-		--SET ROLE insert;
-		confirm_membro := membroInsert (nasc, usuario_id);
+		confirm_membro := membroInsert (nasc, confirm_usuario);
 		IF confirm_membro = 0 THEN
 			RAISE NOTICE 'Erro ao cadastrar membro';
 			RETURN 0;
