@@ -1,11 +1,11 @@
 CREATE OR REPLACE FUNCTION membroInsert (id INTEGER, nasc DATE, usuario INTEGER)
 RETURNS INTEGER AS $membroInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO membro (id_membro, data_de_nascimento, fk_usuario)
-		VALUES (id, nasc, usuario);
-		RETURN confirm;
+		VALUES (id, nasc, usuario) RETURNING id_membro INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
@@ -18,11 +18,11 @@ $membroInsert$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION membroInsert (nasc DATE, usuario INTEGER)
 RETURNS INTEGER AS $membroInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO membro (data_de_nascimento, fk_usuario)
-		VALUES (nasc, usuario);
-		RETURN confirm;
+		VALUES (nasc, usuario) RETURNING id_membro INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
@@ -35,11 +35,11 @@ $membroInsert$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION membroInsert (usuario INTEGER)
 RETURNS INTEGER AS $membroInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO membro (fk_usuario)
-		VALUES (usuario);
-		RETURN confirm;
+		VALUES (usuario) RETURNING id_membro INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
@@ -89,7 +89,6 @@ RETURNS INTEGER AS $membroCadastra$
 DECLARE
 	tipo_id INT;
 	usuario_id INT;
-	membro_id INT;
 	confirm_usuario INT;
 	confirm_membro INT;
 BEGIN 
@@ -110,8 +109,7 @@ BEGIN
 			RETURN 0;
 		ELSE
 			RAISE NOTICE 'Membro cadastrado com sucesso!';
-			SELECT INTO membro_id last_value FROM membro_id_membro_seq;
-			RETURN membro_id;
+			RETURN confirm_membro;
 		END IF;
 	END IF;
 END;
