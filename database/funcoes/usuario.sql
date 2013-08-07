@@ -1,11 +1,11 @@
 CREATE OR REPLACE FUNCTION usuarioInsert (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, tipo INTEGER)
 RETURNS INTEGER AS $usuarioInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO usuario (id_usuario, nome, login, senha, inativo, fk_tipo)
-		VALUES (id, nome, login, senha, inativo, tipo);
-		RETURN confirm;
+		VALUES (id, nome, login, senha, inativo, tipo) RETURNING id_usuario INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
@@ -18,11 +18,11 @@ $usuarioInsert$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION usuarioInsert (nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, tipo INTEGER)
 RETURNS INTEGER AS $usuarioInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO usuario (nome, login, senha, inativo, fk_tipo)
-		VALUES (nome, login, senha, inativo, tipo);
-		RETURN confirm;
+		VALUES (nome, login, senha, inativo, tipo) RETURNING id_usuario INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 
@@ -35,11 +35,11 @@ $usuarioInsert$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION usuarioInsert (nome VARCHAR, login VARCHAR, senha VARCHAR, tipo INTEGER)
 RETURNS INTEGER AS $usuarioInsert$
 DECLARE
-	confirm INT;
+	id_gerada INT;
 BEGIN 
 	INSERT INTO usuario (nome, login, senha, fk_tipo)
-		VALUES (nome, login, senha, tipo);
-		RETURN confirm;
+		VALUES (nome, login, senha, tipo) RETURNING id_usuario INTO id_gerada;
+		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
 		RAISE NOTICE 'Check violation: Parametros de entrada 

@@ -71,8 +71,6 @@ CREATE OR REPLACE FUNCTION clienteCadastra (nome VARCHAR, login VARCHAR, senha V
 RETURNS INTEGER AS $clienteCadastra$
 DECLARE
 	tipo_id INT;
-	usuario_id INT;
-	cliente_id INT;
 	confirm_usuario INT;
 	confirm_cliente INT;
 BEGIN 
@@ -84,17 +82,13 @@ BEGIN
 		RAISE NOTICE 'Erro ao cadastrar cliente';
 		RETURN 0;
 	ELSE
-		--SET ROLE retrieve;
-		SELECT INTO usuario_id last_value FROM usuario_id_usuario_seq;
-		--SET ROLE insert;
-		confirm_cliente := clienteInsert (usuario_id);
+		confirm_cliente := clienteInsert (confirm_usuario);
 		IF confirm_cliente = 0 THEN
 			RAISE NOTICE 'Erro ao cadastrar cliente';
 			RETURN 0;
 		ELSE
 			RAISE NOTICE 'Cliente atualizado com sucesso!';
-			SELECT INTO cliente_id last_value FROM cliente_id_cliente_seq;
-			RETURN 0;
+			RETURN confirm_cliente;
 		END IF;
 	END IF;
 END;
