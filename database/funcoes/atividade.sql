@@ -1,7 +1,7 @@
 
 --INSERTS;
 
-CREATE OR REPLACE FUNCTION atividadeInsert (inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION atividadeCadastrar (inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada  INTEGER;
 	BEGIN
@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION atividadeInsert (inicio TIMESTAMP, limite TIMESTAMP, 
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION atividadeInsert (inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), id_projeto INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION atividadeCadastrar (inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada  INTEGER;
 	BEGIN
