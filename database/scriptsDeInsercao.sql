@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_atividade1 INTEGER;
 		id_atividade2 INTEGER;
 		id_atividade3 INTEGER;
+		id_trash INTEGER;
 	BEGIN
 		--cria gerente
 		id_gerente := membroCadastra ('Gerente ', 'gerente'||random(), 'admin', CURRENT_DATE);
@@ -27,11 +28,10 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_atividade3 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_projeto);
 		
 		 --atribui atividades
-		--atividadeAtribuir();
-		--atividadeAtribuir();
-		--atividadeAtribuir();
-		--atividadeAtribuir();
-		
+		id_trash := atividadeAtribuir(id_membro1, id_atividade1);
+		id_trash := atividadeAtribuir(id_membro1, id_atividade2);
+		id_trash := atividadeAtribuir(id_membro2, id_atividade2);
+		id_trash := atividadeAtribuir(id_membro3, id_atividade3);
 		
 		RETURN 'TRUE';
 	END;
@@ -43,15 +43,17 @@ SELECT insertData();
 
 CREATE OR REPLACE FUNCTION deleteData() RETURNS BOOLEAN AS $$
 	BEGIN
-		DELETE FROM usuario;
-		
-		DELETE FROM membro;
-		
-		DELETE FROM projeto;
+		DELETE FROM atividade_do_membro;
 		
 		DELETE FROM atividade;
 		
 		DELETE FROM cronograma;
+		
+		DELETE FROM projeto;
+		
+		DELETE FROM membro;
+		
+		DELETE FROM usuario;
 		
 		--TODO complete deletes;
 		
