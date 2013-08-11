@@ -13,7 +13,7 @@ Membros:
 Atuais tasks:
 -------------
 
-- Documento de requisitos funcionais / não funcionais
+- - Atualizar, corrigir e complementar documento de requisitos funcionais / não funcionais
 
 <table>
 	<tr>
@@ -26,7 +26,7 @@ Atuais tasks:
 	</tr>
 </table>
 
-- Atualizar, corrigir e complementar diagrama de classes.
+- Atualizar, corrigir e complementar diagramas de caso de uso e classes.
 
 <table>
 	<tr>
@@ -35,6 +35,32 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Fabricio</td>
+		<td>Não</td>
+	</tr>
+</table>
+
+- Atualizar, corrigir e complementar DER.
+
+<table>
+	<tr>
+		<th>Responsável</th>
+		<th>Completa?</th>
+	</tr>
+	<tr>
+		<td>Maikon</td>
+		<td>Não</td>
+	</tr>
+</table>
+
+- Iniciar monografia.
+
+<table>
+	<tr>
+		<th>Responsável</th>
+		<th>Completa?</th>
+	</tr>
+	<tr>
+		<td>Roberto</td>
 		<td>Não</td>
 	</tr>
 </table>
