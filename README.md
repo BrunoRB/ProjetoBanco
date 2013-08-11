@@ -139,7 +139,7 @@ Atuais tasks:
     		<td>Não</td>
   	</tr>
   	<tr>
-    		<td>forma_de_contato</td>
+    		<td>fale_conosco</td>
     		<td>Roberto</td>
     		<td>Não</td>
   	</tr>
@@ -154,7 +154,7 @@ Atuais tasks:
     		<td>Não</td>
   	</tr>
   	<tr>
-    		<td>fale_conosco</td>
+    		<td>forma_de_contato</td>
     		<td>Rafael Ebara</td>
     		<td>Não</td>
   	</tr>
