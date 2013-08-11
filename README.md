@@ -118,7 +118,7 @@ Atuais tasks:
     		<td>Não</td>
   	</tr>
   	<tr>
-    		<td></td>
+    		<td>Comentario</td>
     		<td>Roberto</td>
     		<td>Não</td>
   	</tr>
