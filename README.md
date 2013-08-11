@@ -63,7 +63,7 @@ Atuais tasks:
     		<td>Não</td>
   	</tr>
   	<tr>
-    		<td></td>
+    		<td>tentativa_de_login</td>
     		<td>Bruno</td>
     		<td>Não</td>
   	</tr>
