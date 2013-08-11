@@ -58,58 +58,53 @@ Atuais tasks:
     		<td>Não</td>
   	</tr>
   	<tr>
-    		<td>Cronograma</td>
+    		<td>Fases</td>
     		<td>Bruno</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td></td>
+    		<td>Bruno</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>Usuario</td>
+    		<td>Maikon</td>
     		<td>Não</td>
   	</tr>
   	<tr>
     		<td>atividade_do_membro</td>
-    		<td>Bruno</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Usuário</td>
     		<td>Maikon</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Membro</td>
-    		<td>Maikon</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Administrador</td>
-    		<td>Fabricio</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Mensagem</td>
-    		<td>Fabricio</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>usuario_mensagem</td>
-    		<td>Fabricio</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Doe</td>
-    		<td>Fabricio</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>fale_conosco</td>
-    		<td>Fabricio</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Comentário</td>
-    		<td>Roberto</td>
     		<td>Não</td>
   	</tr>
   	<tr>
     		<td>membro_do_projeto</td>
-    		<td>Roberto</td>
+    		<td>Maikon</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>Nota</td>
+    		<td>Maikon</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>Artefato</td>
+    		<td>Fabricio</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>artefato_atividade</td>
+    		<td>Fabricio</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>recurso</td>
+    		<td>Fabricio</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>despesa</td>
+    		<td>Fabricio</td>
     		<td>Não</td>
   	</tr>
   	<tr>
@@ -118,17 +113,37 @@ Atuais tasks:
     		<td>Não</td>
   	</tr>
   	<tr>
-    		<td>Despesa</td>
-    		<td>Rafael Ebara</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
-    		<td>Recurso</td>
-    		<td>Rafael Ebara</td>
-    		<td>Não</td>
-  	</tr>
-  	<tr>
     		<td>forma_de_contato</td>
+    		<td>Roberto</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td></td>
+    		<td>Roberto</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td></td>
+    		<td>Roberto</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>fale_conosco</td>
+    		<td>Rafael Ebara</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td>doacao</td>
+    		<td>Rafael Ebara</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td></td>
+    		<td>Rafael Ebara</td>
+    		<td>Não</td>
+  	</tr>
+  	<tr>
+    		<td></td>
     		<td>Rafael Ebara</td>
     		<td>Não</td>
   	</tr>
