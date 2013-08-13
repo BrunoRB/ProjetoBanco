@@ -89,7 +89,7 @@ CREATE TABLE atividade
   nome_atividade CHARACTER VARYING(100) NOT NULL,
   descricao_atividade TEXT,
   fk_predecessora INTEGER,
-  fk_fase INTEGER,
+  fk_fase INTEGER NOT NULL,
   finalizada BOOLEAN NOT NULL DEFAULT FALSE,
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),
   CONSTRAINT fk_predecessora FOREIGN KEY (fk_predecessora) REFERENCES atividade(id_atividade),
@@ -123,7 +123,8 @@ CREATE TABLE artefato
 	nome VARCHAR(100) NOT NULL,
 	tipo VARCHAR(100),
 	descricao TEXT,
-	porcentagem_concluida INTEGER NOT NULL DEFAULT 0
+	porcentagem_concluida INTEGER NOT NULL DEFAULT 0,
+	CONSTRAINT check_porcentagem_concluida CHECK (porcentagem_concluida::TEXT ~ '^[0-9]$|^[0-9]{2}$|^100$')
 );
 
 CREATE TABLE artefato_atividade
@@ -131,15 +132,16 @@ CREATE TABLE artefato_atividade
 	fk_atividade INTEGER NOT NULL,
 	fk_artefato INTEGER NOT NULL,
 	porcentagem_gerada INTEGER NOT NULL DEFAULT 0,
-	CONSTRAINT pk_artefato_atividade PRIMARY KEY (fk_atividade, fk_artefato)
+	CONSTRAINT pk_artefato_atividade PRIMARY KEY (fk_atividade, fk_artefato),
+	CONSTRAINT check_porcentagem_gerada CHECK (porcentagem_gerada::TEXT ~ '^[0-9]$|^[0-9]{2}$|^100$')
 );
 
-CREATE TABLE tentativas_de_login
+CREATE TABLE tentativa_de_login
 (
   fk_usuario INTEGER NOT NULL,
   tempo VARCHAR(30),	
   CONSTRAINT pk_tentativas_de_login PRIMARY KEY (fk_usuario),
-  CONSTRAINT fk_usuario_tentativas_de_login FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)
+  CONSTRAINT fk_usuario_tentativas_de_login FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
 );
 
 CREATE TABLE fale_conosco
@@ -193,7 +195,15 @@ CREATE TABLE nota
 	CONSTRAINT fk_usuario_nota FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
 );
 
---TODO IMAGEM;
+CREATE TABLE imagem
+(
+	id_imagem SERIAL,
+	sumario VARCHAR(100),
+	path VARCHAR(255) NOT NULL,
+	fk_comentario INTEGER,
+	CONSTRAINT pk_imagem PRIMARY KEY (id_imagem),
+	CONSTRAINT fk_comentario_imagem FOREIGN KEY (fk_comentario) REFERENCES comentario(id_comentario)
+);
 
 --TODO MENSAGEM;
 --TODO MENSAGEM_ENVIADA;
