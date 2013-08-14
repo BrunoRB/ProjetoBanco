@@ -1,0 +1,39 @@
+
+--INSERTS;
+
+--todos
+CREATE OR REPLACE FUNCTION faseCadastrar(nome VARCHAR(100), descricao TEXT, porcentagem_concluida INTEGER) RETURNS INTGER AS $$
+	DECLARE
+	
+	BEGIN
+	
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--sem descricao
+CREATE OR REPLACE FUNCTION faseCadastrar(nome VARCHAR(100), porcentagem_concluida INTEGER) RETURNS INTGER AS $$
+	DECLARE
+	
+	BEGIN
+	
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--END INSERTS;
+
+--DELETES;
+
+CREATE OR REPLACE FUNCTION faseExcluir (id INTEGER) RETURNS INTEGER AS $$
+	BEGIN
+		DELETE FROM fase WHERE id_fase = id;
+		IF (FOUND) THEN
+			RETURN 1;
+		END IF;
+		
+		RETURN 0;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--END DELETES;
+
+
