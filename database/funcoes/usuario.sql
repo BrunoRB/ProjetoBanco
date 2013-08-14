@@ -1,99 +1,69 @@
-CREATE OR REPLACE FUNCTION usuarioInsert (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, tipo INTEGER)
-RETURNS INTEGER AS $usuarioInsert$
+CREATE OR REPLACE FUNCTION usuarioCadastrar (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, inatividade DATE)
+RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (id_usuario, nome, login, senha, inativo, fk_tipo)
-		VALUES (id, nome, login, senha, inativo, tipo) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (id_usuario, nome, login, senha, inativo, data_inatividade)
+		VALUES (id, nome, login, senha, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
 		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
 		RETURN 0;
 END;
-$usuarioInsert$ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION usuarioInsert (nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, tipo INTEGER)
-RETURNS INTEGER AS $usuarioInsert$
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, inatividade DATE)
+RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (nome, login, senha, inativo, fk_tipo)
-		VALUES (nome, login, senha, inativo, tipo) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (nome, login, senha, inativo, data_inatividade)
+		VALUES (nome, login, senha, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
 		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
 		RETURN 0;
 END;
-$usuarioInsert$ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION usuarioInsert (nome VARCHAR, login VARCHAR, senha VARCHAR, tipo INTEGER)
-RETURNS INTEGER AS $usuarioInsert$
+
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR)
+RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (nome, login, senha, fk_tipo)
-		VALUES (nome, login, senha, tipo) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (nome, login, senha)
+		VALUES (nome, login, senha) RETURNING id_usuario INTO id_gerada;
 		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
 		RETURN 0;
 END;
-$usuarioInsert$ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
 
 
 
-CREATE OR REPLACE FUNCTION usuarioUpdate (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, tipo INTEGER)
-RETURNS INTEGER AS $usuarioUpdate$
+
+CREATE OR REPLACE FUNCTION usuarioExcluir (id INTEGER)
+RETURNS INTEGER AS $$
 DECLARE
-	confirm INT;
+	inatividade DATE;
 BEGIN 
-UPDATE usuario SET nome = nome, login = login, senha = senha, inativo = inativo, fk_tipo = tipo WHERE id_usuario = (id);
-		RETURN confirm;
+	inatividade := now();
+	UPDATE usuario SET inativo = TRUE, data_inatividade = inatividade WHERE id_usuario = (id);
+	IF (FOUND) THEN
+		RETURN 1;
+	ELSE
+		RETURN 0;
+	END IF;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
 		RETURN 0;
 END;
-$usuarioUpdate$ LANGUAGE PLPGSQL;
-
-
-CREATE OR REPLACE FUNCTION usuarioUpdate (id INTEGER, inativo BOOLEAN)
-RETURNS INTEGER AS $usuarioUpdate$
-DECLARE
-	confirm INT;
-BEGIN 
-UPDATE usuario SET inativo = inativo WHERE id_usuario = (id);
-		RETURN confirm;
-EXCEPTION 
-	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
-		RETURN 0;
-END;
-$usuarioUpdate$ LANGUAGE PLPGSQL;
-
-
-
-CREATE OR REPLACE FUNCTION usuarioDelete (id INTEGER)
-RETURNS INTEGER AS $usuarioDel$
-DECLARE
-	confirm INT;
-BEGIN 
-	DELETE FROM usuario WHERE id_usuario = (id);
-		RETURN confirm;
-EXCEPTION 
-	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE 'Check violation: Parametros de entrada 
-			nao correspondem as exigencias dos atributos.';
-		RETURN 0;
-END;
-$usuarioDel$ LANGUAGE PLPGSQL;
+$$ LANGUAGE PLPGSQL;
