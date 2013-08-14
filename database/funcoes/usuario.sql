@@ -51,11 +51,8 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION usuarioExcluir (id INTEGER)
 RETURNS INTEGER AS $$
-DECLARE
-	inatividade DATE;
 BEGIN 
-	inatividade := now();
-	UPDATE usuario SET inativo = TRUE, data_inatividade = inatividade WHERE id_usuario = (id);
+	UPDATE usuario SET inativo = TRUE, data_inatividade = CURRENT_DATE WHERE id_usuario = (id);
 	IF (FOUND) THEN
 		RETURN 1;
 	ELSE
