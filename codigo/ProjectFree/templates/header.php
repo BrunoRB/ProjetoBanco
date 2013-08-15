@@ -3,6 +3,8 @@
 /**
  *
  */
+require_once '../util/PostgresConnect.php';
+
 class Header{
 
 	public static function loadHead($title) {
@@ -26,10 +28,9 @@ class Header{
 	<body>
 		<header>
 			<?php
-			if (true) {
+			if (false) {
 					?>
 				<div class="pagination-centered">
-					<h1>ProjectFree</h1>
 					<nav class="navbar-inverse">
 						<div class="navbar navbar-fixed-top navbar-inner ">
 							<a class="brand" href="<?php echo $urlApps;?>index.php"><i class="icon-home"></i></a>
@@ -43,18 +44,17 @@ class Header{
 							</ul>
 						</div>
 					</nav>
+					<h1>ProjectFree</h1>
 				</div>
 				<?php
 			}
 			else {
 				?>
 				<div class="pagination-centered">
-					<h1 class="text-">ProjectFree</h1>
 					<nav class="navbar-inverse">
 						<div class="navbar navbar-fixed-top navbar-inner ">
-							<a class="brand" href="<?php echo $urlApps;?>index.php">Project Free</a>
+							<a class="brand" href="<?php echo $urlApps;?>index.php"><i class="icon-home"></i></a>
 							<ul class="nav">
-								<li><a href="/ProjectFree/application/index.php">Home</a></li>
 								<li><a href="/ProjectFree/application/sobre.php">Sobre</a></li>
 								<li><a href="/ProjectFree/application/faleconosco.php">Fale conosco</a></li>
 							</ul>
@@ -64,6 +64,7 @@ class Header{
 							</ul>
 						</div>
 					</nav>
+					<h1>ProjectFree</h1>
 				</div>
 			<?php
 			}
