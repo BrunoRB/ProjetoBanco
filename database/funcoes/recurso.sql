@@ -1,44 +1,76 @@
-CREATE OR REPLACE function recursoInsert(idR int, nomeR varchar(250), descricaoR varchar(250)) RETURNS integer AS $fun$
-DECLARE
-	id_gerada INTEGER;
-BEGIN
-	INSERT INTO recurso(id, nome, descricao) VALUES(idR, nomeR, descricaoR)
-	RETURNING id_projeto INTO id_gerada;
-	RETURN id_gerada;
-END;
-$fun$ LANGUAGE 'plpgsql';
+--INSERTS
 
-CREATE OR REPLACE function recursoUpdate(idR int, nomeR varchar(250), descricaoR varchar(250)) RETURNS integer AS $fun$
-DECLARE
-	id_gerada INTEGER;
-BEGIN
-	UPDATE recurso
-	SET nome = nomeR, 
-		descricao = descricaoR
-	WHERE id = idR
-	RETURNING id_projeto INTO id_gerada;
-	RETURN id_gerada;
-END;
-$fun$ LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION recursoCadastrar (nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_despesa INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE
+		cod_recurso INTEGER;
+	BEGIN
+		INSERT INTO recurso (nome, descricao, fk_projeto, fk_despesa) 
+		VALUES (nome_p, descricao_p, id_projeto, id_despesa) RETURNING id_recurso INTO cod_recurso;
+		RETURN cod_recurso;
+	END;
+$$ LANGUAGE PLPGSQL
 
-CREATE OR REPLACE function recursoDelete(idR int) RETURNS integer AS $fun$
-DECLARE
-	id_gerada INTEGER;
-BEGIN
-	DELETE FROM recurso
-	WHERE id = idR
-	RETURNING id_projeto INTO id_gerada;
-	RETURN id_gerada;
-END;
-$fun$ LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION recursoCadastrarSemDespesa (nome_p VARCHAR (100), descricao_p TEXT, id_projeto INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE 
+		cod_recurso INTEGER;
+	BEGIN
+		INSERT INTO recurso (nome, descricao, fk_projeto)
+		VALUES (nome_p, descricao_p, id_projeto) RETURNING id_recurso INTO cod_recurso;
+		RETURN cod_recurso;
+	END;
+$$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE function listaRecurso() RETURNS SETOF recurso AS $fun$
-DECLARE 
-	result recurso%ROWTYPE;
-BEGIN
-	FOR result IN SELECT id, nome, descricao FROM recurso LOOP
-		RETURN NEXT result;
-	END LOOP;
-	RETURN;
-END;
-$fun$ LANGUAGE 'plpgsql';
+CREATE OR REPLACE FUNCTION recursoCadastraSemDescricao (nome_p VARCHAR(100), id_projeto INTEGER, id_despesa INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE
+		cod_recurso INTEGER;
+	BEGIN
+		INSERT INTO recurso (nome, fk_projeto, fk_despesa)
+		VALUES (nome_p, id_projeto, id_despesa) RETURNING id_recurso INTO cod_recurso;
+		RETURN cod_recurso;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION recursoCadastraSemDescricaoDespesa (nome_p VARCHAR(100), id_projeto INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE 
+		cod_recurso INTEGER;
+	BEGIN
+		INSERT INTO recurso (nome, fk_projeto)
+		VALUES (nome_p, id_projeto) RETURNING id_recurso INTO cod_recurso;
+		RETURN cod_recurso;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--END INSERTS
+
+--UPDATE
+
+CREATE OR REPLACE FUNCTION recursoAtualizar (id INTEGER, campos TEXT, valores TEXT)
+RETURNS INTEGER AS $$
+	DECLARE 
+		retorno INTEGER;
+	BEGIN
+		RETURN (retorno := generealUpdate(recurso, id, campos, valores));
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--END UPDATE
+
+--DELETE
+
+CREATE OR REPLACE FUNCTION recursoExcluir(id INTEGER)
+RETURNS INTEGER AS $$
+	BEGIN
+		DELETE FROM recurso WHERE id_recurso = id;
+		IF (FOUND) THEN
+			RETURN 1;
+		ELSE
+			RETURN 0;
+		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--END DELETE
