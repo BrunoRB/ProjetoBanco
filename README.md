@@ -34,7 +34,7 @@ Atuais tasks:
 		<th>Completa?</th>
 	</tr>
 	<tr>
-		<td>Fabricio</td>
+		<td>Rafael Ebara</td>
 		<td>Não</td>
 	</tr>
 </table>
@@ -48,6 +48,19 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Maikon</td>
+		<td>Não</td>
+	</tr>
+</table>
+
+- Documento de visão e escopo.
+
+<table>
+	<tr>
+		<th>Responsável</th>
+		<th>Completa?</th>
+	</tr>
+	<tr>
+		<td>Roberto</td>
 		<td>Não</td>
 	</tr>
 </table>

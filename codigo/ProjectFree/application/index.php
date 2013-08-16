@@ -1,6 +1,6 @@
 <?php
 
-include_once '../templates/body.php';
+require_once '../templates/body.php';
 
 class Index extends Body {
 	public function __construct() {
@@ -24,6 +24,7 @@ class Index extends Body {
 			</div>
 
 		</div>
+
 		<?php
 	}
 
