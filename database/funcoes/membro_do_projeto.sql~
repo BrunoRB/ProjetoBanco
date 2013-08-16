@@ -5,7 +5,7 @@ RETURNS INTEGER AS $$
 	DECLARE 
 		cod_membroDoProjeto INTEGER;
 	BEGIN
-		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao) 
+		INSERT INTO membro_do_projeto (fk_projeto, fk_membro, funcao) 
 		VALUES (projeto_p, membro_p, funcao_p) RETURNING id_membro_do_projeto INTO cod_membroDoProjeto;
 		RETURN cod_membroDoProjeto;
 	END;

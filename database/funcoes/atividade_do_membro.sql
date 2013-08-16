@@ -5,12 +5,9 @@ CREATE OR REPLACE FUNCTION atividadeAtribuir(id_membro INTEGER, id_atividade INT
 	DECLARE
 		id_gerada INTEGER;
 	BEGIN
-		INSERT INTO atividade_do_membro VALUES (id_membro, id_atividade);
-		IF (FOUND) THEN
-			RETURN 1;
-		ELSE
-			RETURN 0;
-		END IF;
+		INSERT INTO atividade_do_membro (fk_membro_do_projeto, fk_atividade)
+		VALUES (id_membro, id_atividade) RETURNING id_atividade_do_membro INTO id_gerada;
+		RETURN id_gerada;
 	END;
 $$ LANGUAGE PLPGSQL;
 

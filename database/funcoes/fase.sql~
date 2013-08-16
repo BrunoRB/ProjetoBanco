@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, 
 $$ LANGUAGE PLPGSQL;
 
 --sem predecessora
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(nome VARCHAR(100), descricao TEXT) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT) 
 $$ LANGUAGE PLPGSQL;
 
 --sem descricao
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_predecessora INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(nome VARCHAR(100), id_predecessora INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
@@ -35,7 +35,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_predecessora IN
 $$ LANGUAGE PLPGSQL;
 
 --sem descricao e predecessora
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(nome VARCHAR(100)) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
