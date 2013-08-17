@@ -13,13 +13,11 @@ CREATE TABLE usuario
   login CHARACTER VARYING(100) NOT NULL,
   senha CHARACTER VARYING(255) NOT NULL,
   inativo BOOLEAN NOT NULL DEFAULT FALSE,
-  email CHARACTER VARYING(255) NOT NULL,
   data_inatividade DATE,
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_login UNIQUE (login),
   CONSTRAINT check_login_length CHECK (login ~ '\w{5,100}'),
-  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,255}'),
-  CONSTRAINT check_email_format CHECK (email ~ '^\w+(\.\w+)*+@\w+(\.\w+)+$')
+  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,255}')
 );
 
 CREATE TABLE projeto
