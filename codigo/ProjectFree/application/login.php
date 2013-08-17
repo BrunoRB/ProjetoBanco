@@ -1,6 +1,6 @@
 <?php
 
-include_once '../templates/body.php';
+require_once '../templates/body.php';
 
 class Login extends Body {
 
