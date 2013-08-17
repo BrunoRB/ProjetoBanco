@@ -40,7 +40,7 @@ class Projeto extends Main {
 				<input id="login" type="text" placeholder="Login" name="login" />
 				<label for="senha">Senha: </label>
 				<input id="senha" type="password" placeholder="Senha" name="senha" /> <br />
-				<button type="submit" class="btn btn-success btn-medium" name="submit">Cadastrar</button>
+				<button type="submit" class="btn btn-success btn-medium" name="submit">Salvar</button>
 			</form>
 		</div>
 		<?php

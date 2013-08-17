@@ -19,11 +19,22 @@ class Header{
 		<link rel="stylesheet" href="/ProjectFree/resources/fonts/font-awesome/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/css/main.css" />
 		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/css/smoothness/jquery-ui-1.10.3.custom.css" />
-		<?php if (isset(self::$extraHeader)) foreach (self::$extraHeader as $extra) echo $extra; ?>
-		<script type="text/javascript" src="/ProjectFree/resources/js/jquery-2.0.2.js"></script>
+		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/cleditor/jquery.cleditor.css" />
+
+		<script type="text/javascript" src="/ProjectFree/resources/js/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/ProjectFree/resources/js/jquery-ui-1.10.3.custom.js"></script>
 		<script type="text/javascript" src="/ProjectFree/resources/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/ProjectFree/resources/cleditor/jquery.cleditor.min.js"></script>
 		<script type="text/javascript" src="/ProjectFree/resources/js/projectfree.js"></script>
+
+		<?php
+		if (isset(self::$extraHeader)) {
+			foreach (self::$extraHeader as $extra) {
+				echo $extra;
+			}
+		}
+		?>
+
 	</head>
 	<body>
 		<header>

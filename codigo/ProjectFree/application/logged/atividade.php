@@ -26,7 +26,10 @@ class Atividade extends Main {
 		<div class="container">
 			<form action="<?php echo SAVE_FILE;?>" method="post">
 				Nome da atividade:
-				<input type="text" data-type="text" placeholder="Nome" name="nome" /> <br>
+				<input type="text" data-type="text-simple" placeholder="Nome" name="nome" /> <br>
+
+				Descrição:
+				<textarea data-type="text-multi" name="descricao"></textarea> <br>
 
 				Data de início:
 				<input type="text" data-type="timestamp" placeholder="xx/xx/xxxx" name="dataInicio" /> <br>
@@ -34,12 +37,17 @@ class Atividade extends Main {
 				Data limite:
 				<input type="text" data-type="timestamp" placeholder="xx/xx/xxxx" name="dataLimite" /> <br>
 
+				Atividade predecessora:
+				<select>
+					<option>asdf</option>
+				</select> <br>
+
 				Fase do processo:
 				<select>
 					<option>asdf</option>
 				</select> <br>
 
-				<button type="submit" class="btn btn-success btn-medium" name="submit">Cadastrar</button>
+				<button type="submit" class="btn btn-primary btn-medium" name="submit">Salvar</button>
 			</form>
 		</div>
 		<?php

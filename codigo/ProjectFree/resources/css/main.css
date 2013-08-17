@@ -4,6 +4,7 @@ body {
     background: url(../img/blue.jpg) no-repeat center center fixed;
     background-size: cover;
 	margin: 4% !important;
+	color: white;
 }
 
 h1 {
@@ -16,6 +17,7 @@ h1 {
     outline: 0 none;
     color: black;
     text-shadow: -1px 1px 8px #ffc, 1px -1px 8px #fff;
+    margin-bottom: 4%;
     
 }
 
@@ -38,4 +40,8 @@ footer.footer {
 
 .white {
 	color: white;
+}
+
+table.table-hover-mod tbody tr:hover {
+	background-color: black;
 }
