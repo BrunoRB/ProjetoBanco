@@ -1,13 +1,13 @@
 
 
-CREATE OR REPLACE FUNCTION membroCadastrarEmProjeto(funcao VARCHAR(100), projeto INTEGER, membro INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION membroCadastrarEmProjeto(projeto_p INTEGER, membro_p INTEGER, funcao_p VARCHAR(100)) 
+RETURNS INTEGER AS $$
+	DECLARE 
+		cod_membroDoProjeto INTEGER;
 	BEGIN
-		INSERT INTO membro_do_projeto VALUES (funcao, projeto, membro);
-		IF (FOUND) THEN
-			RETURN 1;
-		ELSE
-			RETURN 0;
-		END IF;
+		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao) 
+		VALUES (projeto_p, membro_p, funcao_p) RETURNING id_membro_do_projeto INTO cod_membroDoProjeto;
+		RETURN cod_membroDoProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
 

@@ -1,19 +1,22 @@
 
 --INSERTS;
 
-CREATE OR REPLACE FUNCTION atribuirAtividade (id_membro INTEGER, id_atividade INTEGER)
-	RETURNS INTEGER AS $$
-BEGIN
-	INSERT INTO atividade_membro VALUES (id_membro, id_atividade);
-	RETURN 1;
-END;
+CREATE OR REPLACE FUNCTION atividadeAtribuir (id_membro INTEGER, id_atividade INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE
+		cod_atividade_do_membro INTEGER;	
+	BEGIN
+		INSERT INTO atividade_do_membro (fk_membro_do_projeto, fk_atividade) 
+		VALUES (id_membro, id_atividade) RETURNING id_atividade_do_membro INTO cod_atividade_do_membro;
+		RETURN cod_atividade_do_membro;
+	END;
 $$ LANGUAGE PLPGSQL;
 
 --UPDATES;
-CREATE OR REPLACE FUNCTION desatribuirAtividade (id_membro INTEGER, id_atividade INTEGER)
+CREATE OR REPLACE FUNCTION atividadeDesatribuir (id_membro INTEGER, id_atividade INTEGER)
 RETURNS INTEGER AS $$
 BEGIN
-	DELETE FROM atividade_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
+	DELETE FROM atividade_do_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
 	RETURN 1;
 END;
 $$ LANGUAGE PLPGSQL;
