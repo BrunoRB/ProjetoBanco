@@ -13,7 +13,7 @@ class Atividade extends Main {
 			$this->salvarAtividade();
 		}
 		else {
-			if (true) { //TODO Check gerente do projeto
+			if (false) { //TODO Check gerente do projeto
 				$this->atividadesGerente();
 			}
 			else {
@@ -123,8 +123,48 @@ class Atividade extends Main {
 
 	private function atividadesMembro() {
 		?>
-
+		<div class="row-fluid">
+			<div class="span7 collapse-group accordion-group" id="emAndamento">
+				<table class="table table-hover-mod">
+				 	<caption>
+				 		<a data-toggle="collapse" data-target="#emAndamento">Minhas atividades</a>
+				 	</caption>
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Iníciada em</th>
+							<th>Data limite</th>
+							<th>Atrubuída em</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Definição do escopo</td>
+							<td>xx/xx/xxxx</td>
+							<td>xx/xx/xxxx</td>
+							<td>xx/xx/xxxx</td>
+						</tr>
+						<tr>
+							<td>Protótipos de tela</td>
+							<td>xx/xx/xxxx</td>
+							<td>xx/xx/xxxx</td>
+							<td>xx/xx/xxxx</td>
+						</tr>
+						<tr>
+							<td>Documento de visão e escopo</td>
+							<td>xx/xx/xxxx</td>
+							<td>xx/xx/xxxx</td>
+							<td>xx/xx/xxxx</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		<?php
+	}
+
+	private function exibirAtividade() {
+
 	}
 
 	private function salvarAtividade() {
@@ -153,7 +193,7 @@ class Atividade extends Main {
 					<option>asdf</option>
 				</select> <br>
 
-				<button type="submit" class="btn btn-primary btn-medium" name="submit">Salvar</button>
+				<button type="submit" class="btn btn-primary btn-large" name="submit">Salvar</button>
 			</form>
 		</div>
 		<?php

@@ -20,9 +20,11 @@ class Fase extends Main {
 	private function membros() {
 		?>
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span7 collapse-group accordion-group" id="membros">
 				<table class="table table-hover-mod">
-				 	<caption>Membros participantes no projeto</caption>
+				 	<caption>
+				 		<a data-toggle="collapse" data-target="#membros">Membros do projeto</a>
+				 	</caption>
 					<thead>
 						<tr>
 							<th>Nome</th>
@@ -62,12 +64,12 @@ class Fase extends Main {
 					</tbody>
 				</table>
 			</div>
-			<div class="span6">
+			<div class="span4">
 				<form action="<?php echo SAVE_FILE;?>" method="post">
 					Convidar membro:
 					<input type="text" class="input-xlarge" data-type="text-autocomplete" placeholder="Comece a digitar" name="membro" /> <br>
 
-					<button type="submit" class="btn btn-primary btn-medium" name="submit">Convidar</button>
+					<button type="submit" class="btn btn-primary btn-large" name="submit">Convidar</button>
 
 				</form>
 			</div>
