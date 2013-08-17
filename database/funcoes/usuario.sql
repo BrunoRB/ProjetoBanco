@@ -1,10 +1,10 @@
-CREATE OR REPLACE FUNCTION usuarioCadastrar (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, inatividade DATE)
+CREATE OR REPLACE FUNCTION usuarioCadastrar (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, email VARCHAR, inativo BOOLEAN, inatividade DATE)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (id_usuario, nome, login, senha, inativo, data_inatividade)
-		VALUES (id, nome, login, md5(senha), inativo, inatividade) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (id_usuario, nome, login, senha, email, inativo, data_inatividade)
+		VALUES (id, nome, login, md5(senha), email, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
 		RAISE NOTICE 'Usuário cadastrado com sucesso!';
 		RETURN id_gerada;
 EXCEPTION 
@@ -15,13 +15,13 @@ END;
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR, inativo BOOLEAN, inatividade DATE)
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR, email VARCHAR, inativo BOOLEAN, inatividade DATE)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (nome, login, senha, inativo, data_inatividade)
-		VALUES (nome, login, md5(senha), inativo, inatividade) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (nome, login, senha, email, inativo, data_inatividade)
+		VALUES (nome, login, md5(senha), email, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
 		RAISE NOTICE 'Usuário cadastrado com sucesso!';
 		RETURN id_gerada;
 EXCEPTION 
@@ -33,13 +33,13 @@ $$ LANGUAGE PLPGSQL;
 
 
 
-CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR)
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR, email VARCHAR)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (nome, login, senha)
-		VALUES (nome, login, md5(senha)) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (nome, login, senha, email)
+		VALUES (nome, login, md5(senha), email) RETURNING id_usuario INTO id_gerada;
 		RAISE NOTICE 'Usuário cadastrado com sucesso!';
 		RETURN id_gerada;
 EXCEPTION 
