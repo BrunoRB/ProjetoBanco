@@ -30,8 +30,8 @@ $(document).ready(function() {
 	/*
 	 * Spinner settings and initialization
 	 */
-	
 	$('input[data-type="text-number"]').spinner({
 		min: 0, max: 100
 	});
+	
 });

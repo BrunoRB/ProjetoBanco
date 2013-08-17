@@ -41,7 +41,3 @@ footer.footer {
 .white {
 	color: white;
 }
-
-table.table-hover-mod tbody tr:hover {
-	background-color: black;
-}

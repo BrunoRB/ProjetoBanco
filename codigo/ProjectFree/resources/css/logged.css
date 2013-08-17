@@ -1,2 +1,20 @@
 
 
+table caption a {
+	color: black;
+	font-size: 150%;	
+}
+
+table caption a:hover {
+	cursor: pointer;
+	color: black;
+	opacity: 0.6;
+	text-decoration: none;
+}
+
+
+table.table-hover-mod tbody tr:hover {
+	background-color: black;
+	opacity: 0.7;
+}
+
