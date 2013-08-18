@@ -9,9 +9,9 @@ RETURNS INTEGER AS $$
 		VALUES (nome_p, descricao_p, id_projeto, id_despesa) RETURNING id_recurso INTO cod_recurso;
 		RETURN cod_recurso;
 	END;
-$$ LANGUAGE PLPGSQL
+$$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrarSemDespesa (nome_p VARCHAR (100), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_recurso INTEGER;
@@ -22,7 +22,7 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastraSemDescricao (nome_p VARCHAR(100), id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (nome_p VARCHAR(100), id_projeto INTEGER, id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_recurso INTEGER;
@@ -33,7 +33,7 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastraSemDescricaoDespesa (nome_p VARCHAR(100), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (nome_p VARCHAR(100), id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_recurso INTEGER;
@@ -53,7 +53,8 @@ RETURNS INTEGER AS $$
 	DECLARE 
 		retorno INTEGER;
 	BEGIN
-		RETURN (retorno := generealUpdate(recurso, id, campos, valores));
+		retorno := generealUpdate(recurso, id, campos, valores);
+		RETURN retorno;
 	END;
 $$ LANGUAGE PLPGSQL;
 

@@ -11,13 +11,13 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION artefatoCadastrarSemPorc (nome_p VARCHAR(100), tipo_p VARCHAR(100), descricao_p TEXT)
+CREATE OR REPLACE FUNCTION artefatoCadastrar (nome_p VARCHAR(100), tipo_p VARCHAR(100), descricao_p TEXT)
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_artefato INTEGER;
 	BEGIN
 		INSERT INTO artefato (nome, tipo, descricao)
-		VALUES (nome_p, tipo_p, descricao_p, porcentagem_concluida_p) RETURNING id_artefato INTO cod_artefato;
+		VALUES (nome_p, tipo_p, descricao_p) RETURNING id_artefato INTO cod_artefato;
 		RETURN cod_artefato;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -94,12 +94,13 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION artefatoAtualizar (id INTEGER, campos (TEXT), valores (TEXT))
+CREATE OR REPLACE FUNCTION artefatoAtualizar (id INTEGER, campos TEXT, valores TEXT)
 RETURNS INTEGER AS $$
 	DECLARE 
 		retorno INTEGER;
 	BEGIN
-		RETURN (retorno := generalUpdate(artefato, id, campos, valores));
+		retorno := generalUpdate(artefato, id, campos, valores);
+		RETURN retorno;
 	END;
 $$ LANGUAGE PLPGSQL;
 
