@@ -1,4 +1,4 @@
-\c postgres
+﻿\c postgres
 
 DROP DATABASE projectfree;
 
@@ -12,12 +12,15 @@ CREATE TABLE usuario
   nome CHARACTER VARYING(100) NOT NULL, 
   login CHARACTER VARYING(100) NOT NULL,
   senha CHARACTER VARYING(255) NOT NULL,
+  email CHARACTER VARYING(255) NOT NULL,
   inativo BOOLEAN NOT NULL DEFAULT FALSE,
   data_inatividade DATE,
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_login UNIQUE (login),
+  CONSTRAINT unique_email UNIQUE (email),
   CONSTRAINT check_login_length CHECK (login ~ '\w{5,100}'),
-  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,255}')
+  CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,255}'),
+  CONSTRAINT check_email_length CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$')
 );
 
 CREATE TABLE projeto
@@ -99,6 +102,7 @@ CREATE TABLE atividade
 CREATE TABLE atividade_do_membro
 (
 	id_atividade_do_membro SERIAL,
+	data_horario_atribuicao TIMESTAMP NOT NULL DEFAULT NOW(),
 	fk_membro_do_projeto INTEGER NOT NULL,
 	fk_atividade INTEGER NOT NULL,
 	CONSTRAINT pk_atividade_do_membro PRIMARY KEY (id_atividade_do_membro),
