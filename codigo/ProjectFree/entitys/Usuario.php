@@ -79,4 +79,11 @@ class Usuario {
 	    $this->fk_imagem = $fk_imagem;
 	}
 
+	public function checkLoginFields() {
+		if (isset($this->nome) && isset($this->login) && isset($this->senha)) {
+			return true;
+		}
+		return false;
+	}
+
 }
