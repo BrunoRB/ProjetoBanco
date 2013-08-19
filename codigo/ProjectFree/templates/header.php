@@ -57,7 +57,7 @@ class Header{
 				</div>
 				<?php
 			}
-			else if (false) {
+			else if (TRUE) {
 				?>
 				<div class="pagination-centered">
 					<nav class="navbar-inverse">

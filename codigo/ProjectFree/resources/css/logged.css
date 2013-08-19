@@ -22,3 +22,7 @@ div.collapse-group {
 	border: none;
 }
 
+.btn-large {
+	width: 200px;
+	font-family: sans-serif;
+}

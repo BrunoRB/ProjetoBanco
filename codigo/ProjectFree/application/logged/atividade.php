@@ -13,7 +13,7 @@ class Atividade extends Main {
 			$this->salvarAtividade();
 		}
 		else {
-			if (false) { //TODO Check gerente do projeto
+			if (true) { //TODO Check gerente do projeto
 				$this->atividadesGerente();
 			}
 			else {
@@ -178,10 +178,10 @@ class Atividade extends Main {
 				<textarea data-type="text-multi" name="descricao"></textarea> <br>
 
 				Data de início:
-				<input type="text" data-type="timestamp" placeholder="xx/xx/xxxx" name="dataInicio" /> <br>
+				<input type="text" data-type="timestamp" placeholder="dd/mm/aaaa" name="dataInicio" /> <br>
 
 				Data limite:
-				<input type="text" data-type="timestamp" placeholder="xx/xx/xxxx" name="dataLimite" /> <br>
+				<input type="text" data-type="timestamp" placeholder="dd/mm/aaaa" name="dataLimite" /> <br>
 
 				Atividade predecessora:
 				<select>
@@ -192,6 +192,9 @@ class Atividade extends Main {
 				<select>
 					<option>asdf</option>
 				</select> <br>
+
+				Membros da atividade
+				<input type="text" class="input-xlarge" data-type="text-autocomplete" placeholder="Comece a digitar" name="membro" /> <br>
 
 				<button type="submit" class="btn btn-primary btn-large" name="submit">Salvar</button>
 			</form>
