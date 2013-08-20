@@ -28,10 +28,10 @@ CREATE OR REPLACE FUNCTION generalUpdate(nome_tabela TEXT, id_atualizar INTEGER,
 		arrayValores VARCHAR(255) ARRAY;
 		countCamposAlterados INTEGER := 0;
 		tempVal TEXT;
-	BEGIN
+	BEGIN\! 
 		-- Remove all whitespaces
-		campos := REGEXP_REPLACE(campos, ',\s+', ',');
-		valores := REGEXP_REPLACE(valores, ',\s+', ',');
+		campos := REGEXP_REPLACE(campos, '"\s*,\s*"', ',');
+		valores := REGEXP_REPLACE(valores, ',\s*', ',');
 		
 		-- Divide as variáveis TEXT campos e valores em arrays onde cada posição é um valor
 		arrayCampos := REGEXP_SPLIT_TO_ARRAY(campos, ','); 
