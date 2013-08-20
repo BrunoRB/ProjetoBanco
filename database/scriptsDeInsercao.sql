@@ -26,10 +26,10 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_despesa1 INTEGER;
 		id_despesa2 INTEGER;
 	BEGIN
-		FOR i IN 1..10000 LOOP
+		FOR i IN 1..14000 LOOP
 			--cria gerente
-			email := 'gerente' || i || '@gerente.com';
-			id_gerente := usuarioCadastrar ('Gerente', 'gerente'|| i, 'admin', email);
+			email := ('gerente' || i || '@gerente.com');
+			id_gerente := usuarioCadastrar ('Gerente', email, 'admin');
 
 	 		--cria projeto
 			id_projeto := projetoCadastrar ('Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador');
@@ -38,11 +38,11 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 
 			--cria membros
 			email := 'membro' || i || 'a@membro.com';
-			id_membro1 := usuarioCadastrar ('Membro1', 'Membro_a'|| i, 'admin', email); --cria membro 1
+			id_membro1 := usuarioCadastrar ('Membro1', email, 'membro'); --cria membro 1
 			email := 'membro' || i || 'b@membro.com';
-			id_membro2 := usuarioCadastrar ('Membro2', 'Membro_b'|| i, 'admin', email); --cria membro 2
+			id_membro2 := usuarioCadastrar ('Membro2', email, 'membro'); --cria membro 2
 			email := 'membro' || i || 'c@membro.com';
-			id_membro3 := usuarioCadastrar ('Membro3', 'Membro_c'|| i, 'admin', email); --cria membro 3
+			id_membro3 := usuarioCadastrar ('Membro3', email, 'membro'); --cria membro 3
 			--aloca membros ao projeto
 			membro_projeto1 := membroCadastrarEmProjeto (id_projeto, id_membro1, 'membro');	
 			membro_projeto2 := membroCadastrarEmProjeto (id_projeto, id_membro2, 'membro');
@@ -112,9 +112,9 @@ CREATE OR REPLACE FUNCTION deleteData() RETURNS BOOLEAN AS $$
 
 		DELETE FROM membro_do_projeto;
 
-		DELETE FROM despesa;
-
 		DELETE FROM recurso;
+
+		DELETE FROM despesa;
 
 		DELETE FROM projeto;
 
