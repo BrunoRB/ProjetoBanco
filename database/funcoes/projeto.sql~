@@ -49,23 +49,6 @@ $$ LANGUAGE PLPGSQL;
 
 --END INSERTS;
 
---UPDATE
-
-CREATE OR REPLACE FUNCTION projetoAtualizar (id INTEGER, nome_p VARCHAR(100), orcamento_p NUMERIC(11,2), dataCadastro DATE, descricao_p TEXT, dataTermino DATE)
-RETURNS INTEGER AS $$
-	BEGIN
-		UPDATE projeto SET nome = nome_p, orcamento = orcamento_p, data_de_cadastro = dataCadastro, descricao = descricao_p, data_de_termino = dataTermino
-		WHERE id_projeto = id;
-		IF (FOUND) THEN
-			RETURN 1;
-		ELSE
-			RETURN 0;
-		END IF;
-	END;
-$$ LANGUAGE PLPGSQL;
-
---END UPDATE
-
 --DELETES;
 
 CREATE OR REPLACE FUNCTION projetoExcluir (id INTEGER)	RETURNS INTEGER AS $$

@@ -26,13 +26,16 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATE
 
-CREATE OR REPLACE FUNCTION despesaAtualizar(id INTEGER, campos TEXT, valores TEXT)
+CREATE OR REPLACE FUNCTION despesaAtualizar(id INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE
-		retorno INTEGER;
 	BEGIN
-		retorno := generalUpdate(despesa, id, campos, valores);
-		RETURN retorno;
+		UPDATE despesa SET nome = nome_p, calor = valor_p, descricao = descricao_p, fk_projeto = id_projeto
+		WHERE id_despesa = id;
+		IF (FOUND) THEN
+			RETURN 1;
+		ELSE
+			RETURN 0;
+		END IF; 
 	END;
 $$ LANGUAGE PLPGSQL;
 

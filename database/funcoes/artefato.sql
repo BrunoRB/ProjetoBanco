@@ -94,13 +94,16 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION artefatoAtualizar (id INTEGER, campos TEXT, valores TEXT)
+CREATE OR REPLACE FUNCTION artefatoAtualizar (id INTEGER, nome_p VARCHAR(100), tipo_p VARCHAR(100), descricao_p TEXT, porc INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE 
-		retorno INTEGER;
 	BEGIN
-		retorno := generalUpdate(artefato, id, campos, valores);
-		RETURN retorno;
+		UPDATE artefato SET nome = nome_p, tipo = tipo_p, descricao = descricao_p, porcentagem_concluida = porc
+		WHERE id_artefato = id;
+		IF (FOUND) THEN
+			RETURN 1;
+		ELSE
+			RETURN 0;
+		END IF;
 	END;
 $$ LANGUAGE PLPGSQL;
 
