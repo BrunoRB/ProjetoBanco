@@ -22,7 +22,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Rafael Ebara</td>
-		<td>Não</td>
+		<td>Inicado</td>
 	</tr>
 </table>
 
@@ -35,7 +35,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Rafael Ebara</td>
-		<td>Não</td>
+		<td>Inicado</td>
 	</tr>
 </table>
 
@@ -48,7 +48,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Maikon</td>
-		<td>Não</td>
+		<td>Requer alterações constantes</td>
 	</tr>
 </table>
 
@@ -61,7 +61,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Roberto</td>
-		<td>Não</td>
+		<td>Inicado</td>
 	</tr>
 </table>
 
