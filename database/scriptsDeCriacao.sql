@@ -18,7 +18,6 @@ CREATE TABLE usuario
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_imagem UNIQUE (imagem),
   CONSTRAINT unique_email UNIQUE (email),
-  CONSTRAINT check_login_length CHECK (login ~ '\w{5,100}'),
   CONSTRAINT check_senha_length CHECK (senha ~ '\w{5,255}'),
   CONSTRAINT check_email_length CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$')
 );
