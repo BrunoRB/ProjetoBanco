@@ -1,52 +1,69 @@
 --INSERTS;
 
 --todos;
-CREATE OR REPLACE FUNCTION usuarioCadastrar (id INTEGER, nome VARCHAR, login VARCHAR, senha VARCHAR, email VARCHAR, inativo BOOLEAN, inatividade DATE)
+CREATE OR REPLACE FUNCTION usuarioCadastrar (id INTEGER, nome VARCHAR, senha VARCHAR, email VARCHAR, imagem VARCHAR,inativo BOOLEAN, inatividade DATE)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (id_usuario, nome, login, senha, email, inativo, data_inatividade)
-		VALUES (id, nome, login, md5(senha), email, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (id_usuario, nome, senha, email, imagem, inativo, data_inatividade)
+		VALUES (id, nome, md5(senha), email, imagem, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
 		RAISE NOTICE 'Usuário cadastrado com sucesso!';
 		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos!';
 		RETURN 0;
 END;
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR, email VARCHAR, inativo BOOLEAN, inatividade DATE)
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, senha VARCHAR, email VARCHAR, imagem VARCHAR, inativo BOOLEAN, inatividade DATE)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (nome, login, senha, email, inativo, data_inatividade)
-		VALUES (nome, login, md5(senha), email, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (nome, senha, email, imagem, inativo, data_inatividade)
+		VALUES (nome, md5(senha), email, imagem, inativo, inatividade) RETURNING id_usuario INTO id_gerada;
 		RAISE NOTICE 'Usuário cadastrado com sucesso!';
 		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos!';
 		RETURN 0;
 END;
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, login VARCHAR, senha VARCHAR, email VARCHAR)
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, senha VARCHAR, email VARCHAR, imagem VARCHAR)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 BEGIN 
-	INSERT INTO usuario (nome, login, senha, email)
-		VALUES (nome, login, md5(senha), email) RETURNING id_usuario INTO id_gerada;
+	INSERT INTO usuario (nome, senha, email, imagem)
+		VALUES (nome, md5(senha), email, imagem) RETURNING id_usuario INTO id_gerada;
 		RAISE NOTICE 'Usuário cadastrado com sucesso!';
 		RETURN id_gerada;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos!';
+		RETURN 0;
+END;
+$$ LANGUAGE PLPGSQL;
+
+
+CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, senha VARCHAR, email VARCHAR)
+RETURNS INTEGER AS $$
+DECLARE
+	id_gerada INT;
+BEGIN 
+	INSERT INTO usuario (nome, senha, email)
+		VALUES (nome, md5(senha), email) RETURNING id_usuario INTO id_gerada;
+		RAISE NOTICE 'Usuário cadastrado com sucesso!';
+		RETURN id_gerada;
+EXCEPTION 
+	WHEN CHECK_VIOLATION THEN
+		RAISE NOTICE '[Erro] Dados inválidos inseridos!';
 		RETURN 0;
 END;
 $$ LANGUAGE PLPGSQL;
@@ -69,7 +86,7 @@ BEGIN
 	END IF;
 EXCEPTION 
 	WHEN CHECK_VIOLATION THEN
-		RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+		RAISE NOTICE '[Erro] Dados inválidos inseridos!';
 		RETURN 0;
 END;
 $$ LANGUAGE PLPGSQL;
@@ -79,13 +96,13 @@ $$ LANGUAGE PLPGSQL;
 
 --LOGIN;
 
-CREATE OR REPLACE FUNCTION logar (logon VARCHAR, password VARCHAR)
+CREATE OR REPLACE FUNCTION logar (login VARCHAR, password VARCHAR)
 RETURNS INTEGER AS $$
 DECLARE
 	id_gerada INT;
 	name VARCHAR;
 BEGIN 
-	SELECT INTO id_gerada, name id_usuario, nome FROM usuario WHERE login = logon AND senha = md5(password);
+	SELECT INTO id_gerada, name id_usuario, nome FROM usuario WHERE email = login AND senha = md5(password);
 	IF (FOUND) THEN
 		RAISE NOTICE 'Olá, %', name;
 		RETURN id_gerada;
