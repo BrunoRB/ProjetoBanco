@@ -22,7 +22,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Rafael Ebara</td>
-		<td>Inicado</td>
+		<td>Iniciado</td>
 	</tr>
 </table>
 
@@ -35,7 +35,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Rafael Ebara</td>
-		<td>Inicado</td>
+		<td>Iniciado</td>
 	</tr>
 </table>
 
@@ -61,7 +61,7 @@ Atuais tasks:
 	</tr>
 	<tr>
 		<td>Roberto</td>
-		<td>Inicado</td>
+		<td>Iniciado</td>
 	</tr>
 </table>
 
