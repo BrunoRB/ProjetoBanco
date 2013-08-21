@@ -7,7 +7,12 @@ RETURNS INTEGER AS $$
 	BEGIN
 		INSERT INTO recurso (nome, descricao, fk_projeto, fk_despesa) 
 		VALUES (nome_p, descricao_p, id_projeto, id_despesa) RETURNING id_recurso INTO cod_recurso;
+		RAISE NOTICE 'Recurso cadastrado com sucesso!';
 		RETURN cod_recurso;
+	EXCEPTION 
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION 'Falha ao cadastrar recurso!';
+			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -18,7 +23,12 @@ RETURNS INTEGER AS $$
 	BEGIN
 		INSERT INTO recurso (nome, descricao, fk_projeto)
 		VALUES (nome_p, descricao_p, id_projeto) RETURNING id_recurso INTO cod_recurso;
+		RAISE NOTICE 'Recurso cadastrado com sucesso!';
 		RETURN cod_recurso;
+	EXCEPTION 
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION 'Falha ao cadastrar recurso!';
+			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -29,7 +39,12 @@ RETURNS INTEGER AS $$
 	BEGIN
 		INSERT INTO recurso (nome, fk_projeto, fk_despesa)
 		VALUES (nome_p, id_projeto, id_despesa) RETURNING id_recurso INTO cod_recurso;
+		RAISE NOTICE 'Recurso cadastrado com sucesso!';
 		RETURN cod_recurso;
+	EXCEPTION 
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION 'Falha ao cadastrar recurso!';
+			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -40,7 +55,12 @@ RETURNS INTEGER AS $$
 	BEGIN
 		INSERT INTO recurso (nome, fk_projeto)
 		VALUES (nome_p, id_projeto) RETURNING id_recurso INTO cod_recurso;
+		RAISE NOTICE 'Recurso cadastrado com sucesso!';
 		RETURN cod_recurso;
+	EXCEPTION 
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION 'Falha ao cadastrar recurso!';
+			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -54,10 +74,16 @@ RETURNS INTEGER AS $$
 		UPDATE recuso SET nome = nome_p, descricao = descricao_p, fk_projeto = id_projeto, fk_despesa = id_despesa
 		WHERE id_recuso = id;
 		IF (FOUND) THEN
+			RAISE NOTICE 'Recurso atualizado com sucesso!';
 			RETURN 1;
 		ELSE
+			RAISE NOTICE 'Falha ao atualizar recurso';
 			RETURN 0;
 		END IF;
+	EXCEPTION 
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION 'Falha ao atualizar recurso!';
+			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -70,8 +96,10 @@ RETURNS INTEGER AS $$
 	BEGIN
 		DELETE FROM recurso WHERE id_recurso = id;
 		IF (FOUND) THEN
+			RAISE NOTICE 'Recurso excluido com sucesso!';
 			RETURN 1;
 		ELSE
+			RAISE NOTICE 'Falha ao excluir o recurso!';
 			RETURN 0;
 		END IF;
 	END;
