@@ -69,7 +69,7 @@ class Fase extends Main {
 					Convidar membro:
 					<input type="text" class="input-xlarge" data-type="text-autocomplete" placeholder="Comece a digitar" name="membro" /> <br>
 
-					<button type="submit" class="btn btn-primary btn-large" name="submit">Convidar</button>
+					<button type="button" class="btn btn-primary btn-large" name="submit">Convidar</button>
 
 				</form>
 			</div>

@@ -19,8 +19,8 @@ class Index extends Main {
 
 			<div class="pagination-centered verticalCenter">
 				<h2>Gerenciamento de projetos de software de um modo como você nunca viu.</h2>
-		    	<a href="login.php"><button type="button" class="btn btn-info btn-large">Faça login</button></a>
-				<a href="cadastro.php"><button type="button" class="btn btn-info btn-large">Realize seu cadastro</button></a>
+		    	<a href="login.php"><button type="button" class="btn btn-index btn-info btn-large">Faça login</button></a>
+				<a href="cadastro.php"><button type="button" class="btn btn-index btn-info btn-large">Realize seu cadastro</button></a>
 			</div>
 		</div>
 

@@ -3,11 +3,11 @@
 class Usuario {
 	private $id_usuario;
 	private $nome;
-	private $login;
+	private $email;
 	private $senha;
 	private $inativo;
+	private $imagem;
 	private $data_inatividade;
-	private $fk_imagem;
 
 	public function getId_usuario()
 	{
@@ -29,14 +29,14 @@ class Usuario {
 	    $this->nome = $nome;
 	}
 
-	public function getLogin()
+	public function getEmail()
 	{
-	    return $this->login;
+	    return $this->email;
 	}
 
-	public function setLogin($login)
+	public function setEmail($email)
 	{
-	    $this->login = $login;
+	    $this->email = $email;
 	}
 
 	public function getSenha()
@@ -59,6 +59,16 @@ class Usuario {
 	    $this->inativo = $inativo;
 	}
 
+	public function getImagem()
+	{
+	    return $this->imagem;
+	}
+
+	public function setImagem($imagem)
+	{
+	    $this->imagem = $imagem;
+	}
+
 	public function getData_inatividade()
 	{
 	    return $this->data_inatividade;
@@ -68,22 +78,4 @@ class Usuario {
 	{
 	    $this->data_inatividade = $data_inatividade;
 	}
-
-	public function getFk_imagem()
-	{
-	    return $this->fk_imagem;
-	}
-
-	public function setFk_imagem($fk_imagem)
-	{
-	    $this->fk_imagem = $fk_imagem;
-	}
-
-	public function checkLoginFields() {
-		if (isset($this->nome) && isset($this->login) && isset($this->senha)) {
-			return true;
-		}
-		return false;
-	}
-
 }

@@ -1,74 +1,118 @@
 <?php
 
-require_once '../templates/body.php';
+require_once 'main.php';
+require_once ROOT_FOLDER . '/entitys/Usuario.php';
 
-class Login extends Body {
+class Login extends Main {
 
 	public function __construct() {
-		$this->setTtile('Login');
+		$this->setTitle('Home');
 		parent::__construct();
 	}
 
 	public function loadBody() {
-		if (isset($_POST['submit'])) {
-			$this->login();
+		global $userId;
+		if ($userId === false) {
+			if (isset($_POST['submit'])) {
+				$this->login();
+			}
+			else {
+				$this->show();
+			}
 		}
 		else {
-			?>
-			<div class="container">
-				<form action="login.php" method="post">
-					<label for="login">Login: </label>
-					<input id="login" type="text" placeholder="Login" name="login" />
-					<label for="senha">Senha: </label>
-					<input id="senha" type="password" placeholder="Senha" name="senha" /> <br />
-					<button type="submit" class="btn btn-info btn-medium" name="submit">Logar</button>
-				</form>
-			</div>
-
-			<?php
+			if (isset($_GET['logout']) && $_GET['logout'] == true) {
+				$this->storeloginOnSession(false);
+				redirect('index.php');
+			}
+			else {
+				$this->showAlredyLogged();
+			}
 		}
+	}
 
+	private function show() {
+		?>
+		<div class="pagination-centered">
+			<form method="post" action="login.php">
+				<div class="input-prepend">
+					<span class="add-on"><i class="icon-envelope"></i></span> <input
+						class="input-xlarge" type="text" placeholder="E-mail" name="email">
+				</div>
+				<br>
+				<div class="input-prepend">
+					<span class="add-on"><i class="icon-key"></i> </span> <input
+						class="input-xlarge" type="password" placeholder="Senha"
+						name="senha">
+				</div>
+				<br>
+				<button class="btn btn-index btn-primary" type="submit" name="submit">Logar</button>
+			</form>
+		</div>
+		<?php
+	}
+
+	private function showAlredyLogged() {
+		?>
+			<h2>
+				Você já se encontra logado nesse momento,
+				<a href="login.php?logout=true">
+					clique aqui para deslogar
+					<i class="icon-signout"></i>
+				</a>
+			</h2>
+		<?php
 	}
 
 	private function login() {
-		$user = $this->createObject();
-
-		if (!isset($user)) {
-			//TODO campos faltantes
+		if (empty($_POST['email']) || empty($_POST['senha'])) {
+			$this->show();
+			printErrorMessage('Erro, preencha os campos login e senha !');
 		}
 		else {
+			$user = $this->createUser();
+
 			$pgConnect = new PostgresConnection();
 
-			$attrArray = array(
-				$usuario->getLogin(),
-				$usuario->getSenha()
-			);
-
-			$functionName = 'usuarioLogar';
-			$parameters = array($usuario->getLogin(), $usuario->getSenha());
+			$functionName = 'logar';
+			$parameters = array($user->getEmail(), $user->getSenha());
 
 			$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+
 			$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
 
-
-			if ($pgConnect->getResult($retval)) {
-
-			}
-
+			$result = $pgConnect->getResult($retval);
 
 			$pgConnect->closeConnection();
+
+			$id = current(current($result));
+
+			if ($id > 0) {
+				$this->storeloginOnSession($id);
+				redirect('logged/index.php');
+			}
+			else {
+				$this->show();
+				printErrorMessage('Erro, login e/ou senha inválidos !');
+			}
 		}
 	}
 
-	private function createObject() {
-		if (isset($_POST['login']) && isset($_POST['senha'])) {
-			$usuario = new Usuario();
-			$usuario->setLogin($_POST['login']);
-			$usuario->setSenha($_POST['senha']);
+	private function createUser() {
+		$user = new Usuario();
+		$user->setEmail($_POST['email']);
+		$user->setSenha($_POST['senha']);
+		return $user;
+	}
+
+	private function storeloginOnSession($id) {
+		if ($id !== false) {
+			$_SESSION['userId'] = $id;
 		}
 		else {
-			return null;
+			unset($_SESSION['userId']);
 		}
 	}
+
 
 } new Login();

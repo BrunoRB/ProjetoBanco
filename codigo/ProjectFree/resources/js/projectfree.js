@@ -1,7 +1,6 @@
 
 
 $(document).ready(function() {
-	
 	/*
 	 * Datepicker settings and initialization
 	 */
@@ -32,6 +31,11 @@ $(document).ready(function() {
 	 */
 	$('input[data-type="text-number"]').spinner({
 		min: 0, max: 100
+	});
+	
+
+	$('input').click(function() {
+		$(this).css('background-color', 'white');
 	});
 	
 });
