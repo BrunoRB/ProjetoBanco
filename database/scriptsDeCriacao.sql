@@ -143,7 +143,8 @@ CREATE TABLE artefato_atividade
 CREATE TABLE tentativa_de_login
 (
   fk_usuario INTEGER NOT NULL,
-  tempo VARCHAR(30),	
+  data_horario_login TIMESTAMP NOT NULL,	
+  sucesso BOOLEAN NOT NULL,
   CONSTRAINT pk_tentativas_de_login PRIMARY KEY (fk_usuario),
   CONSTRAINT fk_usuario_tentativas_de_login FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario)
 );
