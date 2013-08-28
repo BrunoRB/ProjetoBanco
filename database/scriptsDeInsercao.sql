@@ -1,3 +1,18 @@
+--funções necessarias para rodar o insertData:
+
+-- projeto.sql
+-- usuario.sql
+-- membro_do_projeto.sql
+-- fase.sql
+-- atividade.sql
+-- atividade_do_membro
+-- artefato.sql
+-- artefato_atividade.sql
+-- recurso.sql
+-- despesa.sql
+-- mensagem.sql
+-- mensagem_enviada.sql
+
 CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 	DECLARE
 		randVal INTEGER := ROUND(RANDOM()*40);
@@ -25,6 +40,7 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_artefato2 INTEGER;
 		id_despesa1 INTEGER;
 		id_despesa2 INTEGER;
+		id_mensagem INTEGER;
 	BEGIN
 		FOR i IN 1..14000 LOOP
 			--cria gerente
@@ -55,11 +71,11 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 
 			--cria atividades
 			id_atividade1 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1);
-			id_atividade2 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_atividade1, id_fase1);
+			id_atividade2 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1);
 			id_atividade3 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2);
-			id_atividade4 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2);
+			id_atividade4 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2);
 			id_atividade5 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3);
-			id_atividade6 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_atividade5, id_fase3);		
+			id_atividade6 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3);		
 
 			 --atribui atividades
 			id_trash := atividadeAtribuir(membro_projeto1, id_atividade1);
@@ -88,6 +104,18 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			--cria recursos
 			id_trash := recursoCadastrar('recurso 1', 'descricao do recurso 1', id_projeto, id_despesa2);
 			id_trash := recursoCadastrar('recurso 2', id_projeto);
+			
+			--escreve mensagem do gerente
+			id_mensagem := mensagemEscreve('mensagem do gerente', 'Bem vindo ao projeto', id_gerente);
+			--envia mensagem do gerente para os membros
+			id_trash_rec := mensagem_enviadaEnvia(id_membro1, id_mensagem, CURRENT_DATE);
+			id_trash_rec := mensagem_enviadaEnvia(id_membro2, id_mensagem, CURRENT_DATE);		
+			id_trash_rec := mensagem_enviadaEnvia(id_membro3, id_mensagem, CURRENT_DATE);
+			
+			--escreve mensagem de um membro
+			id_mensagem := mensagemEscreve('Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo', id_membro2);
+			--envia mensagem para o gerente
+			id_trash_rec := mensagem_enviadaEnvia(id_gerente, id_mensagem, CURRENT_DATE);
 		END LOOP;
 		RETURN 'TRUE';
 	END;

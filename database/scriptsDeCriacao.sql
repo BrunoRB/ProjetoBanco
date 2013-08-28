@@ -210,5 +210,21 @@ CREATE TABLE imagem
 	CONSTRAINT fk_comentario_imagem FOREIGN KEY (fk_comentario) REFERENCES comentario(id_comentario)
 );
 
---TODO MENSAGEM;
---TODO MENSAGEM_ENVIADA;
+CREATE TABLE mensagem
+(
+	id_mensagem SERIAL,
+	assunto VARCHAR(100) NOT NULL,
+	texto TEXT NOT NULL,
+	fk_usuario INTEGER NOT NULL,
+	CONSTRAINT pk_mensagem PRIMARY KEY (id_mensagem),
+	CONSTRAINT fk_usuario_mensagem FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
+);
+
+CREATE TABLE mensagem_enviada
+(
+	fk_destinatario INTEGER NOT NULL,
+	fk_mensagem INTEGER NOT NULL,
+	data_hora_envio TIMESTAMP NOT NULL DEFAULT NOW(),
+	CONSTRAINT pk_mensagem_enviada PRIMARY KEY (fk_destinatario, fk_mensagem)
+);
+
