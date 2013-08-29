@@ -121,6 +121,7 @@ CREATE TABLE artefato
 	tipo VARCHAR(100),
 	descricao TEXT,
 	porcentagem_concluida INTEGER NOT NULL DEFAULT 0,
+	CONSTRAINT pk_artefato PRIMARY KEY (id_artefato),
 	CONSTRAINT check_porcentagem_concluida CHECK (porcentagem_concluida::TEXT ~ '^[0-9]$|^[0-9]{2}$|^100$')
 );
 
@@ -130,6 +131,8 @@ CREATE TABLE artefato_atividade
 	fk_artefato INTEGER NOT NULL,
 	porcentagem_gerada INTEGER NOT NULL DEFAULT 0,
 	CONSTRAINT pk_artefato_atividade PRIMARY KEY (fk_atividade, fk_artefato),
+	CONSTRAINT fk_artefato_atividade_atividade FOREIGN KEY (fk_atividade) REFERENCES atividade(id_atividade),
+	CONSTRAINT fk_artefato_atividade_artefato FOREIGN KEY (fk_artefato) REFERENCES artefato(id_artefato),
 	CONSTRAINT check_porcentagem_gerada CHECK (porcentagem_gerada::TEXT ~ '^[0-9]$|^[0-9]{2}$|^100$')
 );
 
@@ -218,6 +221,8 @@ CREATE TABLE mensagem_enviada
 	fk_destinatario INTEGER NOT NULL,
 	fk_mensagem INTEGER NOT NULL,
 	data_hora_envio TIMESTAMP NOT NULL DEFAULT NOW(),
-	CONSTRAINT pk_mensagem_enviada PRIMARY KEY (fk_destinatario, fk_mensagem)
+	CONSTRAINT pk_mensagem_enviada PRIMARY KEY (fk_destinatario, fk_mensagem),
+	CONSTRAINT mensagem_enviada_usuario FOREIGN KEY (fk_destinatario) REFERENCES usuario(id_usuario),
+	CONSTRAINT mensagem_enviada_mensagem FOREIGN KEY (fk_mensagem) REFERENCES mensagem(id_mensagem)
 );
 
