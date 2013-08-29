@@ -42,7 +42,7 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_despesa2 INTEGER;
 		id_mensagem INTEGER;
 	BEGIN
-		FOR i IN 1..14000 LOOP
+		FOR i IN 1..11000 LOOP
 			--cria gerente
 			email := ('gerente' || i || '@gerente.com');
 			id_gerente := usuarioCadastrar ('Gerente', email, 'admin');

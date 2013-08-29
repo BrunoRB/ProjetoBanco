@@ -1,10 +1,3 @@
-﻿\c postgres
-
-DROP DATABASE projectfree;
-
-CREATE DATABASE projectfree;
-
-\c projectfree
 
 CREATE TABLE usuario
 (
