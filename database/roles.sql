@@ -4,6 +4,11 @@ REVOKE ALL PRIVILEGES ON DATABASE projectfree FROM GROUP public;
 
 CREATE ROLE admin SUPERUSER;
 
+DROP ROLE function;
+CREATE ROLE function;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO function;
+
+DROP ROLE insert;
 CREATE ROLE insert;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO insert;
 GRANT UPDATE ON artefato_id_artefato_seq TO insert;
@@ -24,15 +29,19 @@ GRANT UPDATE ON projeto_id_projeto_seq TO insert;
 GRANT UPDATE ON recurso_id_recurso_seq TO insert;
 GRANT UPDATE ON usuario_id_usuario_seq TO insert;
 
-
+DROP ROLE retrieve;
 CREATE ROLE retrieve;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO retrieve;
 
+DROP ROLE update;
 CREATE ROLE update;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO update;
 
+DROP ROLE delete;
 CREATE ROLE delete;
-GRANT UPDATE ON ALL TABLES IN SCHEMA public TO delete;
+GRANT DELETE ON ALL TABLES IN SCHEMA public TO delete;
+
+GRANT USAGE ON SCHEMA public TO insert, retrieve, update, delete;
 
 
 

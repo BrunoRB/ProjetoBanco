@@ -11,14 +11,6 @@ CREATE DATABASE projectfree;
 \i database/scriptsDeCriacao.sql
 --END CREATE TABLES
 
--- BEGIN ROLES
-DROP ROLE insert;
-DROP ROLE retrieve;
-DROP ROLE update;
-DROP ROLE delete;
-\i database/roles.sql
---END ROLES
-
 --BEGIN CREATE FUNCTIONS/PROCEDURES
 SET CLIENT_ENCODING = 'latin1'; --SCRIPT usuario.sql gera algum problema de encoding para UTF8
 \i database/funcoes/usuario.sql
@@ -37,3 +29,7 @@ SET CLIENT_ENCODING = 'utf8';
 	--TODO faltando arquivos
 
 --END CREATE FUNCTIONS/PROCEDURES
+
+-- BEGIN ROLES
+\i database/roles.sql
+--END ROLES
