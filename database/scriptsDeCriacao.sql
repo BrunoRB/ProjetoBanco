@@ -71,8 +71,10 @@ CREATE TABLE fase
 	id_fase SERIAL,
 	nome VARCHAR(100) NOT NULL,
 	descricao TEXT,
+	fk_projeto INTEGER NOT NULL,
 	fk_predecessora INTEGER,
 	CONSTRAINT pk_fase PRIMARY KEY (id_fase),
+	CONSTRAINT fk_projeto FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
 	CONSTRAINT fk_predecessora FOREIGN KEY (fk_predecessora) REFERENCES fase (id_fase)
 );
 
@@ -85,7 +87,7 @@ CREATE TABLE atividade
   nome_atividade CHARACTER VARYING(100) NOT NULL,
   descricao_atividade TEXT,
   fk_predecessora INTEGER,
-  fk_fase INTEGER NOT NULL,
+  fk_fase INTEGER,
   finalizada BOOLEAN NOT NULL DEFAULT FALSE,
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),
   CONSTRAINT fk_predecessora FOREIGN KEY (fk_predecessora) REFERENCES atividade(id_atividade),
