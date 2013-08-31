@@ -1,5 +1,6 @@
 -- View do Cronograma
 
+CREATE OR REPLACE VIEW cronogramView AS
 SELECT
 "public".membro_do_projeto.fk_projeto AS projeto,  -- ID para identificar o projeto a qual pertencem essas atividades, utilizado para filtar as atividades por projeto
 "public".atividade.id_atividade AS codigo, 
