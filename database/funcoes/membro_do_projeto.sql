@@ -5,8 +5,12 @@ RETURNS INTEGER AS $$
 	DECLARE 
 		cod_membroDoProjeto INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao) 
-		VALUES (projeto_p, membro_p, funcao_p) RETURNING id_membro_do_projeto INTO cod_membroDoProjeto;
+		VALUES (projeto_p, membro_p, funcao_p);
+
+		SET ROLE retrieve;
+		SELECT INTO cod_membroDoProjeto currval('membro_do_projeto_id_membro_do_projeto_seq');
 		RETURN cod_membroDoProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -14,6 +18,7 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION membroRemoverDeProjeto(projeto INTEGER, membro INTEGER) RETURNS INTEGER AS $$
 	BEGIN
+		SET ROLE delete;
 		DELETE FROM Mmembro_do_projeto WHERE fk_projeto = projeto AND fk_membro = membro;
 		IF (FOUND) THEN
 			RETURN 1;

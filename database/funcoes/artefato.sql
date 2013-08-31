@@ -5,8 +5,13 @@ RETURNS INTEGER AS $$
 	DECLARE 
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, tipo, descricao, porcentagem_concluida)
-		VALUES (nome_p, tipo_p, descricao_p, porcentagem_concluida_p) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, tipo_p, descricao_p, porcentagem_concluida_p);
+		
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	EXCEPTION 
@@ -21,8 +26,13 @@ RETURNS INTEGER AS $$
 	DECLARE 
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, tipo, descricao)
-		VALUES (nome_p, tipo_p, descricao_p) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, tipo_p, descricao_p);
+
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	END;
@@ -33,8 +43,13 @@ RETURNS INTEGER AS $$
 	DECLARE
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, tipo)
-		VALUES (nome_p, tipo_p) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, tipo_p);
+
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	END;
@@ -45,8 +60,13 @@ RETURNS INTEGER AS $$
 	DECLARE
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, tipo, porcentagem_concluida)
-		VALUES (nome_p, tipo_p, porcen) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, tipo_p, porcen);
+		
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');		
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	EXCEPTION 
@@ -61,8 +81,13 @@ RETURNS INTEGER AS $$
 	DECLARE
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, descricao, porcentagem_concluida)
-		VALUES (nome_p, descricao_p, porcentagem_concluida_p) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, descricao_p, porcentagem_concluida_p);
+
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	EXCEPTION 
@@ -77,8 +102,13 @@ RETURNS INTEGER AS $$
 	DECLARE
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, descricao)
-		VALUES (nome_p, descricao_p) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, descricao_p);
+
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	END;
@@ -89,8 +119,13 @@ RETURNS INTEGER AS $$
 	DECLARE
 		cod_artefato INTEGER;
 	BEGIN
+		SET ROLE insert;
 		INSERT INTO artefato (nome, porcentagem_concluida)
-		VALUES (nome_p, porcentagem_concluida_p) RETURNING id_artefato INTO cod_artefato;
+			VALUES (nome_p, porcentagem_concluida_p);
+
+		SET ROLE retrieve;
+		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
+
 		RAISE NOTICE 'Artefato cadastrado com sucesso!';
 		RETURN cod_artefato;
 	EXCEPTION 
@@ -106,7 +141,8 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION artefatoAtualizarPorcentagem (id INTEGER, porcentagem INTEGER)
 RETURNS INTEGER AS $$
-	BEGIN	
+	BEGIN
+		SET ROLE update;	
 		UPDATE artefato SET porcentagem_concluida = (porcentagem_concluida + porcentagem)
 		WHERE id_artefato = id;
 		IF (FOUND) THEN
@@ -126,6 +162,7 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION artefatoAtualizar (id INTEGER, nome_p VARCHAR(100), tipo_p VARCHAR(100), descricao_p TEXT, porc INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		SET ROLE update;
 		UPDATE artefato SET nome = nome_p, tipo = tipo_p, descricao = descricao_p, porcentagem_concluida = porc
 		WHERE id_artefato = id;
 		IF (FOUND) THEN
@@ -148,6 +185,7 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION artefatoExcluir (id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		SET ROLE delete;
 		DELETE FROM artefato WHERE id_artefato = id;
 		IF (FOUND) THEN
 			RAISE NOTICE 'Artefato excluido com sucesso!';

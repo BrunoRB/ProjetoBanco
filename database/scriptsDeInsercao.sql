@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_atividade5 INTEGER;
 		id_atividade6 INTEGER;
 		id_trash INTEGER;
-		id_trash_rec RECORD;
+		confirm BOOLEAN;
 		id_fase1 INTEGER;
 		id_fase2 INTEGER;
 		id_fase3 INTEGER;
@@ -65,9 +65,9 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			membro_projeto3 := membroCadastrarEmProjeto (id_projeto, id_membro3, 'membro');		
 			
 			--cria fases
-			id_fase1 := faseCadastrar('Fase 1', 'Primeira fase do projeto');
-			id_fase2 := faseCadastrar('Fase 2', 'Segunda fase do projeto', id_fase1);
-			id_fase3 := faseCadastrar('Fase 3', 'Terceira fase do projeto', id_fase2);
+			id_fase1 := faseCadastrar('Fase 1', 'Primeira fase do projeto', id_projeto);
+			id_fase2 := faseCadastrar('Fase 2', 'Segunda fase do projeto', id_projeto, id_fase1);
+			id_fase3 := faseCadastrar('Fase 3', 'Terceira fase do projeto', id_projeto, id_fase2);
 
 			--cria atividades
 			id_atividade1 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1);
@@ -78,24 +78,24 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			id_atividade6 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3);		
 
 			 --atribui atividades
-			id_trash := atividadeAtribuir(membro_projeto1, id_atividade1);
-			id_trash := atividadeAtribuir(membro_projeto1, id_atividade3);
-			id_trash := atividadeAtribuir(membro_projeto2, id_atividade2);
-			id_trash := atividadeAtribuir(membro_projeto2, id_atividade4);
-			id_trash := atividadeAtribuir(membro_projeto3, id_atividade5);
-			id_trash := atividadeAtribuir(membro_projeto3, id_atividade6);
+			id_trash := atividade_do_membroCadastrar(membro_projeto1, id_atividade1);
+			id_trash := atividade_do_membroCadastrar(membro_projeto1, id_atividade3);
+			id_trash := atividade_do_membroCadastrar(membro_projeto2, id_atividade2);
+			id_trash := atividade_do_membroCadastrar(membro_projeto2, id_atividade4);
+			id_trash := atividade_do_membroCadastrar(membro_projeto3, id_atividade5);
+			id_trash := atividade_do_membroCadastrar(membro_projeto3, id_atividade6);
 		
 			--cria artefatos
 			id_artefato1 := artefatoCadastrar ('artefato 1', 'Tipo 1', 'Primeiro artefato'); --artefato
 			id_artefato2 := artefatoCadastrar ('artefato 2', 'Tipo 2', 'Segundo artefato');
 
 			--vincula atividades aos artefatos
-			id_trash_rec := artefato_atividadeCadastrar(id_artefato1, id_atividade1, 35);
-			id_trash_rec := artefato_atividadeCadastrar(id_artefato1, id_atividade2, 35);
-			id_trash_rec := artefato_atividadeCadastrar(id_artefato1, id_atividade3, 30);
-			id_trash_rec := artefato_atividadeCadastrar(id_artefato2, id_atividade4, 40);
-			id_trash_rec := artefato_atividadeCadastrar(id_artefato2, id_atividade5, 25);
-			id_trash_rec := artefato_atividadeCadastrar(id_artefato2, id_atividade6, 35);
+			confirm := artefato_atividadeCadastrar(id_artefato1, id_atividade1, 35);
+			confirm := artefato_atividadeCadastrar(id_artefato1, id_atividade2, 35);
+			confirm := artefato_atividadeCadastrar(id_artefato1, id_atividade3, 30);
+			confirm := artefato_atividadeCadastrar(id_artefato2, id_atividade4, 40);
+			confirm := artefato_atividadeCadastrar(id_artefato2, id_atividade5, 25);
+			confirm := artefato_atividadeCadastrar(id_artefato2, id_atividade6, 35);
 
 			--cria despesas
 			id_despesa1 := despesaCadastrar ('despesa 1', 100, id_projeto);
@@ -108,20 +108,20 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			--escreve mensagem do gerente
 			id_mensagem := mensagemEscreve('mensagem do gerente', 'Bem vindo ao projeto', id_gerente);
 			--envia mensagem do gerente para os membros
-			id_trash_rec := mensagem_enviadaEnvia(id_membro1, id_mensagem, CURRENT_DATE);
-			id_trash_rec := mensagem_enviadaEnvia(id_membro2, id_mensagem, CURRENT_DATE);		
-			id_trash_rec := mensagem_enviadaEnvia(id_membro3, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_membro1, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_membro2, id_mensagem, CURRENT_DATE);		
+			confirm := mensagem_enviadaEnvia(id_membro3, id_mensagem, CURRENT_DATE);
 			
 			--escreve mensagem de um membro
 			id_mensagem := mensagemEscreve('Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo', id_membro2);
 			--envia mensagem para o gerente
-			id_trash_rec := mensagem_enviadaEnvia(id_gerente, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_gerente, id_mensagem, CURRENT_DATE);
 		END LOOP;
 		RETURN 'TRUE';
 	END;
 $$ LANGUAGE PLPGSQL;
 
-SELECT insertData();
+--SELECT insertData();
 
 
 

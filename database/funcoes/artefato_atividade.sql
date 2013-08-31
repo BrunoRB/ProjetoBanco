@@ -1,15 +1,19 @@
 -- INSERTS
 
 CREATE OR REPLACE FUNCTION artefato_atividadeCadastrar (id_artefato INTEGER, id_atividade INTEGER, porcentagem_p INTEGER)
-RETURNS RECORD AS $$
+RETURNS BOOLEAN AS $$
 	DECLARE
 		codigos RECORD;
 	BEGIN
-		--verificar se a porcentagem passada somada as porcentagens das outras atividades não passa de 100%
+		SET ROLE insert;
 		INSERT INTO artefato_atividade (fk_atividade, fk_artefato, porcentagem_gerada) 
-		VALUES (id_atividade, id_artefato, porcentagem_p) RETURNING id_atividade, id_artefato INTO codigos;
-		RAISE NOTICE 'Atividade vinculada ao artefato com sucesso!';
-		RETURN codigos;
+		VALUES (id_atividade, id_artefato, porcentagem_p);
+		IF (FOUND) THEN
+			RAISE NOTICE 'Atividade vinculada ao artefato com sucesso!';
+			RETURN true;
+		ELSE
+			RETURN false;
+		END IF;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
 			RAISE EXCEPTION 'O valor da porcengem informado é inválido!';
@@ -25,8 +29,8 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION artefato_atividadeAtualizar (id_atividade INTEGER, id_artefato INTEGER, porcentagem_p INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
-		UPDATE artefato_atividade SET porcentagem_gerada = porcentagem_p
-		WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
+		SET ROLE update;
+		UPDATE artefato_atividade SET porcentagem_gerada = porcentagem_p WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
 		IF (FOUND) THEN
 			RAISE NOTICE 'Relação entre atividade e artefato atualizada com sucesso!';
 			RETURN 1;
@@ -48,6 +52,7 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION artefato_atividadeExcluir (id_atividade INTEGER, id_artefato INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		SET ROLE delete;
 		DELETE FROM artefato_atividade WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
 		IF (FOUND) THEN
 			RETURN 1;
