@@ -20,3 +20,25 @@ CREATE TRIGGER validateUniqueManagerOnProject BEFORE INSERT OR UPDATE ON membro_
 
 --END TRIGGER membro_do_projeto
 
+
+
+--TRIGGER mensagem_enviada
+
+CREATE FUNCTION validaMensagemEnviada() RETURNS TRIGGER AS $$
+	DECLARE
+		usuario mensagem.fk_usuario%TYPE;
+	BEGIN
+		SELECT fk_usuario FROM mensagem WHERE NEW.fk_mensagem = id_mensagem INTO usuario;
+		
+		IF (NEW.fk_destinatario = usuario) THEN
+			RAISE EXCEPTION '[ERRO] Não é permitido mandar mensagem para si mesmo.';
+		END IF;
+
+		RETURN NEW; 
+	END;
+$$LANGUAGE PLPGSQL;
+
+CREATE TRIGGER validaMensagemEnviada BEFORE INSERT OR UPDATE ON mensagem_enviada FOR EACH ROW EXECUTE PROCEDURE validaMensagemEnviada();
+
+--END TRIGGER mensagem_enviada
+
