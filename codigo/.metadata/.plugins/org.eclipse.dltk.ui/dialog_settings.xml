@@ -4,6 +4,10 @@
 		<item value="false" key="org.eclipse.php.internal.ui.text.PHPOutlineInformationControlDIALOG_USE_PERSISTED_SIZE"/>
 		<item value="false" key="org.eclipse.php.internal.ui.text.PHPOutlineInformationControlDIALOG_USE_PERSISTED_LOCATION"/>
 	</section>
+	<section name="org.eclipse.jdt.internal.ui.typehierarchy.QuickHierarchy">
+		<item value="false" key="org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration$2$1DIALOG_USE_PERSISTED_LOCATION"/>
+		<item value="false" key="org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration$2$1DIALOG_USE_PERSISTED_SIZE"/>
+	</section>
 	<section name="org.eclipse.php.internal.ui.explorer.PHPExplorerPart">
 		<item value="true" key="group_libraries"/>
 		<item value="false" key="linkWithEditor"/>

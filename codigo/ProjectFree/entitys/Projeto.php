@@ -7,6 +7,7 @@ class Projeto {
 	private $data_de_cadastro;
 	private $descricao;
 	private $data_de_termino;
+	private $idGerente;
 
 	public function getId_projeto()
 	{
@@ -66,5 +67,15 @@ class Projeto {
 	public function setData_de_termino($data_de_termino)
 	{
 	    $this->data_de_termino = $data_de_termino;
+	}
+
+	public function getIdGerente()
+	{
+	    return $this->idGerente;
+	}
+
+	public function setIdGerente($idGerente)
+	{
+	    $this->idGerente = $idGerente;
 	}
 }

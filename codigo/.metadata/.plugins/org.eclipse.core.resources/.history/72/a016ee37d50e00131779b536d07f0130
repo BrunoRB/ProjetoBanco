@@ -1,0 +1,54 @@
+<?php
+
+define('TEST_BROWSER', '*firefox /usr/bin/firefox');
+define('TEST_BASE_URL', 'http://projectfree.local/ProjectFree/application/');
+//require_once('phpunitdep.php');
+require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+
+
+class ScreenShotTest extends PHPUnit_Extensions_SeleniumTestCase {
+
+	public static $browsers = array(
+		array(
+			'name'	=> 'Firefox on Linux',
+			'browser' => '*firefox /usr/lib/firefox/firefox-bin',
+			'host'	=> 'localhost',
+			'port'	=> 4444,
+			'timeout' => 30000,
+		)
+	);
+
+	protected function setUp() {
+		$this->setBrowser(TEST_BROWSER);
+		$this->setBrowserUrl(TEST_BASE_URL);
+	}
+
+	public function testRand() {
+
+
+		$urls = array(
+			'index.php',
+			'cadastro.php',
+			'login.php',
+		);
+		$this->open('index.php');
+
+		sleep(5);
+
+		$this->open('index.php');
+
+		sleep(5);
+	}
+
+	protected function getBrowserName() {
+		$this->drivers[0]->getBrowser();
+	}
+
+	public function screenshot($url, $basepath = null) {
+		if ($basepath) {
+			$basepath .= '/';
+		}
+		$filepath = $basepath . str_replace('/', '_', $url) . '.png';
+		file_put_contents($filepath, base64_decode($this->captureEntirePageScreenshotToString()));
+	}
+}

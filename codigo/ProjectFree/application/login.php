@@ -1,7 +1,6 @@
 <?php
 
 require_once 'main.php';
-require_once ROOT_FOLDER . '/entitys/Usuario.php';
 
 class Login extends Main {
 
@@ -31,7 +30,7 @@ class Login extends Main {
 		}
 	}
 
-	private function show() {
+	protected function show() {
 		?>
 		<div class="pagination-centered">
 			<form method="post" action="login.php">
@@ -83,11 +82,11 @@ class Login extends Main {
 
 			$result = $pgConnect->getResult($retval);
 
-			$pgConnect->closeConnection();
-
 			$id = current(current($result));
 
-			if ($id > 0) {
+			$pgConnect->closeConnection();
+
+			if (isset($id) && $id > 0) {
 				$this->storeloginOnSession($id);
 				redirect('logged/index.php');
 			}

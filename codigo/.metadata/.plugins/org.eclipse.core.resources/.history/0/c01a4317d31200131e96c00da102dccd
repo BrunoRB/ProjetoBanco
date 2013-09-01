@@ -1,0 +1,10 @@
+<?php
+
+class Projeto {
+	private $id_projeto;
+	private $nome;
+	private $orcamento;
+	private $data_de_cadastro;
+	private $descricao;
+	private data_de_termino;
+}

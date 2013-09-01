@@ -59,7 +59,6 @@ class PostgresConnection {
 	 * @return retorno de pg_execute
 	 */
 	public function executeFunctionStatement($functionName, array $values) {
-		var_dump($functionName, $values);
 		return pg_execute($this->connection, $functionName, $values);
 	}
 

@@ -1,0 +1,84 @@
+<?php
+
+define('TEST_BROWSER', '*firefox /usr/bin/firefox');
+define('TEST_BASE_URL', 'http://projectfree.local/ProjectFree/application/');
+//require_once('phpunitdep.php');
+require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+
+
+class ScreenShotTest extends PHPUnit_Extensions_SeleniumTestCase {
+
+	public static $browsers = array(
+		array(
+			'name'	=> 'Firefox on Linux',
+			'browser' => '*firefox /usr/lib/firefox/firefox-bin',
+			'host'	=> 'localhost',
+			'port'	=> 4444,
+			'timeout' => 30000,
+		)
+	);
+
+	protected function setUp() {
+		$this->setBrowser(TEST_BROWSER);
+		$this->setBrowserUrl(TEST_BASE_URL);
+	}
+
+	public function testRand() {
+		$this->setSpeed(100);
+
+		$this->login();
+
+		$path = '../resources/screenshots/';
+
+		$urlCRUDS = array(
+			'logged/projeto.php',
+			'logged/mensagem.php',
+			'logged/cronograma.php',
+			'logged/atividade.php',
+			'logged/fase.php',
+			'logged/membro.php',
+			'logged/artefato.php',
+		);
+
+		foreach ($urlCRUDS as $urlCRUD) {
+			$this->screenshot($urlCRUD, $path);
+			$this->screenshot($urlCRUD . '?novo=true', $path);
+		}
+
+		$this->open('/ProjectFree/application/login.php?logout=true');
+
+		$urls = array(
+				'index.php',
+				'cadastro.php',
+				'login.php',
+				'logged/index.php'
+		);
+
+		foreach ($urls as $url) {
+			$this->screenshot($url, $path);
+		}
+	}
+
+	private function login() {
+		$this->open('login.php');
+		$this->waitForPageToLoad('1000');
+		$this->type('css=input[name="email"]', 'teste@teste.com');
+		$this->type('css=input[name="senha"]', 'admin');
+		$this->click('css=button[name="submit"]');
+		$this->waitForPageToLoad('1000');
+	}
+
+	protected function getBrowserName() {
+		$this->drivers[0]->getBrowser();
+	}
+
+	public function screenshot($url, $basepath = null) {
+		$this->getEval("window.resizeTo(1200, 800); window.moveTo(0,0);");
+		if ($basepath) {
+			$basepath .= '/';
+		}
+		$filepath = $basepath . str_replace('/', '_', $url) . '.png';
+		$filepath = str_replace('logged_', '', $filepath);
+		file_put_contents($filepath, base64_decode($this->captureEntirePageScreenshotToString()));
+	}
+}

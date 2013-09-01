@@ -10,21 +10,14 @@ class Page_Projeto extends Main {
 	}
 
 	public function loadBody() {
-		if (isset($_GET['novo']) && $_GET['novo'] == true) {
-			$this->cadastrarProjeto();
-		}
-		else if (isset($_GET['selecionar']) && is_numeric($_GET['selecionar'])) {
-			$this->selecionarProjeto();
-		}
-		else if (isset($_GET['id']) && is_numeric($_GET['id'])) { //TODO check if id == number
-			$this->show();
-		}
-		else {
-			$this->listarProjetos();
-		}
+		parent::loadBody();
 	}
 
-	private function listarProjetos() {
+	protected function exibir() {
+		parent::exibir('projeto');
+	}
+
+	protected function listar() {
 		?>
 		<div class="row-fluid">
 			<div class="span7 collapse-group accordion-group" id="projetos">
@@ -52,44 +45,6 @@ class Page_Projeto extends Main {
 		<?php
 	}
 
-	private function show() {
-		?>
-			Projeto: ProjectFree - Gerenciamento de projetos
-
-			<br>
-
-			Gerente: Bruno
-
-			<br>
-
-			Meu papel no projeto: Gerente
-
-			<br>
-
-			Número de membros do projeto: 1
-
-			<br>
-
-			Orçamento: R$-10.000
-
-			<br>
-
-			Data de cadastro do projeto: 01/04/2013
-
-			<br>
-
-			Descrição:  Ne vero ex hac nostra decem dierum subtractione, alicui,
-			quod ad annuas vel menstruas praestationes pertinet, praeiudicium fiat,
-			partes iudicum erunt in controversis, quae super hoc exortae fuerint,
-			dictae subtractionis rationem habere, addendo alios X dies in fine cuiuslibet praestationis.
-
-			<br>
-
-			<a type="submit" class="btn btn-primary btn-large" href="projeto.php?selecionar=1">Selecionar projeto</a>
-
-		<?php
-	}
-
 	private function selecionarProjeto() {
 		global $userId;
 		if (true) { // Check if user belongs to project
@@ -99,7 +54,7 @@ class Page_Projeto extends Main {
 		}
 	}
 
-	private function cadastrarProjeto() {
+	protected function cadastrar() {
 		?>
 		<div class="container">
 
@@ -112,7 +67,8 @@ class Page_Projeto extends Main {
 				<textarea data-type="text-multi" name="descricao"></textarea> <br>
 				<button type="submit" class="btn btn-primary btn-large" name="submit">Salvar</button>
 				<input type="hidden" name="entity" value="projeto" >
-				<input type="hidden" name="fields" value="nome,orcamento,descricao">
+				<input type="hidden" name="fields" value="idGerente,nome,orcamento,descricao">
+				<input type="hidden" name="idGerente" value="<?php echo $this->getUserId();?>">
 			</form>
 		</div>
 		<?php
