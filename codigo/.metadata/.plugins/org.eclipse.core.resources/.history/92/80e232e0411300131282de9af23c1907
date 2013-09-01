@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetoBanco/codigo/ProjectFree/util/Constants.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'ProjectFree/util/Constants.php';
 
 require_once ROOT_FOLDER . '/util/Util.php';
 

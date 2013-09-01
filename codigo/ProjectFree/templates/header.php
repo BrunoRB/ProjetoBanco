@@ -15,7 +15,7 @@ class Header{
 		global $projectId;
 		global $gerente;
 
-		$path = ($userId === false) ? '/ProjectFree/application/' : '/ProjectFree/application/logged/';
+		$path = ($userId === false) ? '/ProjetoBanco/codigo/ProjectFree/application/' : '/ProjetoBanco/codigo/ProjectFree/application/logged/';
 		?>
 <!DOCTYPE html>
 
@@ -24,18 +24,18 @@ class Header{
 		<meta charset='utf-8' />
 		<title><?php echo isset($this->title) ? $this->title . ' | ' : '';?>Project Free</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/css/bootstrap-responsive.css" />
-		<link rel="stylesheet" href="/ProjectFree/resources/fonts/font-awesome/css/font-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/css/main.css" />
-		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/css/smoothness/jquery-ui-1.10.3.custom.css" />
-		<link rel="stylesheet" type="text/css" href="/ProjectFree/resources/cleditor/jquery.cleditor.css" />
+		<link rel="stylesheet" type="text/css" href="/ProjetoBanco/codigo/ProjectFree/resources/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/ProjetoBanco/codigo/ProjectFree/resources/css/bootstrap-responsive.css" />
+		<link rel="stylesheet" href="/ProjetoBanco/codigo/ProjectFree/resources/fonts/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="/ProjetoBanco/codigo/ProjectFree/resources/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="/ProjetoBanco/codigo/ProjectFree/resources/css/smoothness/jquery-ui-1.10.3.custom.css" />
+		<link rel="stylesheet" type="text/css" href="/ProjetoBanco/codigo/ProjectFree/resources/cleditor/jquery.cleditor.css" />
 
-		<script type="text/javascript" src="/ProjectFree/resources/js/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/ProjectFree/resources/js/jquery-ui-1.10.3.custom.js"></script>
-		<script type="text/javascript" src="/ProjectFree/resources/js/bootstrap.js"></script>
-		<script type="text/javascript" src="/ProjectFree/resources/cleditor/jquery.cleditor.min.js"></script>
-		<script type="text/javascript" src="/ProjectFree/resources/js/projectfree.js"></script>
+		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/jquery-ui-1.10.3.custom.js"></script>
+		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/cleditor/jquery.cleditor.min.js"></script>
+		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/ProjetoBanco/codigo/ProjectFree.js"></script>
 		<?php
 		if (isset($this->extraHeader)) {
 			foreach ($this->extraHeader as $extra) {
@@ -82,10 +82,10 @@ class Header{
 		</div>
 		<div class="pull-right">
 			<ul class="nav">
-				<li><a href="/ProjectFree/application/cadastro.php">Cadastro</a></li>
-				<li><a href="/ProjectFree/application/faleconosco.php">Fale conosco</a></li>
-				<li><a href="/ProjectFree/application/sobre.php">Sobre</a></li>
-				<li><a href="/ProjectFree/application/doe.php">Doe !</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/cadastro.php">Cadastro</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/faleconosco.php">Fale conosco</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/sobre.php">Sobre</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/doe.php">Doe !</a></li>
 			</ul>
 		</div>
 		<?php
@@ -99,8 +99,8 @@ class Header{
 		?>
 		<ul class="nav">
 			<li class="brand">Nome do Projeto
-			<li><a href="/ProjectFree/application/logged/atividade.php">Atividades</a></li>
-			<li><a href="/ProjectFree/application/logged/membro.php">Membros</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/atividade.php">Atividades</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/membro.php">Membros</a></li>
 		</ul>
 		<?php
 		$this->loggedRightMenu();
@@ -110,11 +110,11 @@ class Header{
 		?>
 		<ul class="nav">
 			<li class="brand">Nome do Projeto
-			<li><a href="/ProjectFree/application/logged/cronograma.php">Cronograma</a></li>
-			<li><a href="/ProjectFree/application/logged/fase.php">Fases</a></li>
-			<li><a href="/ProjectFree/application/logged/atividade.php">Atividades</a></li>
-			<li><a href="/ProjectFree/application/logged/membro.php">Membros</a></li>
-			<li><a href="/ProjectFree/application/logged/artefato.php">Artefatos</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/cronograma.php">Cronograma</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/fase.php">Fases</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/atividade.php">Atividades</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/membro.php">Membros</a></li>
+			<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/artefato.php">Artefatos</a></li>
 		</ul>
 		<?php
 		$this->loggedRightMenu();
@@ -124,12 +124,12 @@ class Header{
 		?>
 		<div class="pull-right">
 			<ul class="nav">
-				<li><a href="/ProjectFree/application/logged/projeto.php">Projetos</a></li>
-				<li><a href="/ProjectFree/application/mensagem.php">Mensagens</a></li>
-				<li><a href="/ProjectFree/application/logged/nota.php">Notas</a></li>
-				<li><a href="/ProjectFree/application/logged/">Convites</a></li>
-				<li><a href="/ProjectFree/application/logged/">Perfil</a></li>
-				<li><a href="/ProjectFree/application/login.php?logout=true">Logout</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/projeto.php">Projetos</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/mensagem.php">Mensagens</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/nota.php">Notas</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/">Convites</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/">Perfil</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/login.php?logout=true">Logout</a></li>
 			</ul>
 		</div>
 		<?php

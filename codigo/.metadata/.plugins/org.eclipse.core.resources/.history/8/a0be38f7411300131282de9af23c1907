@@ -1,0 +1,14 @@
+<?php
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/ProjetoBanco/codigo/ProjectFree/util/Constants.php';
+
+require_once ROOT_FOLDER . '/util/Util.php';
+
+require_once ROOT_FOLDER . '/util/PostgresConnect.php';
+
+require_once ROOT_FOLDER . '/templates/header.php';
+require_once ROOT_FOLDER . '/templates/footer.php';
+
+require_once ROOT_FOLDER . '/entitys/Usuario.php';
+require_once ROOT_FOLDER . '/entitys/Projeto.php';
+
