@@ -39,9 +39,9 @@ class Cronograma extends Main {
 						<td>dd/mm/yyyy</td>
 						<td>dd/mm/yyyy</td>
 						<td>dd/mm/yyyy</td>
-						<td><?php echo $i + 2;?></td>
-						<td><?php echo $i;?></td>
-						<td><?php echo rand(0, 1000);?></td>
+						<td><?php echo $i-1;?></td>
+						<td>Nome_da_Fase</td>
+						<td><?php echo rand(0, 10);?></td>
 						<td><?php echo rand(0, 10);?></td>
 					</tr>
 				<?php }?>

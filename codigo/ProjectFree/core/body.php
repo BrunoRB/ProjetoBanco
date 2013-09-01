@@ -10,6 +10,7 @@ require_once ROOT_FOLDER . '/templates/header.php';
 require_once ROOT_FOLDER . '/templates/footer.php';
 
 require_once ROOT_FOLDER . '/entitys/Usuario.php';
+require_once ROOT_FOLDER . '/entitys/Projeto.php';
 
 class Body {
 	private $header;
@@ -51,7 +52,7 @@ class Body {
 		);
 
 		if (isset($_POST['submit']) && isset($_POST['entity'])
-		&& isset($_POST['fields']) && in_array($_POST['entity'], $entityWhitelist)
+			&& isset($_POST['fields']) && in_array($_POST['entity'], $entityWhitelist)
 		) {
 			$this->save();
 		}
@@ -65,8 +66,8 @@ class Body {
 		$entity = ucfirst($_POST['entity']);
 
 		$retval = checkMandatoryPostFields($fields);
-		if ($retval['flag']) {
 
+		if ($retval['flag']) {
 			$pgConnect = new PostgresConnection();
 
 			$functionName = lcfirst($entity) . 'Cadastrar'; // ex: usuarioCadastrar
@@ -87,7 +88,7 @@ class Body {
 			$id = current(current($result));
 
 			if ($id > 0) {
-
+				printSuccessMessage($pgConnect->getNoticeString());
 			}
 			else {
 				printErrorMessage($pgConnect->getErrorString());
@@ -116,5 +117,47 @@ class Body {
 			</script>
 			<?php
 		}
+	}
+
+	protected function retrieveList($objectName, array $parameters, array $fields) {
+		$pgConnect = new PostgresConnection();
+
+		$functionName = $objectName . 'Listar'; // ex: usuarioCadastrar
+
+		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+
+		$retval = $pgConnect->executeQueryWithParams("SELECT * FROM $functionName($1)", $parameters);
+
+		$result = $pgConnect->getResult($retval);
+
+		if ($result !== false) {
+			foreach ($result as $projeto) {
+				?>
+				<tr>
+					<?php
+					foreach ($fields as $field) {
+						echo "<td>$projeto[$field]</td>";
+					}
+					?>
+				</tr>
+				<?php
+			}
+		}
+		else {
+			printWarningMessage("Nenhum {$objectName} encontrado");
+		}
+
+		$pgConnect->closeConnection();
+
+	}
+
+	public function getUserId() {
+		global $userId;
+		return isset($userId) ? $userId : null;
+	}
+
+	public function getProjectId() {
+		global $projectId;
+		return isset($projectId) ? $projectId : null;
 	}
 }

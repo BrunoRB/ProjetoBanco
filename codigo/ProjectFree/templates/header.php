@@ -125,7 +125,7 @@ class Header{
 		<div class="pull-right">
 			<ul class="nav">
 				<li><a href="/ProjectFree/application/logged/projeto.php">Projetos</a></li>
-				<li><a href="/ProjectFree/application/logged/mensagem.php">Mensagens</a></li>
+				<li><a href="/ProjectFree/application/mensagem.php">Mensagens</a></li>
 				<li><a href="/ProjectFree/application/logged/nota.php">Notas</a></li>
 				<li><a href="/ProjectFree/application/logged/">Convites</a></li>
 				<li><a href="/ProjectFree/application/logged/">Perfil</a></li>

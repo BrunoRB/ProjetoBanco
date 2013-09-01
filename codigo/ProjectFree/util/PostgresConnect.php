@@ -59,7 +59,17 @@ class PostgresConnection {
 	 * @return retorno de pg_execute
 	 */
 	public function executeFunctionStatement($functionName, array $values) {
+		var_dump($functionName, $values);
 		return pg_execute($this->connection, $functionName, $values);
+	}
+
+	/**
+	 *
+	 * @param unknown $query
+	 * @param unknown $params
+	 */
+	public function executeQueryWithParams($query, $params) {
+		return pg_query_params($this->connection, $query, $params);
 	}
 
 	public function getResult($result) {
@@ -69,4 +79,9 @@ class PostgresConnection {
 	public function getErrorString() {
 		return pg_last_error($this->connection);
 	}
+
+	public function getNoticeString() {
+		return pg_last_notice($this->connection);
+	}
+
 }

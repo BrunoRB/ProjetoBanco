@@ -23,7 +23,8 @@ $(document).ready(function() {
 	 * Autocomplete settings and initialization
 	 */
 	$('input[data-type="text-autocomplete"]').autocomplete({
-	    source: ['Bruno', 'Fabricio', 'Maikon', 'Roberto', 'Ebara']
+	    source: ['Bruno (bruno@hotmail.com)', 'Fabricio (fabricio@hotmail.com)', 
+	             'Maikon (maikon@hotmail.com', 'Roberto (roberto@hotmail.com)', 'Ebara (ebara@migue.com)']
 	});
 	
 	/*

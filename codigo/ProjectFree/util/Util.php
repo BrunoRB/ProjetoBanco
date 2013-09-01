@@ -18,7 +18,22 @@ function printErrorMessage($message) {
   		<span><i class="icon-warning-sign"></i> $message</span>
 	</div>
 MESSAGE;
+}
 
+function printWarningMessage($message) {
+	echo <<<MESSAGE
+	<div class="warning text-warning">
+  		<span><i class="icon-warning-sign"></i> $message</span>
+	</div>
+MESSAGE;
+}
+
+function printSuccessMessage($message) {
+	echo <<<MESSAGE
+	<div class="sucess text-success">
+  		<span><i class="icon-success-sign"></i> $message</span>
+	</div>
+MESSAGE;
 }
 
 function printAlertMessage() {
@@ -37,6 +52,7 @@ function checkMandatoryPostFields(array $fields) {
 	$flag = true;
 	$invalidFields = array();
 	$validFields = array();
+	$i = 0;
 	foreach ($fields as $field) {
 		if (!isset($_POST[$field]) || empty($_POST[$field])) {
 			$invalidFields[] = $field;

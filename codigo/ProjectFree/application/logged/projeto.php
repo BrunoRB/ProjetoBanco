@@ -2,7 +2,7 @@
 
 require_once 'main.php';
 
-class Projeto extends Main {
+class Page_Projeto extends Main {
 
 	public function __construct() {
 		$this->setTitle('Projetos');
@@ -39,25 +39,14 @@ class Projeto extends Main {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td><a href="projeto.php?id=1">ProjectFree - Gerenciamento de projetos</a></td>
-							<td>Gerente do projeto</td>
-						</tr>
-						<tr>
-							<td><a href="projeto.php?id=1">Long Night - Sistema para gerenciamento de festas</a></td>
-							<td>Desenvolvedor back-end</td>
-						</tr>
-						<tr>
-							<td><a href="projeto.php?id=1">Sistema tal</a></td>
-							<td>Desenvolvedor front-end</td>
-						</tr>
+					<?php
+						$this->retrieveList('projeto', array($this->getUserId()), array('nome', 'funcao'));
+					?>
 					</tbody>
 				</table>
 			</div>
 			<div class="span5">
-				<form action="<?php echo SAVE_FILE;?>" method="post">
-					<a class="btn btn-primary btn-large" href="projeto.php?novo=true">Cadastrar novo projeto</a>
-				</form>
+				<a class="btn btn-primary btn-large" href="projeto.php?novo=true">Cadastrar novo projeto</a>
 			</div>
 		</div>
 		<?php
@@ -114,18 +103,20 @@ class Projeto extends Main {
 		?>
 		<div class="container">
 
-			<form action="<?php echo SAVE_FILE;?>" method="post">
+			<form action="projeto.php?novo=true" method="post">
 				Nome do projeto:
 				<input id="nome" type="text" placeholder="Nome" name="nome" /> <br>
 				Orçamento:
-				<input id="login" type="text" placeholder="Login" name="login" /> <br>
+				<input id="login" type="text" placeholder="Login" name="orcamento" /> <br>
 				Descrição:
 				<textarea data-type="text-multi" name="descricao"></textarea> <br>
 				<button type="submit" class="btn btn-primary btn-large" name="submit">Salvar</button>
+				<input type="hidden" name="entity" value="projeto" >
+				<input type="hidden" name="fields" value="nome,orcamento,descricao">
 			</form>
 		</div>
 		<?php
 	}
 
 
-} new Projeto();
+} new Page_Projeto();

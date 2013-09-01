@@ -11,6 +11,10 @@ CREATE DATABASE projectfree;
 \i database/scriptsDeCriacao.sql
 --END CREATE TABLES
 
+--CREATE VIEWS
+\i database/views.sql
+--END CREATE VIES
+
 --BEGIN CREATE FUNCTIONS/PROCEDURES
 SET CLIENT_ENCODING = 'latin1'; --SCRIPT usuario.sql gera algum problema de encoding para UTF8
 \i database/funcoes/usuario.sql
