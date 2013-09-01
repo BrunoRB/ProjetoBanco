@@ -123,8 +123,29 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
-CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
+CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT id_projeto INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
 	SET ROLE retrieve;
-	SELECT nome AS Nome, funcao AS funcao FROM projetoView WHERE id_usuario = $1;
+	SELECT id_projeto, nome, funcao FROM projetoView WHERE id_usuario = $1;
 $$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION projetoExibir (idUsuario INTEGER, OUT id INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
+	DECLARE
+		funcao VARCHAR(100);
+	BEGIN
+		SET ROLE retrieve;
+		SELECT INTO funcao funcao FROM membro_do_projeto INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario; 
+
+		IF LOWER(funcao) = 'gerente' THEN
+			SELECT projeto.nome, projeto.orcamento, projeto.data_de_cadastro, projeto.descricao, projeto.data_de_termino, usuario.nome AS gerente 
+				FROM projeto INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto 
+				INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario 
+1				WHERE usuario.id_usuario = idUsuario AND LOWER(membro_do_projeto.funcao) = 'gerente';
+		ELSE
+			SELECT projeto.nome AS projeto, projeto.descricao, projeto.data_de_termino, usuario.nome AS gerente
+				FROM projeto INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto 
+				INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario 
+				WHERE usuario.id_usuario = idUsuario AND LOWER(membro_do_projeto.funcao) = 'gerente';
+		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
 
