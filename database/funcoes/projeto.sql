@@ -95,4 +95,10 @@ $$ LANGUAGE PLPGSQL;
 
 --END DELETES;
 
+--SELECTS;
+
+CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
+	SET ROLE retrieve;
+	SELECT nome AS Nome, funcao AS funcao FROM projetoView WHERE id_usuario = $1;
+$$ LANGUAGE SQL;
 

@@ -19,3 +19,9 @@ INNER JOIN "public".membro_do_projeto ON "public".atividade_do_membro.fk_membro_
 INNER JOIN "public".fase ON "public".atividade.fk_fase = "public".fase.id_fase
 GROUP BY "public".membro_do_projeto.fk_projeto, "public".atividade.id_atividade, "public".fase.id_fase 
 ORDER BY fase.id_fase; -- Ordenando as atividade pela sua fase
+
+--View Listagem de projetos
+CREATE OR REPLACE VIEW projetoView AS 
+	SELECT id_usuario, projeto.nome AS Nome, membro_do_projeto.funcao AS funcao FROM projeto 
+		INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto
+		INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario;
