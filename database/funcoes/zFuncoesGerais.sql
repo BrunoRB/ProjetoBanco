@@ -64,3 +64,11 @@ INSERT INTO temp VALUES (1, 'OI', 100);
 SELECT generalUpdate('temp', 1, 'nome, idade', 'qualquernome, 10');
 SELECT * FROM temp;
 */
+
+
+
+CREATE OR REPLACE FUNCTION genericSelect(nome_tabela TEXT, id INTEGER) RETURNS RECORD AS $$
+	BEGIN
+	
+	END;
+$$ LANGUAGE PLPGSQL;

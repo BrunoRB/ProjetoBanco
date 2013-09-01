@@ -85,6 +85,8 @@ class Body {
 
 			$result = $pgConnect->getResult($retval);
 
+			var_dump($result);
+
 			$id = current(current($result));
 
 			if ($id > 0) {

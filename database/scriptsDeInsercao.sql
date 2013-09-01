@@ -42,15 +42,13 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		id_despesa2 INTEGER;
 		id_mensagem INTEGER;
 	BEGIN
-		FOR i IN 1..11000 LOOP
+		FOR i IN 1..10 LOOP
 			--cria gerente
 			email := ('gerente' || i || '@gerente.com');
 			id_gerente := usuarioCadastrar ('Gerente', email, 'admin');
 
-	 		--cria projeto
-			id_projeto := projetoCadastrar ('Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador');
-			--aloca gerente ao projeto
-			id_trash := membroCadastrarEmProjeto (id_projeto, id_gerente, 'Gerente');		
+	 		--cria projeto com gerente já definido
+			id_projeto := projetoCadastrar (id_gerente, 'Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador');
 
 			--cria membros
 			email := 'membro' || i || 'a@membro.com';

@@ -1,18 +1,21 @@
 
 --INSERTS;
 
-CREATE OR REPLACE FUNCTION projetoCadastrar (nome VARCHAR(100), orcamento NUMERIC(10, 2), descricao TEXT) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100), orcamento NUMERIC(10, 2), descricao TEXT) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
+		idMembroDoProjeto INTEGER;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO projeto (nome, orcamento, descricao) VALUES 
 			(nome, orcamento, descricao);
-
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
-		RETURN id_gerada;
 		
+		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
+		
+		RETURN id_gerada;
+
 		EXCEPTION
 		WHEN CHECK_VIOLATION THEN
 			RAISE NOTICE '[Erro] Dados inválidos inseridos !';
@@ -22,15 +25,19 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (nome VARCHAR(100), orcamento NUMERI
 	
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION projetoCadastrar (nome VARCHAR(100), descricao TEXT) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARCHAR(100), descricao TEXT) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
+		idMembroDoProjeto INTEGER;
 	BEGIN
 		SET ROLE insert;
-		INSERT INTO projeto (nome, descricao) VALUES (nome, descricao);
+		INSERT INTO projeto (nome, descricao) VALUES (nomeProjeto, descricao);
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
+		
+		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
+		
 		RETURN id_gerada;
 		
 		EXCEPTION
@@ -41,15 +48,19 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (nome VARCHAR(100), descricao TEXT) 
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION projetoCadastrar (nome VARCHAR(100), orcamento NUMERIC(10, 2)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoCadastrar (nomeProjeto VARCHAR(100), orcamento NUMERIC(10, 2)) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
+		idMembroDoProjeto INTEGER;
 	BEGIN
 		SET ROLE insert;
-		INSERT INTO projeto (nome, orcamento, fk_gerente) VALUES (nome, orcamento);
+		INSERT INTO projeto (nome, orcamento, fk_gerente) VALUES (nomeProjeto, orcamento);
 		
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
+		
+		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
+		
 		RETURN id_gerada;
 		
 		EXCEPTION
