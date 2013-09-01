@@ -16,6 +16,8 @@ CREATE DATABASE projectfree;
 --END CREATE VIES
 
 --BEGIN CREATE FUNCTIONS/PROCEDURES
+\i database/funcoes/zFuncoesGerais.sql
+
 SET CLIENT_ENCODING = 'latin1'; --SCRIPT usuario.sql gera algum problema de encoding para UTF8
 \i database/funcoes/usuario.sql
 SET CLIENT_ENCODING = 'utf8';

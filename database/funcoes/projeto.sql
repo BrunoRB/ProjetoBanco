@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 	DECLARE
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
+		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO projeto (nome, orcamento, descricao) VALUES 
@@ -14,11 +15,13 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 		
 		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
 		
+		trash := mensagemDeSucesso('PROJETO', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
+		
 		RETURN id_gerada;
 
 		EXCEPTION
 		WHEN CHECK_VIOLATION THEN
-			RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+			RAISE EXCEPTION '[Erro] Dados inválidos inseridos !';
 			RETURN 0;
 	END;
 	
@@ -29,6 +32,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 	DECLARE
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
+		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO projeto (nome, descricao) VALUES (nomeProjeto, descricao);
@@ -38,34 +42,39 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		
 		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
 		
+		trash := mensagemDeSucesso('PROJETO', 'cadastrado'); -- raise notice, ver zFuncoesGerais
+		
 		RETURN id_gerada;
 		
 		EXCEPTION
 		WHEN CHECK_VIOLATION THEN
-			RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+			RAISE EXCEPTION '[Erro] Dados inválidos inseridos !';
 			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION projetoCadastrar (nomeProjeto VARCHAR(100), orcamento NUMERIC(10, 2)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARCHAR(100), orcamento NUMERIC(10, 2)) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
+		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
-		INSERT INTO projeto (nome, orcamento, fk_gerente) VALUES (nomeProjeto, orcamento);
+		INSERT INTO projeto (nome, orcamento) VALUES (nomeProjeto, orcamento);
 		
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
 		
 		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
 		
+		trash := mensagemDeSucesso('projeto', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
+		
 		RETURN id_gerada;
 		
 		EXCEPTION
 		WHEN CHECK_VIOLATION THEN
-			RAISE NOTICE '[Erro] Dados inválidos inseridos !';
+			RAISE EXCEPTION '[Erro] Dados inválidos inseridos !';
 			RETURN 0;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -75,12 +84,15 @@ $$ LANGUAGE PLPGSQL;
 --UPDATE
 
 CREATE OR REPLACE FUNCTION projetoAtualizar (id INTEGER, nome_p VARCHAR(100), orcamento_p NUMERIC(11,2), dataCadastro DATE, descricao_p TEXT, dataTermino DATE)
-RETURNS INTEGER AS $$
+	RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
 	BEGIN
 		SET ROLE update;
 		UPDATE projeto SET nome = nome_p, orcamento = orcamento_p, data_de_cadastro = dataCadastro, descricao = descricao_p, data_de_termino = dataTermino
 		WHERE id_projeto = id;
 		IF (FOUND) THEN
+			trash := mensagemDeSucesso('PROJETO', 'atualizado'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		ELSE
 			RETURN 0;
@@ -93,10 +105,13 @@ $$ LANGUAGE PLPGSQL;
 --DELETES;
 
 CREATE OR REPLACE FUNCTION projetoExcluir (id INTEGER)	RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
 	BEGIN
 		SET ROLE delete;
 		DELETE FROM projeto WHERE id_projeto = id;
 		IF (FOUND) THEN
+			trash := mensagemDeSucesso('PROJETO', 'excluído'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		END IF;
 		
