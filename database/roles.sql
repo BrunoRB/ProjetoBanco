@@ -22,12 +22,25 @@ GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO retrieve;
 DROP ROLE update;
 CREATE ROLE update;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO update;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO update;
 
 DROP ROLE delete;
 CREATE ROLE delete;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO delete;
 
 GRANT USAGE ON SCHEMA public TO insert, retrieve, update, delete, function;
+
+
+CREATE OR REPLACE FUNCTION ups() RETURNS VOID AS $$
+	BEGIN
+		SET ROLE admin;
+		GRANT SELECT ON ALL TABLES IN SCHEMA public TO update;
+		SET ROLE update;
+		UPDATE USUARIO SET nome='UPDATE' WHERE id_usuario = 1;
+		SET ROLE admin;
+		REVOKE SELECT ON ALL TABLES IN SCHEMA public FROM update;
+	END;
+$$ LANGUAGE PLPGSQL;
 
 
 
