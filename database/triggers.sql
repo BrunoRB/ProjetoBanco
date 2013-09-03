@@ -98,6 +98,30 @@ CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
 	END;
 $$LANGUAGE PLPGSQL;
 
-CREATE TRIGGER verificaAtividadePredecessora BEFORE INSERT OR UPDATE ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaAtividadePredecessora();
+CREATE TRIGGER verificaAtividadePredecessora BEFORE INSERT OR UPDATE ON atividade FOR EACH ROW EXECUTE PROCEDURE verificaAtividadePredecessora();
+
+
+
+CREATE FUNCTION verificaAtividadeConcluida() RETURNS TRIGGER AS $$
+	DECLARE
+		porcentagem artefato_atividade.porcentagem_gerada%TYPE;
+		soma artefato.porcentagem_concluida%TYPE;
+		artefato artefato_atividade.fk_artefato%TYPE;
+	BEGIN
+		IF (NEW.finalizada IS NOT NULL) THEN
+			SELECT porcentagem_gerada, fk_artefato FROM artefato.atividade WHERE artefato_atividade.fk_atividade = atividade.id_atividade INTO porcentagem, artefato;
+
+			SELECT porcentagem_concluida FROM artefato WHERE artefato.id_artefato = artefato INTO soma;
+
+			UPDATE artefato
+			SET porcentagem_concluida = soma + porcentagem
+			WHERE artefato.id_artefato = artefato;
+		END IF;
+
+		RETURN NEW; 
+	END;
+$$LANGUAGE PLPGSQL;
+
+CREATE TRIGGER verificaAtividadeConcluida BEFORE UPDATE ON atividade FOR EACH ROW EXECUTE PROCEDURE verificaAtividadeConcluida();
 
 --END TRIGGER atividade
