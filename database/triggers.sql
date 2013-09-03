@@ -83,12 +83,12 @@ CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
 	BEGIN
 		IF (NEW.fk_predecessora IS NOT NULL) THEN
 			SELECT fim_atividade, finalizada, fk_fase FROM atividade WHERE id_atividade = NEW.fk_predecessora INTO fim, finalizado, fase;
-			IF (finalizado = true)			
-				IF (NEW.inicio_atividade < fim)
+			IF (finalizado = true) THEN			
+				IF (NEW.inicio_atividade < fim) THEN
 					RAISE EXCEPTION '[ERRO] Não é permitido iniciar uma atividade sem antes terminar a atividade predecessora.';
 				END IF;
 
-				IF (NEW.fk_fase < fase)
+				IF (NEW.fk_fase < fase) THEN
 					RAISE EXCEPTION '[ERRO] A fase da atividade deve ser maior ou igual a fase da atividade predecessora.';
 				END IF;
 			END IF;
