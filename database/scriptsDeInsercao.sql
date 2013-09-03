@@ -119,9 +119,81 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
---SELECT insertData();
+CREATE OR REPLACE FUNCTION updateData() RETURNS INTEGER AS $$
+	DECLARE
+		resposta INTEGER;
+		data1 DATE;
+		data2 DATE;
+	BEGIN
+		--pega as datas do projeto
+		SET ROLE retrieve;
+		SELECT INTO data1 data_de_cadastro FROM projeto WHERE id_projeto = 1;
+		SELECT INTO data2 data_de_termino FROM projeto WHERE id_projeto = 1;
+		
+		SET ROLE function;
+		--atulizar projeto
+		resposta := projetoAtualizar(1, 'Projeto alterado', 15.500, data1, 'nova descrição', data2);
 
+		--atualiza gerente e membros do projeto
+		resposta := usuarioAtualizar(1, 'Novo_gerente', 'novo_email_gerente@gerente.com', 'novasenhag');
+		resposta := usuarioAtualizar(2, 'Novo_membro1', 'novo_email_membro1@gerente.com', 'novasenham');
+		resposta := usuarioAtualizar(3, 'Novo_membro2', 'novo_email_membro2@gerente.com', 'novasenham', 'caminho_imagem');
+		resposta := usuarioAtualizar(4, 'Novo_membro3', 'novo_email_membro3@gerente.com', 'novasenham');
 
+		--atualiza as fases
+		resposta := faseAtualizar(1, 'Nova_fase_1', 1);
+		resposta := faseAtualizar(2, 'Nova_fase_2', 'Nova_descrição', 1, 1);
+		resposta := faseAtualizar(3, 'Nova_fase_3', 1, 2);
+		
+		--atualiza as atividades
+
+		--pega as datas da atividade 1
+		SET ROLE retrieve;
+		SELECT INTO data1 inicio_atividade FROM atividade WHERE id_atividade = 1;
+		SELECT INTO data2 limite_atividade FROM atividade WHERE id_atividade = 1;
+		SET ROLE function;
+		resposta := atividadeAtualizar(1, data1, data2, 'novo_nome_atividade1', 'nova_descricao', 1);
+		
+		SET ROLE retrieve;
+		SELECT INTO data1 inicio_atividade FROM atividade WHERE id_atividade = 2;
+		SELECT INTO data2 limite_atividade FROM atividade WHERE id_atividade = 2;
+		SET ROLE function;
+		resposta := atividadeAtualizar(2, data1, data2, 'novo_nome_atividade2', 'adicionando_descricao', 1, 1);
+
+		SET ROLE retrieve;
+		SELECT INTO data1 inicio_atividade FROM atividade WHERE id_atividade = 3;
+		SELECT INTO data2 limite_atividade FROM atividade WHERE id_atividade = 3;
+		SET ROLE function;
+		resposta := atividadeAtualizar(3, data1, data2, 'novo_nome_atividade3', 'adicionando_descricao', 2);
+
+		SET ROLE retrieve;
+		SELECT INTO data1 inicio_atividade FROM atividade WHERE id_atividade = 4;
+		SELECT INTO data2 limite_atividade FROM atividade WHERE id_atividade = 4;
+		SET ROLE function;
+		resposta := atividadeAtualizar(4, data1, data2, 'novo_nome_atividade4', 'nova_descricao', 3, 2);
+
+		SET ROLE retrieve;
+		SELECT INTO data1 inicio_atividade FROM atividade WHERE id_atividade = 5;
+		SELECT INTO data2 limite_atividade FROM atividade WHERE id_atividade = 5;
+		SET ROLE function;
+		resposta := atividadeAtualizar(5, data1, data2, 'novo_nome_atividade5', 'adicionando_descricao', 3);
+
+		SET ROLE retrieve;
+		SELECT INTO data1 inicio_atividade FROM atividade WHERE id_atividade = 6;
+		SELECT INTO data2 limite_atividade FROM atividade WHERE id_atividade = 6;
+		SET ROLE function;
+		resposta := atividadeAtualizar(6, data1, data2, 'novo_nome_atividade6', 'adicionando_descricao', 5, 3);
+
+		--atribui usuario a outra atividade
+		--reposta := 
+
+		--Atualiza os artefatos
+		resposta := artefatoAtualizar(1, 'novo_nome_artefato1', 'novo_tipo1', '', 0);
+		resposta := artefatoAtualizar(2, 'novo_nome_artefato2', 'novo_tipo2', 'nova_descricao', 0);
+
+		RETURN resposta;
+	END;
+$$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION deleteData() RETURNS BOOLEAN AS $$
 	BEGIN			
@@ -148,13 +220,6 @@ CREATE OR REPLACE FUNCTION deleteData() RETURNS BOOLEAN AS $$
 		
 		--TODO complete deletes;
 		
-		RETURN 'TRUE';
-	END;
-$$ LANGUAGE PLPGSQL;
-
---TODO update data
-CREATE OR REPLACE FUNCTION updateData() RETURNS BOOLEAN AS $$
-	BEGIN
 		RETURN 'TRUE';
 	END;
 $$ LANGUAGE PLPGSQL;

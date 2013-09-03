@@ -139,7 +139,7 @@ CREATE OR REPLACE FUNCTION projetoExibir (idUsuario INTEGER, OUT id INTEGER, OUT
 			SELECT projeto.nome, projeto.orcamento, projeto.data_de_cadastro, projeto.descricao, projeto.data_de_termino, usuario.nome AS gerente 
 				FROM projeto INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto 
 				INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario 
-1				WHERE usuario.id_usuario = idUsuario AND LOWER(membro_do_projeto.funcao) = 'gerente';
+				WHERE usuario.id_usuario = idUsuario AND LOWER(membro_do_projeto.funcao) = 'gerente';
 		ELSE
 			SELECT projeto.nome AS projeto, projeto.descricao, projeto.data_de_termino, usuario.nome AS gerente
 				FROM projeto INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto 

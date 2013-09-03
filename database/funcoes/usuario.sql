@@ -78,6 +78,47 @@ RETURNS VARCHAR AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
+--com imagem
+CREATE OR REPLACE FUNCTION usuarioAtualizar(id INTEGER, nome_p VARCHAR(100), email_p VARCHAR(100), senha_p VARCHAR(255), imagem_p VARCHAR(255))
+RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
+	BEGIN
+		SET ROLE update;
+		UPDATE usuario SET nome = nome_p, email = email_p, senha = md5(senha_p), imagem = imagem_p WHERE id_usuario = id;
+		IF (FOUND) THEN
+			trash = mensagemDeSucesso('Usuário', 'Atualizado');
+			RETURN 1;
+		ELSE
+			RETURN 0;
+		END IF;
+	EXCEPTION
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION '[Erro] Dados inválidos inseridos!';
+			RETURN 0;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--sem imagem
+CREATE OR REPLACE FUNCTION usuarioAtualizar(id INTEGER, nome_p VARCHAR(100), email_p VARCHAR(100), senha_p VARCHAR(255))
+RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
+	BEGIN
+		SET ROLE update;
+		UPDATE usuario SET nome = nome_p, email = email_p, senha = md5(senha_p) WHERE id_usuario = id;
+		IF (FOUND) THEN
+			trash = mensagemDeSucesso('Usuário', 'Atualizado');
+			RETURN 1;
+		ELSE
+			RETURN 0;
+		END IF;
+	EXCEPTION
+		WHEN CHECK_VIOLATION THEN
+			RAISE EXCEPTION '[Erro] Dados inválidos inseridos!';
+			RETURN 0;
+	END;
+$$ LANGUAGE PLPGSQL;
 --END UPDATES:
 
 

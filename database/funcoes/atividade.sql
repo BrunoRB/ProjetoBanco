@@ -65,14 +65,37 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATES;
 
-CREATE OR REPLACE FUNCTION atividadeAtualizar(id INTEGER, inicio TIMESTAMP, limete TIMESTAMP, nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER)
+
+CREATE OR REPLACE FUNCTION atividadeAtualizar(id INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER)
 RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
 	BEGIN	
 		SET ROLE update;	
 		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, descricao_atividade = 				descricao, fk_predecessora = predecessora, fk_fase = fase WHERE id_atividade = id;
 		IF (FOUND) THEN
+			trash := mensagemDeSucesso('Atividade', 'atualizada');
 			RETURN 1;
 		ELSE
+			RAISE NOTICE 'Erro ao atualizar a atividade.';
+			RETURN 0;
+		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--sem predecessora
+CREATE OR REPLACE FUNCTION atividadeAtualizar(id INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, fase INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
+	BEGIN	
+		SET ROLE update;	
+		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, descricao_atividade = 				descricao, fk_fase = fase WHERE id_atividade = id;
+		IF (FOUND) THEN
+			trash := mensagemDeSucesso('Atividade', 'atualizada');
+			RETURN 1;
+		ELSE
+			RAISE NOTICE 'Erro ao atualizar a atividade.';
 			RETURN 0;
 		END IF;
 	END;
