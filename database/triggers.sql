@@ -73,4 +73,31 @@ CREATE TRIGGER verificaValorDespesa BEFORE INSERT OR UPDATE ON despesa FOR EACH 
 
 
 
+--TRIGGER atividade
 
+CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
+	DECLARE
+		fim atividade.fim_atividade%TYPE;
+		finalizado atividade.finalizada%TYPE;
+		fase atividade.fk_fase%TYPE;
+	BEGIN
+		IF (NEW.fk_predecessora IS NOT NULL) THEN
+			SELECT fim_atividade, finalizada, fk_fase FROM atividade WHERE id_atividade = NEW.fk_predecessora INTO fim, finalizado, fase;
+			IF (finalizado = true)			
+				IF (NEW.inicio_atividade < fim)
+					RAISE EXCEPTION '[ERRO] Não é permitido iniciar uma atividade sem antes terminar a atividade predecessora.';
+				END IF;
+
+				IF (NEW.fk_fase < fase)
+					RAISE EXCEPTION '[ERRO] A fase da atividade deve ser maior ou igual a fase da atividade predecessora.';
+				END IF;
+			END IF;
+		END IF;
+
+		RETURN NEW; 
+	END;
+$$LANGUAGE PLPGSQL;
+
+CREATE TRIGGER verificaAtividadePredecessora BEFORE INSERT OR UPDATE ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaAtividadePredecessora();
+
+--END TRIGGER atividade
