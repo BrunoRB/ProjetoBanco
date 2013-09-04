@@ -9,7 +9,7 @@ RETURNS BOOLEAN AS $$
 		INSERT INTO artefato_atividade (fk_atividade, fk_artefato, porcentagem_gerada) 
 		VALUES (id_atividade, id_artefato, porcentagem_p);
 		IF (FOUND) THEN
-			RAISE NOTICE 'Atividade vinculada ao artefato com sucesso!';
+			EXECUTE mensagemDeSucesso('Relação Artefato/Atividade', 'inserida');
 			RETURN true;
 		ELSE
 			RETURN false;
@@ -32,7 +32,7 @@ RETURNS INTEGER AS $$
 		SET ROLE update;
 		UPDATE artefato_atividade SET porcentagem_gerada = porcentagem_p WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Relação entre atividade e artefato atualizada com sucesso!';
+			EXECUTE mensagemDeSucesso('Relação artefato/atividade', 'atualizada');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atulizar relação entre atividade e artefato!';
@@ -49,14 +49,14 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETES
 
-CREATE OR REPLACE FUNCTION artefato_atividadeExcluir (id_atividade INTEGER, id_artefato INTEGER)
+CREATE OR REPLACE FUNCTION artefato_atividadeExcluir(id_atividade INTEGER, id_artefato INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		SET ROLE delete;
 		DELETE FROM artefato_atividade WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
 		IF (FOUND) THEN
 			RETURN 1;
-			RAISE NOTICE 'Relação atividade e artefato excluida com sucesso!';
+			EXECUTE mensagemDeSucesso('Relação artefato/atividade', 'excluida');
 		ELSE
 			RETURN 0;
 			RAISE NOTICE 'Falha ao excluir relação atividade e artefato!';

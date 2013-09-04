@@ -12,7 +12,7 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -33,7 +33,7 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -50,7 +50,7 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -67,7 +67,7 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');		
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -88,7 +88,7 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -109,10 +109,11 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	END;
 $$ LANGUAGE PLPGSQL;
+
 CREATE OR REPLACE FUNCTION artefatoCadastrarSemTipoDesc (nome_p VARCHAR(100), porcentagem_concluida_p INTEGER)
 
 RETURNS INTEGER AS $$
@@ -126,7 +127,7 @@ RETURNS INTEGER AS $$
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
 
-		RAISE NOTICE 'Artefato cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Artefato', 'Cadastrado');
 		RETURN cod_artefato;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -146,7 +147,7 @@ RETURNS INTEGER AS $$
 		UPDATE artefato SET porcentagem_concluida = (porcentagem_concluida + porcentagem)
 		WHERE id_artefato = id;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Porcentagem atualizada com sucesso!';
+			EXECUTE mensagemDeSucesso('Artefato', 'atualizado');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atulizar porcentagem!';
@@ -161,12 +162,14 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION artefatoAtualizar (id INTEGER, nome_p VARCHAR(100), tipo_p VARCHAR(100), descricao_p TEXT, porc INTEGER)
 RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
 	BEGIN
 		SET ROLE update;
 		UPDATE artefato SET nome = nome_p, tipo = tipo_p, descricao = descricao_p, porcentagem_concluida = porc
 		WHERE id_artefato = id;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Artefato atualizado com sucesso!';
+			EXECUTE mensagemDeSucesso('Artefato', 'atualizado');
 			RETURN 1;
 		ELSE
 			RETURN 0;
@@ -186,9 +189,11 @@ CREATE OR REPLACE FUNCTION artefatoExcluir (id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		SET ROLE delete;
+		DELETE FROM artefato_atividade WHERE fk_artefato = id;
 		DELETE FROM artefato WHERE id_artefato = id;
+
 		IF (FOUND) THEN
-			RAISE NOTICE 'Artefato excluido com sucesso!';
+			EXECUTE mensagemDeSucesso('Artefato', 'excluido');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao excluir o artefato!';

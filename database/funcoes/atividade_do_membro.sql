@@ -4,7 +4,6 @@
 CREATE OR REPLACE FUNCTION atividade_do_membroCadastrar(id_membro INTEGER, id_atividade INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO atividade_do_membro (fk_membro_do_projeto, fk_atividade)
@@ -12,7 +11,7 @@ CREATE OR REPLACE FUNCTION atividade_do_membroCadastrar(id_membro INTEGER, id_at
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('atividade_do_membro_id_atividade_do_membro_seq');
-		trash := mensagemDeSucesso('Atividade', 'atribuida');
+		EXECUTE mensagemDeSucesso('Atividade', 'atribuida ao usuário');
 		RETURN id_gerada;
 	EXCEPTION
 		WHEN CHECK_VIOLATION THEN
@@ -40,12 +39,19 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION atividade_do_membroExcluir(id_membro INTEGER, id_atividade INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
-		trash BOOLEAN;
+		id_atdm INTEGER;
+		id_com INTEGER;
 	BEGIN
+		SET ROLE retrieve;
+		SELECT INTO id_atdm id_atividade_do_membro FROM atividade_do_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
+		SELECT INTO id_com id_comentario FROM comentario WHERE fk_atividade_do_membro = id;
+
 		SET ROLE delete;
+		DELETE FROM imagem WHERE fk_comentario = id_com;
+		DELETE FROM comentario WHERE fk_atividade_do_membro = id_atdm;
 		DELETE FROM atividade_do_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('Atribuição', 'excluida');
+			EXECUTE mensagemDeSucesso('Atividade', 'excluida');
 			RETURN 1;
 		ELSE
 			RETURN 0;

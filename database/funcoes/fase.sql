@@ -5,7 +5,6 @@
 CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO fase (nome, descricao, fk_projeto, fk_predecessora) 
@@ -13,7 +12,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, 
 
 		SET ROLE retrieve;
 		SELECT INTO cod_fase currval('fase_id_fase_seq');
-		trash := mensagemDeSucesso('fase', 'cadastrada');
+		EXECUTE mensagemDeSucesso('fase', 'cadastrada');
 		RETURN cod_fase;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -22,7 +21,6 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO fase (nome, descricao, fk_projeto) 
@@ -30,7 +28,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, 
 
 		SET ROLE retrieve;
 		SELECT INTO cod_fase currval('fase_id_fase_seq');
-		trash := mensagemDeSucesso('fase', 'cadastrada');
+		EXECUTE mensagemDeSucesso('fase', 'cadastrada');
 		RETURN cod_fase;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -39,7 +37,6 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER, id_predecessora INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO fase (nome, fk_projeto, fk_predecessora) 
@@ -47,7 +44,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER
 
 		SET ROLE retrieve;
 		SELECT INTO cod_fase currval('fase_id_fase_seq');
-		trash := mensagemDeSucesso('fase', 'cadastrada');		
+		EXECUTE mensagemDeSucesso('fase', 'cadastrada');		
 		RETURN cod_fase;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -56,7 +53,6 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO fase (nome, fk_projeto) 
@@ -64,7 +60,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER
 
 		SET ROLE retrieve;
 		SELECT INTO cod_fase currval('fase_id_fase_seq');
-		trash := mensagemDeSucesso('fase', 'cadastrada');
+		EXECUTE mensagemDeSucesso('fase', 'cadastrada');
 		RETURN cod_fase;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -76,13 +72,11 @@ $$ LANGUAGE PLPGSQL;
 --tudo
 CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, descricao = descricao_p, fk_projeto = id_projeto, fk_predecessora = id_predecessora WHERE id_fase = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('fase', 'atualizada');
+			EXECUTE mensagemDeSucesso('fase', 'atualizada');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atualizar fase!';
@@ -94,13 +88,11 @@ $$ LANGUAGE PLPGSQL;
 --sem descrição
 CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_predecessora INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN	
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, fk_projeto = id_projeto, fk_predecessora = id_predecessora WHERE id_fase = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('fase', 'atualizada');
+			EXECUTE mensagemDeSucesso('fase', 'atualizada');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atualizar fase!';
@@ -112,13 +104,11 @@ $$ LANGUAGE PLPGSQL;
 --sem predecedora
 CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN	
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, descricao = descricao_p, fk_projeto = id_projeto WHERE id_fase = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('fase', 'atualizada');
+			EXECUTE mensagemDeSucesso('fase', 'atualizada');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atualizar fase!';
@@ -130,13 +120,11 @@ $$ LANGUAGE PLPGSQL;
 --sem predecedora e descricao
 CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN	
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, fk_projeto = id_projeto WHERE id_fase = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('fase', 'atualizada');
+			EXECUTE mensagemDeSucesso('fase', 'atualizada');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atualizar fase!';
@@ -150,13 +138,15 @@ $$ LANGUAGE PLPGSQL;
 --DELETES;
 
 CREATE OR REPLACE FUNCTION faseExcluir (id INTEGER) RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN
+		SET ROLE update;
+		UPDATE fase SET fk_predecessora = null WHERE fk_predecessora = id;
+		UPDATE atividade SET fk_fase = null WHERE fk_fase = id;
+
 		SET ROLE delete;
 		DELETE FROM fase WHERE id_fase = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('fase', 'excluida');
+			EXECUTE mensagemDeSucesso('fase', 'excluida');
 			RETURN 1;
 		END IF;
 		

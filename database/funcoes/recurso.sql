@@ -11,7 +11,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_recurso currval('recurso_id_recurso_seq');
-		RAISE NOTICE 'Recurso cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Recurso', 'Cadastrado');
 		RETURN cod_recurso;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -31,7 +31,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_recurso currval('recurso_id_recurso_seq');
-		RAISE NOTICE 'Recurso cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Recurso', 'Cadastrado');
 		RETURN cod_recurso;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -51,7 +51,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_recurso currval('recurso_id_recurso_seq');
-		RAISE NOTICE 'Recurso cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Recurso', 'Cadastrado');
 		RETURN cod_recurso;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -71,7 +71,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_recurso currval('recurso_id_recurso_seq');
-		RAISE NOTICE 'Recurso cadastrado com sucesso!';
+		EXECUTE mensagemDeSucesso('Recurso', 'Cadastrado');
 		RETURN cod_recurso;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -91,7 +91,7 @@ RETURNS INTEGER AS $$
 		UPDATE recuso SET nome = nome_p, descricao = descricao_p, fk_projeto = id_projeto, fk_despesa = id_despesa
 		WHERE id_recuso = id;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Recurso atualizado com sucesso!';
+			EXECUTE mensagemDeSucesso('Recurso', 'atualizado');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atualizar recurso';
@@ -108,13 +108,14 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETE
 
+--delete por id
 CREATE OR REPLACE FUNCTION recursoExcluir(id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		SET ROLE delete;
 		DELETE FROM recurso WHERE id_recurso = id;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Recurso excluido com sucesso!';
+			EXECUTE mensagemDeSucesso('recurso', 'excluido');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao excluir o recurso!';
@@ -122,5 +123,4 @@ RETURNS INTEGER AS $$
 		END IF;
 	END;
 $$ LANGUAGE PLPGSQL;
-
 --END DELETE

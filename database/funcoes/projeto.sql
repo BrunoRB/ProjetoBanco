@@ -5,7 +5,6 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 	DECLARE
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO projeto (nome, orcamento, descricao) VALUES 
@@ -15,7 +14,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 		
 		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
 		
-		trash := mensagemDeSucesso('PROJETO', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
+		EXECUTE mensagemDeSucesso('PROJETO', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
 		
 		RETURN id_gerada;
 
@@ -32,7 +31,6 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 	DECLARE
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO projeto (nome, descricao) VALUES (nomeProjeto, descricao);
@@ -42,7 +40,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		
 		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
 		
-		trash := mensagemDeSucesso('PROJETO', 'cadastrado'); -- raise notice, ver zFuncoesGerais
+		EXECUTE mensagemDeSucesso('PROJETO', 'cadastrado'); -- raise notice, ver zFuncoesGerais
 		
 		RETURN id_gerada;
 		
@@ -58,7 +56,6 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 	DECLARE
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE insert;
 		INSERT INTO projeto (nome, orcamento) VALUES (nomeProjeto, orcamento);
@@ -68,7 +65,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		
 		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
 		
-		trash := mensagemDeSucesso('projeto', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
+		EXECUTE mensagemDeSucesso('projeto', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
 		
 		RETURN id_gerada;
 		
@@ -84,15 +81,13 @@ $$ LANGUAGE PLPGSQL;
 --UPDATE
 
 CREATE OR REPLACE FUNCTION projetoAtualizar (id INTEGER, nome_p VARCHAR(100), orcamento_p NUMERIC(11,2), dataCadastro DATE, descricao_p TEXT, dataTermino DATE)
-	RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
+RETURNS INTEGER AS $$
 	BEGIN
 		SET ROLE update;
 		UPDATE projeto SET nome = nome_p, orcamento = orcamento_p, data_de_cadastro = dataCadastro, descricao = descricao_p, data_de_termino = dataTermino
 		WHERE id_projeto = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('PROJETO', 'atualizado'); -- raise notice, ver zFuncoesGerais
+			EXECUTE mensagemDeSucesso('PROJETO', 'atualizado'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		ELSE
 			RETURN 0;
@@ -106,12 +101,33 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION projetoExcluir (id INTEGER)	RETURNS INTEGER AS $$
 	DECLARE
-		trash BOOLEAN;
+		id_mdp INTEGER
+		id_atdm INTEGER;
+		id_com INTEGER;
 	BEGIN
+		SET ROLE retrieve;
+		SELECT INTO id_mdp id_membro_do_projeto FROM membro_do_projeto WHERE fk_projeto = id
+		SELECT INTO id_atdm id_atividade_do_membro FROM atividade_do_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
+		SELECT INTO id_com id_comentario FROM comentario WHERE fk_atividade_do_membro = id;
+
 		SET ROLE delete;
+
+		DELETE FROM recurso WHERE fk_projeto = id;
+		DELETE FROM despesa WHERE fk_projeto = id;
+
+		DELETE FROM imagem WHERE fk_comentario = id_com;
+		DELETE FROM comentario WHERE fk_atividade_do_membro = id_atdm;
+
+		DELETE FROM atividade WHERE id_ativiade-----PROBLEMA!!!
+
+		DELETE FROM atividade_do_membro WHERE fk_membro_do_projeto = id_mdp;
+		DELETE FROM membro_do_projeto WHERE fk_projeto = id;
+
+		DELETE FROM fase WHERE fk_projeto = id;
+
 		DELETE FROM projeto WHERE id_projeto = id;
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('PROJETO', 'excluído'); -- raise notice, ver zFuncoesGerais
+			EXECUTE mensagemDeSucesso('PROJETO', 'excluído'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		END IF;
 		

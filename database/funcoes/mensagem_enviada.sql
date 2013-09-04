@@ -5,7 +5,7 @@ RETURNS BOOLEAN AS $$
 		INSERT INTO mensagem_enviada (fk_destinatario, fk_mensagem, data_hora_envio)
 		VALUES (id_destinatario, id_mensagem, data);
 		IF (FOUND) THEN
-			RAISE NOTICE 'Mensagem enviada ao usuário com sucesso!';
+			EXECUTE mensagemDeSucesso('Mensagem', 'enviada');
 			RETURN true;
 		ELSE
 			RETURN false;
@@ -13,7 +13,7 @@ RETURNS BOOLEAN AS $$
 		
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
-			RAISE EXCEPTION 'O valor da porcengem informado é inválido!';
+			RAISE EXCEPTION 'Erro ao enviar mensagem!';
 			RETURN false;
 	END;
 $$ LANGUAGE PLPGSQL;

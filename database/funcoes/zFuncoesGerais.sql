@@ -1,10 +1,9 @@
 
-CREATE OR REPLACE FUNCTION mensagemDeSucesso(entity VARCHAR(100), operation VARCHAR(100)) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION mensagemDeSucesso(entity VARCHAR(100), operation VARCHAR(100)) RETURNS VOID AS $$
 	BEGIN
 		entity := INITCAP(LOWER(entity));
 		operation := LOWER(operation);
 		RAISE NOTICE '% % com sucesso !', entity, operation;
-		RETURN TRUE;
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -54,6 +53,7 @@ CREATE OR REPLACE FUNCTION generalUpdate(nome_tabela TEXT, id_atualizar INTEGER,
 				ELSE
 					tempVal = arrayValores[i];
 				END IF;
+				SET ROLE update;
 				EXECUTE 'UPDATE ' || nome_tabela || ' SET ' || arrayCampos[i] || ' = ' || tempVal || ' WHERE id_' || nome_tabela || '=' || id_atualizar;
 
 				countCamposAlterados = countCamposAlterados + 1; --"countCamposAlterados++"

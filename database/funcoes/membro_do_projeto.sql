@@ -11,6 +11,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_membroDoProjeto currval('membro_do_projeto_id_membro_do_projeto_seq');
+		EXECUTE mensagemDeSucesso('Membro', 'inserido');
 		RETURN cod_membroDoProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION membroRemoverDeProjeto(projeto INTEGER, membro INTEGE
 	BEGIN
 		SET ROLE delete;
 		DELETE FROM Mmembro_do_projeto WHERE fk_projeto = projeto AND fk_membro = membro;
+		EXECUTE mensagemDeSucesso('Relação membro/projeto', 'excluida');
 		IF (FOUND) THEN
 			RETURN 1;
 		ELSE

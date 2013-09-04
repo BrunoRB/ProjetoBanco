@@ -4,7 +4,6 @@ CREATE OR REPLACE FUNCTION usuarioCadastrar (nome VARCHAR, email VARCHAR, senha 
 RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INT;
-		trash BOOLEAN;
 	BEGIN 
 		SET ROLE insert;
 		INSERT INTO usuario (nome, email, senha)
@@ -12,7 +11,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('usuario_id_usuario_seq');
-		trash := mensagemDeSucesso('Usuario', 'cadastrado'); -- raise notice, ver zFuncoesGerais
+		EXECUTE mensagemDeSucesso('Usuario', 'cadastrado'); -- raise notice, ver zFuncoesGerais
 		RETURN id_gerada;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -30,7 +29,6 @@ CREATE OR REPLACE FUNCTION alterarSenha (id INTEGER, senha_antiga VARCHAR, senha
 RETURNS INTEGER AS $$
 	DECLARE
 		password VARCHAR;
-		trash BOOLEAN;
 	BEGIN 
 		SET ROLE retrieve;
 		SELECT INTO password senha FROM usuario WHERE id_usuario = id;
@@ -38,7 +36,7 @@ RETURNS INTEGER AS $$
 		IF (password = md5(senha_antiga)) THEN
 			SET ROLE update;
 			UPDATE usuario SET senha = md5(senha_nova) WHERE id_usuario = (id);
-			trash := mensagemDeSucesso('Usuario', 'cadastrado'); -- raise notice, ver zFuncoesGerais	
+			EXECUTE mensagemDeSucesso('Usuario', 'cadastrado'); -- raise notice, ver zFuncoesGerais	
 			RETURN 1;
 		ELSE
 			RAISE EXCEPTION 'Senha atual incorreta!';
@@ -81,13 +79,11 @@ $$ LANGUAGE PLPGSQL;
 --com imagem
 CREATE OR REPLACE FUNCTION usuarioAtualizar(id INTEGER, nome_p VARCHAR(100), email_p VARCHAR(100), senha_p VARCHAR(255), imagem_p VARCHAR(255))
 RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE update;
 		UPDATE usuario SET nome = nome_p, email = email_p, senha = md5(senha_p), imagem = imagem_p WHERE id_usuario = id;
 		IF (FOUND) THEN
-			trash = mensagemDeSucesso('Usuário', 'Atualizado');
+			EXECUTE mensagemDeSucesso('Usuario', 'atualizado');
 			RETURN 1;
 		ELSE
 			RETURN 0;
@@ -102,13 +98,11 @@ $$ LANGUAGE PLPGSQL;
 --sem imagem
 CREATE OR REPLACE FUNCTION usuarioAtualizar(id INTEGER, nome_p VARCHAR(100), email_p VARCHAR(100), senha_p VARCHAR(255))
 RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE update;
 		UPDATE usuario SET nome = nome_p, email = email_p, senha = md5(senha_p) WHERE id_usuario = id;
 		IF (FOUND) THEN
-			trash = mensagemDeSucesso('Usuário', 'Atualizado');
+			EXECUTE mensagemDeSucesso('Usuario', 'atualizado');
 			RETURN 1;
 		ELSE
 			RETURN 0;
@@ -126,13 +120,11 @@ $$ LANGUAGE PLPGSQL;
 
 --Inativa o usuário
 CREATE OR REPLACE FUNCTION usuarioExcluir (id INTEGER) RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN 
 		SET ROLE update;
 		UPDATE usuario SET inativo = TRUE, data_inatividade = CURRENT_DATE WHERE id_usuario = (id);
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('Usuario', 'inativado'); -- raise notice, ver zFuncoesGerais
+			EXECUTE mensagemDeSucesso('Usuario', 'inativado'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		ELSE
 			RAISE EXCEPTION 'Usuário não inativado!';
@@ -148,13 +140,11 @@ $$ LANGUAGE PLPGSQL;
 
 --Exclui todos usuários que estão inativos à um ano ou mais
 CREATE OR REPLACE FUNCTION usuarioExcluir () RETURNS INTEGER AS $$
-	DECLARE
-		trash BOOLEAN;
 	BEGIN
 		SET ROLE delete;
 		DELETE FROM usuario WHERE inativo = TRUE AND age(data_inatividade) >= '1 year';
 		IF (FOUND) THEN
-			trash := mensagemDeSucesso('Usuarios inativos', 'excluídos'); -- raise notice, ver zFuncoesGerais
+			EXECUTE mensagemDeSucesso('Usuarios inativos', 'excluidos'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		ELSE
 			RAISE EXCEPTION 'Usuários não excluídos!';

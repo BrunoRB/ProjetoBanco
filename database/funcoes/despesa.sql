@@ -11,7 +11,7 @@ RETURNS INTEGER AS $$
 		
 		SET ROLE retrieve;
 		SELECT INTO cod_despesa currval('despesa_id_despesa_seq');
-		RAISE NOTICE 'Despesa cadastrada com sucesso!';
+		EXECUTE mensagemDeSucesso('Despesa', 'cadastrada');
 		RETURN cod_despesa;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -31,7 +31,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_despesa currval('despesa_id_despesa_seq');
-		RAISE NOTICE 'Despesa cadastrada com sucesso!';
+		EXECUTE mensagemDeSucesso('Despesa', 'cadastrada');
 		RETURN cod_despesa;
 	EXCEPTION 
 		WHEN CHECK_VIOLATION THEN
@@ -50,7 +50,7 @@ RETURNS INTEGER AS $$
 		SET ROLE update;
 		UPDATE despesa SET nome = nome_p, calor = valor_p, descricao = descricao_p, fk_projeto = id_projeto WHERE id_despesa = id;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Despesa atualizada com sucesso!';
+			EXECUTE mensagemDeSucesso('Despesa', 'atualizada');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao atualizar despesa!';
@@ -69,20 +69,12 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION despesaExcluir (id INTEGER)
 RETURNS INTEGER AS $$
-	DECLARE 
-		id_dependente INTEGER;
 	BEGIN
-		SET ROLE retrieve;
-		SELECT INTO id_dependente id_recurso FROM recurso WHERE fk_despesa = id;
-		IF (FOUND) THEN
-			SET ROLE delete;
-			DELETE FROM recurso WHERE id_recurso = id_dependente;
-		END IF;
-
 		SET ROLE delete;
+		DELETE FROM recurso WHERE fk_despesa = id;
 		DELETE FROM despesa WHERE id_despesa = id;
 		IF (FOUND) THEN
-			RAISE NOTICE 'Despesa excluida com sucesso!';
+			EXECUTE mensagemDeSucesso('despesa', 'excluida');
 			RETURN 1;
 		ELSE
 			RAISE NOTICE 'Falha ao excluir despesa!';

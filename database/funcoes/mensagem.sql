@@ -11,7 +11,7 @@ RETURNS INTEGER AS $$
 
 		SET ROLE retrieve;
 		SELECT INTO cod_mensagem currval('mensagem_id_mensagem_seq');
-		RAISE NOTICE 'Mensagem inserida com sucesso!';
+		EXECUTE mensagemDeSucesso('Mensagem', 'inserida');
 		RETURN cod_mensagem;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -24,6 +24,7 @@ BEGIN
 	SET ROLE delete;
 	DELETE FROM mensagem WHERE id_mensagem = id;
 	IF (FOUND) THEN
+		EXECUTE mensagemDeSucesso('Mensagem', 'excluida');
 		RETURN 1;
 	ELSE
 		RETURN 2;
