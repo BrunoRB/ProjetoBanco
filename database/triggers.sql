@@ -83,12 +83,12 @@ CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
 	BEGIN
 		IF (NEW.fk_predecessora IS NOT NULL) THEN
 			SELECT fim_atividade, finalizada, fk_fase FROM atividade WHERE id_atividade = NEW.fk_predecessora INTO fim, finalizado, fase;
-			IF (finalizado = true)			
-				IF (NEW.inicio_atividade < fim)
+			IF (finalizado = true) THEN			
+				IF (NEW.inicio_atividade < fim) THEN
 					RAISE EXCEPTION '[ERRO] Não é permitido iniciar uma atividade sem antes terminar a atividade predecessora.';
 				END IF;
 
-				IF (NEW.fk_fase < fase)
+				IF (NEW.fk_fase < fase) THEN
 					RAISE EXCEPTION '[ERRO] A fase da atividade deve ser maior ou igual a fase da atividade predecessora.';
 				END IF;
 			END IF;
@@ -98,6 +98,30 @@ CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
 	END;
 $$LANGUAGE PLPGSQL;
 
-CREATE TRIGGER verificaAtividadePredecessora BEFORE INSERT OR UPDATE ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaAtividadePredecessora();
+CREATE TRIGGER verificaAtividadePredecessora BEFORE INSERT OR UPDATE ON atividade FOR EACH ROW EXECUTE PROCEDURE verificaAtividadePredecessora();
+
+
+
+CREATE FUNCTION verificaAtividadeConcluida() RETURNS TRIGGER AS $$
+	DECLARE
+		porcentagem artefato_atividade.porcentagem_gerada%TYPE;
+		soma artefato.porcentagem_concluida%TYPE;
+		artefato artefato_atividade.fk_artefato%TYPE;
+	BEGIN
+		IF (NEW.finalizada IS NOT NULL) THEN
+			SELECT porcentagem_gerada, fk_artefato FROM artefato.atividade WHERE artefato_atividade.fk_atividade = atividade.id_atividade INTO porcentagem, artefato;
+
+			SELECT porcentagem_concluida FROM artefato WHERE artefato.id_artefato = artefato INTO soma;
+
+			UPDATE artefato
+			SET porcentagem_concluida = soma + porcentagem
+			WHERE artefato.id_artefato = artefato;
+		END IF;
+
+		RETURN NEW; 
+	END;
+$$LANGUAGE PLPGSQL;
+
+CREATE TRIGGER verificaAtividadeConcluida BEFORE UPDATE ON atividade FOR EACH ROW EXECUTE PROCEDURE verificaAtividadeConcluida();
 
 --END TRIGGER atividade

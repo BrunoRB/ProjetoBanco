@@ -33,6 +33,7 @@ SET CLIENT_ENCODING = 'utf8';
 \i database/funcoes/mensagem.sql
 \i database/funcoes/mensagem_enviada.sql
 \i database/scriptsDeInsercao.sql
+\i database/triggers.sql
 	--TODO faltando arquivos
 
 --END CREATE FUNCTIONS/PROCEDURES
