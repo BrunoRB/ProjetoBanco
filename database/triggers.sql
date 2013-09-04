@@ -50,24 +50,45 @@ CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 	DECLARE
 		orcamento2 projeto.orcamento%TYPE;
 	BEGIN
-		IF (OLD.valor IS NOT NULL) THEN
+		IF (NEW.valor IS NOT NULL) THEN
 			SELECT orcamento FROM projeto WHERE fk_projeto = projeto.id_projeto INTO orcamento2;
 
-			UPDATE projeto
-			SET orcamento = orcamento2 - NEW.valor + OLD.valor
-			WHERE fk_projeto = projeto.id_projeto;
-		END IF;
-		IF (OLD.valor IS NULL) THEN
 			UPDATE projeto
 			SET orcamento = orcamento2 - NEW.valor
 			WHERE fk_projeto = projeto.id_projeto;
 		END IF;
-
 		RETURN NEW; 
 	END;
 $$LANGUAGE PLPGSQL;
 
-CREATE TRIGGER verificaValorDespesa BEFORE INSERT OR UPDATE ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaValorDespesa();
+CREATE TRIGGER verificaValorDespesa BEFORE INSERT ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaValorDespesa();
+
+
+
+CREATE FUNCTION verificaValorDespesa2() RETURNS TRIGGER AS $$
+	DECLARE
+		orcamento2 projeto.orcamento%TYPE;
+	BEGIN
+		IF (NEW.valor IS NOT NULL) THEN
+			SELECT orcamento FROM projeto WHERE fk_projeto = projeto.id_projeto INTO orcamento2;
+
+			IF (OLD.valor IS NOT NULL) THEN
+				UPDATE projeto
+				SET orcamento = orcamento2 - NEW.valor + OLD.valor
+				WHERE fk_projeto = projeto.id_projeto;
+			END IF;
+
+			IF (OLD.valor IS NULL) THEN
+				UPDATE projeto
+				SET orcamento = orcamento2 - NEW.valor
+				WHERE fk_projeto = projeto.id_projeto;
+			END IF;
+		END IF;
+		RETURN NEW; 
+	END;
+$$LANGUAGE PLPGSQL;
+
+CREATE TRIGGER verificaValorDespesa2 BEFORE UPDATE ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaValorDespesa2();
 
 --END TRIGGER despesa
 
