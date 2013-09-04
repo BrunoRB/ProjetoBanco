@@ -27,6 +27,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO update;
 DROP ROLE delete;
 CREATE ROLE delete;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO delete;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO delete;
 
 GRANT USAGE ON SCHEMA public TO insert, retrieve, update, delete, function;
 

@@ -69,7 +69,16 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION despesaExcluir (id INTEGER)
 RETURNS INTEGER AS $$
+	DECLARE 
+		id_dependente INTEGER;
 	BEGIN
+		SET ROLE retrieve;
+		SELECT INTO id_dependente id_recurso FROM recurso WHERE fk_despesa = id;
+		IF (FOUND) THEN
+			SET ROLE delete;
+			DELETE FROM recurso WHERE id_recurso = id_dependente;
+		END IF;
+
 		SET ROLE delete;
 		DELETE FROM despesa WHERE id_despesa = id;
 		IF (FOUND) THEN
