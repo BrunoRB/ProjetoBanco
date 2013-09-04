@@ -101,12 +101,35 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
+--finaliza a atividade
+CREATE OR REPLACE FUNCTION atividadeFinalizar(id INTEGER)
+RETURNS INTEGER AS $$
+	DECLARE
+		trash BOOLEAN;
+	BEGIN	
+		SET ROLE update;	
+		UPDATE atividade SET fim_atividade = now(), finalizada = true WHERE id_atividade = id;
+		IF (FOUND) THEN
+			trash := mensagemDeSucesso('Atividade', 'finalizada');
+			RETURN 1;
+		ELSE
+			RAISE NOTICE 'Erro ao finalizar a atividade.';
+			RETURN 0;
+		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
+
 --END UPDATES;
 
 --DELETES;
 
 CREATE OR REPLACE FUNCTION atividadeExcluir(id_exclusao INTEGER) RETURNS INTEGER AS $$
+	DECLARE
+		id_dependente INTEGER;
 	BEGIN
+		SET ROLE retrieve;
+		SELECT INTO 
+
 		SET ROLE delete;
 		DELETE FROM atividade WHERE id_atividade = id_exclusao;
 		
