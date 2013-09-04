@@ -89,9 +89,11 @@ CREATE TABLE atividade
   fk_predecessora INTEGER,
   fk_fase INTEGER,
   finalizada BOOLEAN NOT NULL DEFAULT FALSE,
+  fk_projeto INTEGER NOT NULL,
   CONSTRAINT pk_atividade PRIMARY KEY (id_atividade),
   CONSTRAINT fk_predecessora FOREIGN KEY (fk_predecessora) REFERENCES atividade(id_atividade),
-  CONSTRAINT fk_fase FOREIGN KEY (fk_fase) REFERENCES fase(id_fase)
+  CONSTRAINT fk_fase FOREIGN KEY (fk_fase) REFERENCES fase(id_fase),
+  CONSTRAINT fk_projeto FOREIGN KEY (fk_projeto) REFERENCES projeto(id_projeto)
 );
 
 CREATE TABLE atividade_do_membro
