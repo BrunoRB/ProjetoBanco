@@ -51,12 +51,13 @@ CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 		orcamento2 projeto.orcamento%TYPE;
 	BEGIN
 		IF (NEW.valor IS NOT NULL) THEN
-			SELECT orcamento FROM projeto WHERE fk_projeto = projeto.id_projeto INTO orcamento2;
+			SELECT orcamento FROM projeto WHERE NEW.fk_projeto = projeto.id_projeto INTO orcamento2;
 
 			UPDATE projeto
 			SET orcamento = orcamento2 - NEW.valor
-			WHERE fk_projeto = projeto.id_projeto;
+			WHERE NEW.fk_projeto = projeto.id_projeto;
 		END IF;
+
 		RETURN NEW; 
 	END;
 $$LANGUAGE PLPGSQL;
@@ -70,18 +71,18 @@ CREATE FUNCTION verificaValorDespesa2() RETURNS TRIGGER AS $$
 		orcamento2 projeto.orcamento%TYPE;
 	BEGIN
 		IF (NEW.valor IS NOT NULL) THEN
-			SELECT orcamento FROM projeto WHERE fk_projeto = projeto.id_projeto INTO orcamento2;
+			SELECT orcamento FROM projeto WHERE despesa.fk_projeto = projeto.id_projeto INTO orcamento2;
 
 			IF (OLD.valor IS NOT NULL) THEN
 				UPDATE projeto
 				SET orcamento = orcamento2 - NEW.valor + OLD.valor
-				WHERE fk_projeto = projeto.id_projeto;
+				WHERE despesa.fk_projeto = projeto.id_projeto;
 			END IF;
 
 			IF (OLD.valor IS NULL) THEN
 				UPDATE projeto
 				SET orcamento = orcamento2 - NEW.valor
-				WHERE fk_projeto = projeto.id_projeto;
+				WHERE despesa.fk_projeto = projeto.id_projeto;
 			END IF;
 		END IF;
 		RETURN NEW; 
@@ -130,7 +131,7 @@ CREATE FUNCTION verificaAtividadeConcluida() RETURNS TRIGGER AS $$
 		artefato artefato_atividade.fk_artefato%TYPE;
 	BEGIN
 		IF (NEW.finalizada IS NOT NULL) THEN
-			SELECT porcentagem_gerada, fk_artefato FROM artefato.atividade WHERE artefato_atividade.fk_atividade = atividade.id_atividade INTO porcentagem, artefato;
+			SELECT porcentagem_gerada, fk_artefato FROM artefato_atividade WHERE artefato_atividade.fk_atividade = atividade.id_atividade INTO porcentagem, artefato;
 
 			SELECT porcentagem_concluida FROM artefato WHERE artefato.id_artefato = artefato INTO soma;
 
