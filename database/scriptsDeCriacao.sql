@@ -8,6 +8,7 @@ CREATE TABLE usuario
   imagem CHARACTER VARYING(255),
   inativo BOOLEAN NOT NULL DEFAULT FALSE,
   data_inatividade DATE,
+  sessao TIMESTAMP,
   CONSTRAINT pk_usuario PRIMARY KEY (id_usuario),
   CONSTRAINT unique_imagem UNIQUE (imagem),
   CONSTRAINT unique_email UNIQUE (email),
