@@ -20,12 +20,12 @@ CREATE OR REPLACE VIEW cronogramView AS
 			GROUP BY "public".membro_do_projeto.fk_projeto, "public".atividade.id_atividade, "public".fase.id_fase 
 			ORDER BY fase.id_fase; -- Ordenando as atividade pela sua fase
 
+
 --View Listagem de projetos
 CREATE OR REPLACE VIEW projetoView AS 
 	SELECT projeto.id_projeto, projeto.nome, membro_do_projeto.funcao, usuario.id_usuario FROM projeto 
 		INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto
 		INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario;
-
 
 
 -- View Listagem dos membros de um projeto
@@ -35,5 +35,51 @@ CREATE OR REPLACE VIEW membro_projetoView AS
 		INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario
 		INNER JOIN atividade_do_membro ON atividade_do_membro.fk_membro_do_projeto = membro_do_projeto.id_membro_do_projeto
 		INNER JOIN atividade ON atividade_do_membro.fk_atividade = atividade.id_atividade
-			WHERE atividade.finalizada = FALSE
+			WHERE atividade.finalizada = FALSE AND usuario.inativo = FALSE
 			GROUP BY atividade_do_membro.fk_membro_do_projeto, membro_do_projeto.id_membro_do_projeto, usuario.id_usuario;
+
+
+-- View Listagem dos artefatos de uma atividade
+CREATE OR REPLACE VIEW artefato_atividadeView AS
+	SELECT artefato_atividade.fk_atividade AS atividade, artefato.nome AS artefato, artefato.tipo, artefato.porcentagem_concluida 
+	FROM artefato
+		INNER JOIN artefato_atividade ON artefato.id_artefato = artefato_atividade.fk_artefato;
+
+
+-- View Listagem das fases de um projeto
+CREATE OR REPLACE VIEW fase_projetoView AS
+	SELECT projeto.id_projeto AS projeto, fase.nome AS fase, fase_1.nome AS predecessora 
+	FROM ((fase INNER JOIN fase fase_1 ON fase.fk_predecessora = fase_1.id_fase) 
+		INNER JOIN projeto ON fase.fk_projeto = projeto.id_projeto);
+
+
+-- View Listagem das atividades completas de um projeto
+CREATE OR REPLACE VIEW atividade_completa_projetoView AS
+	SELECT projeto.id_projeto AS projeto, atividade.nome AS atividade, atividade.inicia_atividade AS inicio, atividade.limite_atividade AS limite,
+	atividade_1.nome AS predecessora, fase.nome AS fase
+	FROM (((atividade INNER JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
+		INNER JOIN projeto ON atividade.fk_projeto = projeto.id_projeto)
+			WHERE atividade.finalizada = TRUE;
+
+
+-- View Listagem das atividades em andamento de um projeto
+CREATE OR REPLACE VIEW atividade_incompleta_projetoView AS
+	SELECT projeto.id_projeto AS projeto, atividade.nome AS atividade, atividade.inicia_atividade AS inicio, atividade.limite_atividade AS limite,
+	atividade_1.nome AS predecessora, fase.nome AS fase
+	FROM (((atividade INNER JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
+		INNER JOIN projeto ON atividade.fk_projeto = projeto.id_projeto)
+			WHERE atividade.finalizada = FALSE;
+
+
+-- View Listagem das notas de um usuário
+CREATE OR REPLACE VIEW nota
+	SELECT fk_usuario, titulo, texto, data FROM nota;
+
+
+-- View Listagem das mensagens recebidas
+CREATE OR REPLACE VIEW mensagem_recebida
+	SELECT mensagem_enviada.fk_destinatario, usuario.nome AS remetente, mensagem.assunto FROM mensagem 
+		INNER JOIN usuario ON mensagem.fk_usuario = usuario.id_usuario
+		INNER JOIN mensagem_enviada ON mensagem.id_mensagem = mensagem_enviada.fk_mensagem;
