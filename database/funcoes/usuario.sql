@@ -162,33 +162,6 @@ $$ LANGUAGE PLPGSQL;
 
 --LOGIN;
 
-CREATE OR REPLACE FUNCTION logar (login VARCHAR, password VARCHAR)
-RETURNS INTEGER AS $$
-	DECLARE
-		id INT;
-		name VARCHAR;
-		inatividade BOOLEAN;
-	BEGIN 
-		SET ROLE retrieve;
-		SELECT INTO id, name id_usuario, nome FROM usuario WHERE email = login AND senha = md5(password);
-		IF (FOUND) THEN
-			SELECT INTO inatividade inativo FROM usuario WHERE id_usuario = id;
-			IF (inatividade = TRUE) THEN
-				SET ROLE update;
-				UPDATE usuario SET inativo = FALSE, data_inatividade = NULL WHERE id_usuario = (id);
-				RAISE NOTICE 'Sua conta foi reativada!';
-			END IF;	
-			RAISE NOTICE 'Olá, %', name;
-			RETURN id;
-		ELSE
-			RAISE EXCEPTION '[Erro] Email ou senha inválidos!';
-			RETURN 0;
-		END IF;
-	EXCEPTION 
-		WHEN CHECK_VIOLATION THEN
-			RAISE EXCEPTION '[Erro] Dados inválidos inseridos!';
-			RETURN 0;
-	END;
-$$ LANGUAGE PLPGSQL;
+-- LOGIN MOVIDO PARA AUTENTICACAO.SQL !!!
 
 --END LOGIN;

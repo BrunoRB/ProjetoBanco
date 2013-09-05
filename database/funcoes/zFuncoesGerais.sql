@@ -1,12 +1,4 @@
 
-CREATE OR REPLACE FUNCTION mensagemDeSucesso(entity VARCHAR(100), operation VARCHAR(100)) RETURNS VOID AS $$
-	BEGIN
-		entity := INITCAP(LOWER(entity));
-		operation := LOWER(operation);
-		RAISE NOTICE '% % com sucesso !', entity, operation;
-	END;
-$$ LANGUAGE PLPGSQL;
-
 /**
 * @author BrunoRB
 *
