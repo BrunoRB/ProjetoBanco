@@ -51,7 +51,7 @@ class Login extends Main {
 		<?php
 	}
 
-	private function showAlredyLogged() {
+	protected function showAlredyLogged() {
 		?>
 			<h2>
 				Você já se encontra logado nesse momento,
@@ -63,55 +63,6 @@ class Login extends Main {
 		<?php
 	}
 
-	private function login() {
-		if (empty($_POST['email']) || empty($_POST['senha'])) {
-			$this->show();
-			printErrorMessage('Erro, preencha os campos login e senha !');
-		}
-		else {
-			$user = $this->createUser();
-
-			$pgConnect = new PostgresConnection();
-
-			$functionName = 'logar';
-			$parameters = array($user->getEmail(), $user->getSenha());
-
-			$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
-
-			$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
-
-			$result = $pgConnect->getResult($retval);
-
-			$id = current(current($result));
-
-			$pgConnect->closeConnection();
-
-			if (isset($id) && $id > 0) {
-				$this->storeloginOnSession($id);
-				redirect('logged/index.php');
-			}
-			else {
-				$this->show();
-				printErrorMessage('Erro, login e/ou senha inválidos !');
-			}
-		}
-	}
-
-	private function createUser() {
-		$user = new Usuario();
-		$user->setEmail($_POST['email']);
-		$user->setSenha($_POST['senha']);
-		return $user;
-	}
-
-	private function storeloginOnSession($id) {
-		if ($id !== false) {
-			$_SESSION['userId'] = $id;
-		}
-		else {
-			unset($_SESSION['userId']);
-		}
-	}
 
 
 } new Login();

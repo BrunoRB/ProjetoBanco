@@ -6,6 +6,10 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
 	BEGIN
+		IF NOT isLogado(idUsuario) THEN
+			RETURN 0;
+		END IF;
+	
 		SET ROLE insert;
 		INSERT INTO projeto (nome, orcamento, descricao) VALUES 
 			(nome, orcamento, descricao);
@@ -32,6 +36,10 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
 	BEGIN
+		IF NOT isLogado(idUsuario) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO projeto (nome, descricao) VALUES (nomeProjeto, descricao);
 
@@ -57,6 +65,10 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		id_gerada INTEGER;
 		idMembroDoProjeto INTEGER;
 	BEGIN
+		IF NOT isLogado(idUsuario) THEN
+			RETURN 0;
+		END IF;
+	
 		SET ROLE insert;
 		INSERT INTO projeto (nome, orcamento) VALUES (nomeProjeto, orcamento);
 		
@@ -80,12 +92,17 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATE
 
-CREATE OR REPLACE FUNCTION projetoAtualizar (id INTEGER, nome_p VARCHAR(100), orcamento_p NUMERIC(11,2), dataCadastro DATE, descricao_p TEXT, dataTermino DATE)
-RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoAtualizar (
+	idUsuario INTEGER, idProjeto INTEGER, nome_p VARCHAR(100), orcamento_p NUMERIC(11,2), dataCadastro DATE, descricao_p TEXT, dataTermino DATE
+) RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+	
 		SET ROLE update;
 		UPDATE projeto SET nome = nome_p, orcamento = orcamento_p, data_de_cadastro = dataCadastro, descricao = descricao_p, data_de_termino = dataTermino
-		WHERE id_projeto = id;
+			WHERE id_projeto = idProjeto;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('PROJETO', 'atualizado'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
@@ -99,16 +116,20 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETES;
 
-CREATE OR REPLACE FUNCTION projetoExcluir (id INTEGER)	RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoExcluir (idUsuario INTEGER, idProjeto INTEGER)	RETURNS INTEGER AS $$
 	DECLARE
 		id_mdp INTEGER;
 		id_atdm INTEGER;
 		id_com INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+		
 		SET ROLE retrieve;
-		SELECT INTO id_mdp id_membro_do_projeto FROM membro_do_projeto WHERE fk_projeto = id
+		SELECT INTO id_mdp id_membro_do_projeto FROM membro_do_projeto WHERE fk_projeto = idProjeto;
 		SELECT INTO id_atdm id_atividade_do_membro FROM atividade_do_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
-		SELECT INTO id_com id_comentario FROM comentario WHERE fk_atividade_do_membro = id;
+		SELECT INTO id_com id_comentario FROM comentario WHERE fk_atividade_do_membro = id_atdm;
 
 		SET ROLE delete;
 
@@ -121,11 +142,11 @@ CREATE OR REPLACE FUNCTION projetoExcluir (id INTEGER)	RETURNS INTEGER AS $$
 		DELETE FROM atividade WHERE id_ativiade-----PROBLEMA!!!
 
 		DELETE FROM atividade_do_membro WHERE fk_membro_do_projeto = id_mdp;
-		DELETE FROM membro_do_projeto WHERE fk_projeto = id;
+		DELETE FROM membro_do_projeto WHERE fk_projeto = idProjeto;
 
-		DELETE FROM fase WHERE fk_projeto = id;
+		DELETE FROM fase WHERE fk_projeto = idProjeto;
 
-		DELETE FROM projeto WHERE id_projeto = id;
+		DELETE FROM projeto WHERE id_projeto = idProjeto;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('PROJETO', 'excluído'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
@@ -139,11 +160,13 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
+--TODO, modificar para função PLPGSQL (if é necessário para validar gerente)
 CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT id_projeto INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
 	SET ROLE retrieve;
 	SELECT id_projeto, nome, funcao FROM projetoView WHERE id_usuario = $1;
 $$ LANGUAGE SQL;
 
+--TODO projetoExibirMembro e projetoExibirGerente
 CREATE OR REPLACE FUNCTION projetoExibir (idUsuario INTEGER, OUT id INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
 	DECLARE
 		funcao VARCHAR(100);

@@ -9,11 +9,11 @@ class Cadastro extends Main {
 		parent::__construct();
 	}
 
-	public function loadBody() {
+	protected function loadBody() {
 		$this->show();
 	}
 
-	private function show() {
+	protected function show() {
 		?>
 		<div class="pagination-centered">
 			<form method="post" action="cadastro.php">
@@ -39,6 +39,11 @@ class Cadastro extends Main {
 		</div>
 		<?php
 	}
+
+	protected function extraCallOnSucessOperation() {
+		$this->login();
+	}
+
 
 } new Cadastro();
 

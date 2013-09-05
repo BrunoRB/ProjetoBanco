@@ -100,9 +100,11 @@ class Body {
 
 			if (isset($id) && $id > 0) {
 				printSuccessMessage($pgConnect->getNoticeString());
+				$this->extraCallOnSucessOperation();
 			}
 			else {
 				printErrorMessage($pgConnect->getErrorString());
+
 			}
 
 			$pgConnect->closeConnection();
@@ -210,5 +212,61 @@ class Body {
 		}
 
 		$pgConnect->closeConnection();
+	}
+
+	/**
+	 *	Sobrescreva caso necessite de uma operação extra após a finalização de alguma função CRUD
+	 *
+	 */
+	protected function extraCallOnSucessOperation() {}
+
+	protected function login() {
+		if (empty($_POST['email']) || empty($_POST['senha'])) {
+			$this->show();
+			printErrorMessage('Erro, preencha os campos login e senha !');
+		}
+		else {
+			$user = $this->createUser();
+
+			$pgConnect = new PostgresConnection();
+
+			$functionName = 'logar';
+			$parameters = array($user->getEmail(), $user->getSenha());
+
+			$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+
+			$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+
+			$result = $pgConnect->getResult($retval);
+
+			$id = current(current($result));
+
+			$pgConnect->closeConnection();
+
+			if (isset($id) && $id > 0) {
+				$this->storeloginOnSession($id);
+				redirect('logged/index.php');
+			}
+			else {
+				$this->show();
+				printErrorMessage('Erro, login e/ou senha inválidos !');
+			}
+		}
+	}
+
+	protected function createUser() {
+		$user = new Usuario();
+		$user->setEmail($_POST['email']);
+		$user->setSenha($_POST['senha']);
+		return $user;
+	}
+
+	protected function storeloginOnSession($id) {
+		if ($id !== false) {
+			$_SESSION['userId'] = $id;
+		}
+		else {
+			unset($_SESSION['userId']);
+		}
 	}
 }
