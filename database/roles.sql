@@ -43,5 +43,5 @@ CREATE ROLE delete;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO delete;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO delete;
 
-GRANT USAGE ON SCHEMA public TO insert, retrieve, update, delete, nao_logado, logado_membro, logado_gerente;
+GRANT USAGE ON SCHEMA public TO insert, retrieve, update, delete;
 
