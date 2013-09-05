@@ -35,6 +35,7 @@ CREATE TABLE membro_do_projeto
 	fk_projeto INTEGER NOT NULL,
 	fk_usuario INTEGER NOT NULL,
 	funcao VARCHAR(100) NOT NULL DEFAULT 'Não especificada',
+	aceito BOOLEAN NOT NULL DEFAULT FALSE,
 	CONSTRAINT pk_membro_do_projeto PRIMARY KEY (id_membro_do_projeto),
 	CONSTRAINT fk_projeto_membro_do_projeto FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
 	CONSTRAINT fk_usuario_membro_do_projeto FOREIGN KEY (fk_usuario) REFERENCES usuario (id_usuario),

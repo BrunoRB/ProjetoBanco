@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE FUNCTION membroCadastrarEmProjeto(idGerente INTEGER, projeto_p INTEGER, membro_p INTEGER, funcao_p VARCHAR(100)) 
+CREATE OR REPLACE FUNCTION membro_do_projetoCadastrar(idUsuario INTEGER, projeto_p INTEGER, membro_p INTEGER, funcao_p VARCHAR(100)) 
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_membroDoProjeto INTEGER;
@@ -20,9 +20,40 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-
-CREATE OR REPLACE FUNCTION membroRemoverDeProjeto(projeto INTEGER, membro INTEGER) RETURNS INTEGER AS $$
+--Membro aceita convite do gerente
+CREATE OR REPLACE FUNCTION membro_do_projetoAceita (idUsuario INTEGER, idProjeto INTEGER) RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isMembro(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;	
+
+		SET ROLE update;
+		UPDATE membro_do_projeto SET aceito = true WHERE fk_projeto = idProjeto AND fk_usuario = idMembro; 
+		EXECUTE mensagemDeSucesso('convite', 'aceito');		
+		RETURN 1;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+--Membro recusa convite do gerente
+CREATE OR REPLACE FUNCTION membro_do_projetoRejeita (idUsuario INTEGER, idProjeto INTEGER) RETURNS INTEGER AS $$
+	BEGIN
+		IF NOT isMembro(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;	
+
+		SET ROLE delete;
+		DELETE FROM membro_do_projeto WHERE fk_projeto = idProjeto AND fk_usuario = idMembro;
+		RAISE NOTICE 'Convite não aceito!'
+		RETURN 1;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION membroRemoverDeProjeto(idUsuario INTEGER, projeto INTEGER, membro INTEGER) RETURNS INTEGER AS $$
+	BEGIN
+		IF NOT isGerente(idUsuario, projeto) THEN
+			RETURN 0;
+		END IF;	
+
 		SET ROLE delete;
 		DELETE FROM Mmembro_do_projeto WHERE fk_projeto = projeto AND fk_membro = membro;
 		EXECUTE mensagemDeSucesso('Relação membro/projeto', 'excluida');
