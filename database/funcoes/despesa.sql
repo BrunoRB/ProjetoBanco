@@ -1,10 +1,14 @@
 --INSERT
 
-CREATE OR REPLACE FUNCTION despesaCadastrar (nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION despesaCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_despesa INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO despesa (nome, valor, descricao, fk_projeto)
 			VALUES (nome_p, valor_p, descricao_p, id_projeto);
@@ -20,11 +24,15 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION despesaCadastrar (nome_p VARCHAR(100), valor_p NUMERIC(19,0), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION despesaCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_despesa INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO despesa (nome, valor, fk_projeto)
 		VALUES (nome_p, valor_p, id_projeto);
@@ -44,9 +52,13 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATE
 
-CREATE OR REPLACE FUNCTION despesaAtualizar(id INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION despesaAtualizar(idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;
 		UPDATE despesa SET nome = nome_p, calor = valor_p, descricao = descricao_p, fk_projeto = id_projeto WHERE id_despesa = id;
 		IF (FOUND) THEN
@@ -67,9 +79,13 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETE
 
-CREATE OR REPLACE FUNCTION despesaExcluir (id INTEGER)
+CREATE OR REPLACE FUNCTION despesaExcluir (idUsuario INTEGER, idProjeto INTEGER, id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE delete;
 		DELETE FROM recurso WHERE fk_despesa = id;
 		DELETE FROM despesa WHERE id_despesa = id;

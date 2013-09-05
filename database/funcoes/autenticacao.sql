@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETUR
 		SET ROLE retrieve;
 	
 		IF NOT isUsuario(idUsuario) THEN
-			RAISE NOTICE 'Não é um usuário válido !';
+			RAISE NOTICE 'Não é um usuário válido!';
 			RETURN false;
 		END IF;
 	
@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETUR
 			WHERE idUsuario = id_usuario AND LOWER(funcao) = 'gerente' AND idProjeto = id_projeto;
 		
 		IF NOT FOUND THEN
-			RAISE NOTICE 'Não é o gerente deste projeto !';
+			RAISE NOTICE 'Não é o gerente deste projeto!';
 			RETURN false;
 		END IF;
 		
@@ -32,7 +32,7 @@ CREATE OR REPLACE FUNCTION isMembro(idUsuario INTEGER, idProjeto INTEGER) RETURN
 		SET ROLE retrieve;
 	
 		IF NOT isUsuario(idUsuario) THEN
-			RAISE NOTICE 'Não é um usuário válido !';
+			RAISE NOTICE 'Não é um usuário válido!';
 			RETURN false;
 		END IF;
 		
@@ -46,7 +46,7 @@ CREATE OR REPLACE FUNCTION isMembro(idUsuario INTEGER, idProjeto INTEGER) RETURN
 			WHERE idUsuario = id_usuario AND LOWER(funcao) = 'membro' AND idProjeto = id_projeto;
 		
 		IF NOT FOUND THEN
-			RAISE NOTICE 'Não é um membro válido deste projeto !';
+			RAISE NOTICE 'Não é um membro válido deste projeto!';
 			RETURN false;
 		END IF;
 		
@@ -61,7 +61,7 @@ CREATE OR REPLACE FUNCTION isLogado(idUsuario INTEGER) RETURNS BOOLEAN AS $$
 		SET ROLE retrieve;
 		
 		IF NOT isUsuario(idUsuario) THEN
-			RAISE NOTICE 'Não é um usuário válido !';
+			RAISE NOTICE 'Não é um usuário válido!';
 			RETURN false;
 		END IF;
 		
@@ -71,7 +71,7 @@ CREATE OR REPLACE FUNCTION isLogado(idUsuario INTEGER) RETURNS BOOLEAN AS $$
 			RETURN TRUE;
 		END IF;
 		
-		RAISE NOTICE 'Não está logado/tempo de sessão expirou !';
+		RAISE NOTICE 'Não está logado/tempo de sessão expirou!';
 		
 		RETURN FALSE;
 	END;
@@ -91,7 +91,7 @@ CREATE OR REPLACE FUNCTION mensagemDeSucesso(entity VARCHAR(100), operation VARC
 	BEGIN
 		entity := INITCAP(LOWER(entity));
 		operation := LOWER(operation);
-		RAISE NOTICE '% % com sucesso !', entity, operation;
+		RAISE NOTICE '% % com sucesso!', entity, operation;
 	END;
 $$ LANGUAGE PLPGSQL;
 

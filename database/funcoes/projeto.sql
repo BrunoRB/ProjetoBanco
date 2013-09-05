@@ -139,7 +139,7 @@ CREATE OR REPLACE FUNCTION projetoExcluir (idUsuario INTEGER, idProjeto INTEGER)
 		DELETE FROM imagem WHERE fk_comentario = id_com;
 		DELETE FROM comentario WHERE fk_atividade_do_membro = id_atdm;
 
-		DELETE FROM atividade WHERE id_ativiade-----PROBLEMA!!!
+		--DELETE FROM atividade WHERE id_ativiade-----PROBLEMA!!!
 
 		DELETE FROM atividade_do_membro WHERE fk_membro_do_projeto = id_mdp;
 		DELETE FROM membro_do_projeto WHERE fk_projeto = idProjeto;

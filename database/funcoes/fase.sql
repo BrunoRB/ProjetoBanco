@@ -2,10 +2,14 @@
 --INSERTS;
 
 --todos
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(idUsuario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO fase (nome, descricao, fk_projeto, fk_predecessora) 
 		VALUES (nome_p, descricao_p, id_projeto, id_predecessora);
@@ -18,10 +22,14 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, 
 $$ LANGUAGE PLPGSQL;
 
 --sem predecessora
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(idUsusario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;		
+
 		SET ROLE insert;
 		INSERT INTO fase (nome, descricao, fk_projeto) 
 		VALUES (nome_p, descricao_p, id_projeto);
@@ -34,10 +42,14 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), descricao_p TEXT, 
 $$ LANGUAGE PLPGSQL;
 
 --sem descricao
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER, id_predecessora INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(idUsuario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_predecessora INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO fase (nome, fk_projeto, fk_predecessora) 
 		VALUES (nome_p, id_projeto, id_predecessora);
@@ -50,10 +62,14 @@ CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER
 $$ LANGUAGE PLPGSQL;
 
 --sem descricao e predecessora
-CREATE OR REPLACE FUNCTION faseCadastrar(nome_p VARCHAR(100), id_projeto INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(idUsuario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO fase (nome, fk_projeto) 
 		VALUES (nome_p, id_projeto);
@@ -70,9 +86,13 @@ $$ LANGUAGE PLPGSQL;
 --UPDATE;
 
 --tudo
-CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER)
+CREATE OR REPLACE FUNCTION faseAtualizar(idUsusario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, descricao = descricao_p, fk_projeto = id_projeto, fk_predecessora = id_predecessora WHERE id_fase = id;
 		IF (FOUND) THEN
@@ -86,9 +106,13 @@ RETURNS INTEGER AS $$
 $$ LANGUAGE PLPGSQL;
 
 --sem descrição
-CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_predecessora INTEGER)
+CREATE OR REPLACE FUNCTION faseAtualizar(idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_predecessora INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN	
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;		
+
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, fk_projeto = id_projeto, fk_predecessora = id_predecessora WHERE id_fase = id;
 		IF (FOUND) THEN
@@ -102,9 +126,13 @@ RETURNS INTEGER AS $$
 $$ LANGUAGE PLPGSQL;
 
 --sem predecedora
-CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION faseAtualizar(idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN	
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, descricao = descricao_p, fk_projeto = id_projeto WHERE id_fase = id;
 		IF (FOUND) THEN
@@ -118,9 +146,13 @@ RETURNS INTEGER AS $$
 $$ LANGUAGE PLPGSQL;
 
 --sem predecedora e descricao
-CREATE OR REPLACE FUNCTION faseAtualizar(id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION faseAtualizar(idUsusario INTEGER, id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN	
+		IF NOT isGerente(idUsuario, id_projeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;
 		UPDATE fase SET nome = nome_p, fk_projeto = id_projeto WHERE id_fase = id;
 		IF (FOUND) THEN
@@ -137,8 +169,12 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETES;
 
-CREATE OR REPLACE FUNCTION faseExcluir (id INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseExcluir (idUsuario INTEGER, idProjeto INTEGER, id INTEGER) RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;
 		UPDATE fase SET fk_predecessora = null WHERE fk_predecessora = id;
 		UPDATE atividade SET fk_fase = null WHERE fk_fase = id;

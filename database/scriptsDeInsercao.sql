@@ -35,7 +35,7 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		membro_projeto1 INTEGER;
 		membro_projeto2 INTEGER;
 		membro_projeto3 INTEGER;
-		email VARCHAR;
+		email VARCHAR; email1 VARCHAR; email2 VARCHAR; email3 VARCHAR;
 		id_artefato1 INTEGER;
 		id_artefato2 INTEGER;
 		id_despesa1 INTEGER;
@@ -45,78 +45,93 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 		FOR i IN 1..10 LOOP
 			--cria gerente
 			email := ('gerente' || i || '@gerente.com');
+			--descrição paremetros->	  nome	   login   senha
 			id_gerente := usuarioCadastrar ('Gerente', email, 'admin');
+
+			--cria membros
+			email1 := 'membro' || i || 'a@membro.com';
+			id_membro1 := usuarioCadastrar ('Membro1', email, 'membro'); --cria membro 1
+			email2 := 'membro' || i || 'b@membro.com';
+			id_membro2 := usuarioCadastrar ('Membro2', email, 'membro'); --cria membro 2
+			email3 := 'membro' || i || 'c@membro.com';
+			id_membro3 := usuarioCadastrar ('Membro3', email, 'membro'); --cria membro 3
 
 			--gerente loga no sistema
 			id_trash := logar(email, 'admin');
 
 	 		--cria projeto com gerente já definido
+			--descrição paremetros->			     nome		  orçamento		descrição
 			id_projeto := projetoCadastrar (id_gerente, 'Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador');
 
-			--cria membros
-			email := 'membro' || i || 'a@membro.com';
-			id_membro1 := usuarioCadastrar ('Membro1', email, 'membro'); --cria membro 1
-			email := 'membro' || i || 'b@membro.com';
-			id_membro2 := usuarioCadastrar ('Membro2', email, 'membro'); --cria membro 2
-			email := 'membro' || i || 'c@membro.com';
-			id_membro3 := usuarioCadastrar ('Membro3', email, 'membro'); --cria membro 3
-			--aloca membros ao projeto
-			membro_projeto1 := membroCadastrarEmProjeto (id_projeto, id_membro1, 'membro');	
-			membro_projeto2 := membroCadastrarEmProjeto (id_projeto, id_membro2, 'membro');
-			membro_projeto3 := membroCadastrarEmProjeto (id_projeto, id_membro3, 'membro');		
+			--gerente convida membros ao projeto
+			--descrição paremetros->							   função  
+			membro_projeto1 := membro_do_projetoCadastrar (id_gerente, id_projeto, id_membro1, 'membro');	
+			membro_projeto2 := membro_do_projetoCadastrar (id_gerente, id_projeto, id_membro2, 'membro');
+			membro_projeto3 := membro_do_projetoCadastrar (id_gerente, id_projeto, id_membro3, 'membro');		
 			
+			--membros logam
+			id_trash := logar(email1, 'membro');
+			id_trash := logar(email2, 'membro');
+			id_trash := logar(email3, 'membro');
+
+			--membros aceitam os convites
+			id_trash := membro_do_projetoAceita(id_membro1, id_projeto);
+			id_trash := membro_do_projetoAceita(id_membro2, id_projeto);
+			id_trash := membro_do_projetoAceita(id_membro3, id_projeto);
+
 			--cria fases
-			id_fase1 := faseCadastrar('Fase 1', 'Primeira fase do projeto', id_projeto);
-			id_fase2 := faseCadastrar('Fase 2', 'Segunda fase do projeto', id_projeto, id_fase1);
-			id_fase3 := faseCadastrar('Fase 3', 'Terceira fase do projeto', id_projeto, id_fase2);
+			--descrição paremetros->   		nome          descrição		    id_proj    fase predecessora
+			id_fase1 := faseCadastrar(id_gerente, 'Fase 1', 'Primeira fase do projeto', id_projeto);
+			id_fase2 := faseCadastrar(id_gerente, 'Fase 2', 'Segunda fase do projeto', id_projeto, id_fase1);
+			id_fase3 := faseCadastrar(id_gerente, 'Fase 3', 'Terceira fase do projeto', id_projeto, id_fase2);
 
 			--cria atividades
-			id_atividade1 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1, id_projeto);
-			id_atividade2 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1, id_projeto);
-			id_atividade3 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2, id_projeto);
-			id_atividade4 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2, id_projeto);
-			id_atividade5 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3, id_projeto);
-			id_atividade6 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3, id_projeto);		
+			id_atividade1 := atividadeCadastrar(id_gerente, CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1, id_projeto);
+			id_atividade2 := atividadeCadastrar(id_gerente, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1, id_projeto);
+			id_atividade3 := atividadeCadastrar(id_gerente, CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2, id_projeto);
+			id_atividade4 := atividadeCadastrar(id_gerente, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2, id_projeto);
+			id_atividade5 := atividadeCadastrar(id_gerente, CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3, id_projeto);
+			id_atividade6 := atividadeCadastrar(id_gerente, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3, id_projeto);		
 
 			 --atribui atividades
-			id_trash := atividade_do_membroCadastrar(membro_projeto1, id_atividade1);
-			id_trash := atividade_do_membroCadastrar(membro_projeto1, id_atividade3);
-			id_trash := atividade_do_membroCadastrar(membro_projeto2, id_atividade2);
-			id_trash := atividade_do_membroCadastrar(membro_projeto2, id_atividade4);
-			id_trash := atividade_do_membroCadastrar(membro_projeto3, id_atividade5);
-			id_trash := atividade_do_membroCadastrar(membro_projeto3, id_atividade6);
+			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto1, id_atividade1);
+			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto1, id_atividade3);
+			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto2, id_atividade2);
+			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto2, id_atividade4);
+			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto3, id_atividade5);
+			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto3, id_atividade6);
 		
 			--cria artefatos
-			id_artefato1 := artefatoCadastrar ('artefato 1', 'Tipo 1', 'Primeiro artefato'); --artefato
-			id_artefato2 := artefatoCadastrar ('artefato 2', 'Tipo 2', 'Segundo artefato');
+			id_artefato1 := artefatoCadastrar (id_gerente, id_projeto, 'artefato 1', 'Tipo 1', 'Primeiro artefato'); --artefato
+			id_artefato2 := artefatoCadastrar (id_gerente, id_projeto, 'artefato 2', 'Tipo 2', 'Segundo artefato');
 
 			--vincula atividades aos artefatos
-			confirm := artefato_atividadeCadastrar(id_artefato1, id_atividade1, 35);
-			confirm := artefato_atividadeCadastrar(id_artefato1, id_atividade2, 35);
-			confirm := artefato_atividadeCadastrar(id_artefato1, id_atividade3, 30);
-			confirm := artefato_atividadeCadastrar(id_artefato2, id_atividade4, 40);
-			confirm := artefato_atividadeCadastrar(id_artefato2, id_atividade5, 25);
-			confirm := artefato_atividadeCadastrar(id_artefato2, id_atividade6, 35);
+			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato1, id_atividade1, 35);
+			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato1, id_atividade2, 35);
+			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato1, id_atividade3, 30);
+			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato2, id_atividade4, 40);
+			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato2, id_atividade5, 25);
+			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato2, id_atividade6, 35);
 
 			--cria despesas
-			id_despesa1 := despesaCadastrar ('despesa 1', 100, id_projeto);
-			id_despesa2 := despesaCadastrar ('despesa 2', 450.67, 'Despesa referente a um recurso', id_projeto);
+			id_despesa1 := despesaCadastrar (id_gerente, 'despesa 1', 100, id_projeto);
+			id_despesa2 := despesaCadastrar (id_gerente, 'despesa 2', 450.67, 'Despesa referente a um recurso', id_projeto);
 
 			--cria recursos
-			id_trash := recursoCadastrar('recurso 1', 'descricao do recurso 1', id_projeto, id_despesa2);
-			id_trash := recursoCadastrar('recurso 2', id_projeto);
+			id_trash := recursoCadastrar(id_gerente, 'recurso 1', 'descricao do recurso 1', id_projeto, id_despesa2);
+			id_trash := recursoCadastrar(id_gerente, 'recurso 2', id_projeto);
 			
 			--escreve mensagem do gerente
-			id_mensagem := mensagemEscreve('mensagem do gerente', 'Bem vindo ao projeto', id_gerente);
+			id_mensagem := mensagemEscreve(id_projeto, 'mensagem do gerente', 'Bem vindo ao projeto', id_gerente);
 			--envia mensagem do gerente para os membros
-			confirm := mensagem_enviadaEnvia(id_membro1, id_mensagem, CURRENT_DATE);
-			confirm := mensagem_enviadaEnvia(id_membro2, id_mensagem, CURRENT_DATE);		
-			confirm := mensagem_enviadaEnvia(id_membro3, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_membro1, id_projeto, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_membro2, id_projeto, id_mensagem, CURRENT_DATE);		
+			confirm := mensagem_enviadaEnvia(id_membro3, id_projeto, id_mensagem, CURRENT_DATE);
 			
 			--escreve mensagem de um membro
-			id_mensagem := mensagemEscreve('Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo', id_membro2);
+			id_mensagem := mensagemEscreve(id_projeto, 'Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo', id_membro2);
 			--envia mensagem para o gerente
-			confirm := mensagem_enviadaEnvia(id_gerente, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_mensagem, CURRENT_DATE);
 		END LOOP;
 		RETURN 'TRUE';
 	END;

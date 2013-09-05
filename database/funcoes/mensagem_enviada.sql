@@ -1,6 +1,12 @@
-CREATE OR REPLACE FUNCTION mensagem_enviadaEnvia (id_destinatario INTEGER, id_mensagem INTEGER, data TIMESTAMP) 
+CREATE OR REPLACE FUNCTION mensagem_enviadaEnvia(idUsuario INTEGER, idProjeto INTEGER, id_destinatario INTEGER, id_mensagem INTEGER, data TIMESTAMP) 
 RETURNS BOOLEAN AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			IF NOT isMembro(idUsuario, idProjeto) THEN
+				RETURN 0;
+			END IF;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO mensagem_enviada (fk_destinatario, fk_mensagem, data_hora_envio)
 		VALUES (id_destinatario, id_mensagem, data);
@@ -17,3 +23,5 @@ RETURNS BOOLEAN AS $$
 			RETURN false;
 	END;
 $$ LANGUAGE PLPGSQL;
+
+--FAZER O EXCLUIR ESPECIFICO PARA ESSA TABELA
