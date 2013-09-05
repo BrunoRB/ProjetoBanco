@@ -47,6 +47,9 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			email := ('gerente' || i || '@gerente.com');
 			id_gerente := usuarioCadastrar ('Gerente', email, 'admin');
 
+			--gerente loga no sistema
+			id_trash := logar(email, 'admin');
+
 	 		--cria projeto com gerente já definido
 			id_projeto := projetoCadastrar (id_gerente, 'Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador');
 
@@ -68,12 +71,12 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			id_fase3 := faseCadastrar('Fase 3', 'Terceira fase do projeto', id_projeto, id_fase2);
 
 			--cria atividades
-			id_atividade1 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1);
-			id_atividade2 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1);
-			id_atividade3 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2);
-			id_atividade4 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2);
-			id_atividade5 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3);
-			id_atividade6 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3);		
+			id_atividade1 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1, id_projeto);
+			id_atividade2 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1, id_projeto);
+			id_atividade3 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2, id_projeto);
+			id_atividade4 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2, id_projeto);
+			id_atividade5 := atividadeCadastrar(CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3, id_projeto);
+			id_atividade6 := atividadeCadastrar((CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3, id_projeto);		
 
 			 --atribui atividades
 			id_trash := atividade_do_membroCadastrar(membro_projeto1, id_atividade1);

@@ -2,7 +2,7 @@
 
 --todos
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER
+	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER, idProjeto INTEGER)
 ) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
@@ -12,8 +12,8 @@ CREATE OR REPLACE FUNCTION atividadeCadastrar(
 		END IF;
 	
 		SET ROLE insert;
-		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, descricao_atividade, fk_predecessora, fk_fase) 
-			VALUES (inicio, limite, nome, descricao, predecessora, fase);
+		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, descricao_atividade, fk_predecessora, fk_fase, fk_projeto) 
+			VALUES (inicio, limite, nome, descricao, predecessora, fase, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('atividade_id_atividade_seq');
@@ -24,8 +24,8 @@ $$ LANGUAGE PLPGSQL;
 
 --sem predecessora
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, fase INTEGER
-) RETURNS INTEGER AS $$
+	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, fase INTEGER, idProjeto INTEGER) 
+RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
 	BEGIN
@@ -33,8 +33,8 @@ CREATE OR REPLACE FUNCTION atividadeCadastrar(
 			RETURN 0;
 		END IF;
 		SET ROLE insert;
-		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, descricao_atividade, fk_fase) 
-		VALUES (inicio, limite, nome, descricao, fase);
+		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, descricao_atividade, fk_fase, fk_projeto) 
+			VALUES (inicio, limite, nome, descricao, fase, id_projeto);
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('atividade_id_atividade_seq');
@@ -45,8 +45,8 @@ $$ LANGUAGE PLPGSQL;
 
 --sem descrição
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), predecessora INTEGER, fase INTEGER
-) RETURNS INTEGER AS $$
+	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), predecessora INTEGER, fase INTEGER, idProjeto INTEGER)
+ RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
 	BEGIN	
@@ -54,8 +54,8 @@ CREATE OR REPLACE FUNCTION atividadeCadastrar(
 			RETURN 0;
 		END IF;
 		SET ROLE insert;
-		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, fk_predecessora, fk_fase) 
-			VALUES (inicio, limite, nome, predecessora, fase);
+		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, fk_predecessora, fk_fase, fk_projeto) 
+			VALUES (inicio, limite, nome, predecessora, fase, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('atividade_id_atividade_seq');
@@ -66,8 +66,8 @@ $$ LANGUAGE PLPGSQL;
 
 --sem descricao e predecessora
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100),fase INTEGER
-) RETURNS INTEGER AS $$
+	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100),fase INTEGER, idProjeto INTEGER) 
+RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
 	BEGIN
@@ -75,8 +75,8 @@ CREATE OR REPLACE FUNCTION atividadeCadastrar(
 			RETURN 0;
 		END IF;
 		SET ROLE insert;
-		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, fk_fase) 
-		VALUES (inicio, limite, nome, fase);
+		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, fk_fase, fk_projeto) 
+		VALUES (inicio, limite, nome, fase, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('atividade_id_atividade_seq');
@@ -92,7 +92,7 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION atividadeAtualizar(
 	idUsuario INTEGER id INTEGER, inicio TIMESTAMP, limite TIMESTAMP, 
-	nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER
+	nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER, idProjeto INTEGER
 ) RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, idProjeto) THEN
@@ -101,7 +101,7 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 			
 		SET ROLE update;	
 		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, 
-			nome_atividade = nome, descricao_atividade =	descricao, fk_predecessora = predecessora, fk_fase = fase 
+			nome_atividade = nome, descricao_atividade = descricao, fk_predecessora = predecessora, fk_fase = fase 
 				WHERE id_atividade = id;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('Atividade', 'atualizada');
@@ -116,7 +116,7 @@ $$ LANGUAGE PLPGSQL;
 --sem predecessora
 CREATE OR REPLACE FUNCTION atividadeAtualizar(
 	idUsuario INTEGER, id INTEGER, inicio TIMESTAMP, limite TIMESTAMP,
-	nome VARCHAR(100), descricao TEXT, fase INTEGER
+	nome VARCHAR(100), descricao TEXT, fase INTEGER, idProjeto INTEGER
 ) RETURNS INTEGER AS $$
 	BEGIN	
 		IF NOT isGerente(idUsuario, idProjeto) THEN
@@ -136,7 +136,7 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 $$ LANGUAGE PLPGSQL;
 
 --finaliza a atividade
-CREATE OR REPLACE FUNCTION atividadeFinalizar(idUsuario INTEGER, id INTEGER)
+CREATE OR REPLACE FUNCTION atividadeFinalizar(idUsuario INTEGER, idProjeto INTEGER, id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isMembro(idUsuario, idProjeto) THEN
@@ -158,7 +158,7 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETES;
 
-CREATE OR REPLACE FUNCTION atividadeExcluir(idUsuario INTEGER, id INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION atividadeExcluir(idUsuario INTEGER, idProjeto INTEGER, id INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		id_atdm INTEGER;
 		id_com INTEGER;

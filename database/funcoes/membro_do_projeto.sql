@@ -1,10 +1,14 @@
 
 
-CREATE OR REPLACE FUNCTION membroCadastrarEmProjeto(projeto_p INTEGER, membro_p INTEGER, funcao_p VARCHAR(100)) 
+CREATE OR REPLACE FUNCTION membroCadastrarEmProjeto(idGerente INTEGER, projeto_p INTEGER, membro_p INTEGER, funcao_p VARCHAR(100)) 
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_membroDoProjeto INTEGER;
 	BEGIN
+		IF NOT isGerente(idUsuario, projeto_p) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE insert;
 		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao) 
 		VALUES (projeto_p, membro_p, funcao_p);
