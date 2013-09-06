@@ -33,7 +33,7 @@ RETURNS INTEGER AS $$
 		END IF;
 		SET ROLE insert;
 		INSERT INTO atividade (inicio_atividade, limite_atividade, nome_atividade, descricao_atividade, fk_fase, fk_projeto) 
-			VALUES (inicio, limite, nome, descricao, fase, id_projeto);
+			VALUES (inicio, limite, nome, descricao, fase, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('atividade_id_atividade_seq');

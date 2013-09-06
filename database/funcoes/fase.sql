@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION faseCadastrar(idUsuario INTEGER, nome_p VARCHAR(100),
 $$ LANGUAGE PLPGSQL;
 
 --sem predecessora
-CREATE OR REPLACE FUNCTION faseCadastrar(idUsusario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION faseCadastrar(idUsuario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		cod_fase INTEGER;
 	BEGIN
@@ -86,7 +86,7 @@ $$ LANGUAGE PLPGSQL;
 --UPDATE;
 
 --tudo
-CREATE OR REPLACE FUNCTION faseAtualizar(idUsusario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER)
+CREATE OR REPLACE FUNCTION faseAtualizar(idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_predecessora INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, id_projeto) THEN
@@ -146,7 +146,7 @@ RETURNS INTEGER AS $$
 $$ LANGUAGE PLPGSQL;
 
 --sem predecedora e descricao
-CREATE OR REPLACE FUNCTION faseAtualizar(idUsusario INTEGER, id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION faseAtualizar(idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN	
 		IF NOT isGerente(idUsuario, id_projeto) THEN

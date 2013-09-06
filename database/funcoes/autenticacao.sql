@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETUR
 		SELECT INTO flag id_projeto FROM projeto 
 			INNER JOIN membro_do_projeto ON id_projeto = fk_projeto  
 			INNER JOIN usuario ON id_usuario = fk_usuario 
-			WHERE idUsuario = id_usuario AND LOWER(funcao) = 'gerente' AND idProjeto = id_projeto;
+			WHERE id_usuario = idUsuario AND LOWER(funcao) = 'gerente' AND id_projeto = idProjeto;
 		
 		IF NOT FOUND THEN
 			RAISE NOTICE 'Não é o gerente deste projeto!';
@@ -111,6 +111,10 @@ RETURNS INTEGER AS $$
 				UPDATE usuario SET inativo = FALSE, data_inatividade = NULL, sessao = NOW() + 30 WHERE id_usuario = (id);
 				RAISE NOTICE 'Sua conta foi reativada!';
 			END IF;	
+
+			SET ROLE update;
+			UPDATE usuario SET sessao = (NOW() + INTERVAL '1 hour') WHERE id_usuario = (id);
+
 			RAISE NOTICE 'Olá, %', name;
 			RETURN id;
 		ELSE

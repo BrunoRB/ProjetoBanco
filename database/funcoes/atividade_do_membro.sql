@@ -1,7 +1,7 @@
 
 --INSERTS;
 
-CREATE OR REPLACE FUNCTION atividade_do_membroCadastrar(idUsusario INTEGER, idProjeto INTEGER, id_membro INTEGER, id_atividade INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION atividade_do_membroCadastrar(idUsuario INTEGER, idProjeto INTEGER, id_membro INTEGER, id_atividade INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
 	BEGIN
@@ -40,7 +40,7 @@ $$ LANGUAGE PLPGSQL;
 --END UPDATE;
 
 --DELETES;
-CREATE OR REPLACE FUNCTION atividade_do_membroExcluir(idUsusario INTEGER, idProjeto INTEGER, id_membro INTEGER, id_atividade INTEGER)
+CREATE OR REPLACE FUNCTION atividade_do_membroExcluir(idUsuario INTEGER, idProjeto INTEGER, id_membro INTEGER, id_atividade INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		id_atdm INTEGER;

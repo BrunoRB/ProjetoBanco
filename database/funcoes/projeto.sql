@@ -16,7 +16,10 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
 		
-		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
+		--Seta esse ususario como gerente deste projeto
+		SET ROLE insert;
+		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao) 
+		VALUES (id_gerada, idUsuario, 'Gerente');
 		
 		EXECUTE mensagemDeSucesso('PROJETO', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
 		
@@ -46,7 +49,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
 		
-		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
+		idMembroDoProjeto := membro_do_projetoCadastrar(id_gerada, idUsuario, 'Gerente');
 		
 		EXECUTE mensagemDeSucesso('PROJETO', 'cadastrado'); -- raise notice, ver zFuncoesGerais
 		
@@ -75,7 +78,7 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nomeProjeto VARC
 		SET ROLE retrieve;
 		SELECT INTO id_gerada currval('projeto_id_projeto_seq');
 		
-		idMembroDoProjeto := membroCadastrarEmProjeto(id_gerada, idUsuario, 'Gerente');
+		idMembroDoProjeto := membro_do_projetoCadastrar(id_gerada, idUsuario, 'Gerente');
 		
 		EXECUTE mensagemDeSucesso('projeto', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
 		

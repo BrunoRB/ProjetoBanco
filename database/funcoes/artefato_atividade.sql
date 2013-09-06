@@ -1,10 +1,14 @@
 -- INSERTS
 
-CREATE OR REPLACE FUNCTION artefato_atividadeCadastrar (id_artefato INTEGER, id_atividade INTEGER, porcentagem_p INTEGER)
+CREATE OR REPLACE FUNCTION artefato_atividadeCadastrar (idUsuario INTEGER, idProjeto INTEGER, id_artefato INTEGER, id_atividade INTEGER, porcentagem_p INTEGER)
 RETURNS BOOLEAN AS $$
 	DECLARE
 		codigos RECORD;
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;		
+
 		SET ROLE insert;
 		INSERT INTO artefato_atividade (fk_atividade, fk_artefato, porcentagem_gerada) 
 		VALUES (id_atividade, id_artefato, porcentagem_p);
@@ -26,9 +30,13 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATES
 
-CREATE OR REPLACE FUNCTION artefato_atividadeAtualizar (id_atividade INTEGER, id_artefato INTEGER, porcentagem_p INTEGER)
+CREATE OR REPLACE FUNCTION artefato_atividadeAtualizar (idUsuario INTEGER, idProjeto INTEGER, id_atividade INTEGER, id_artefato INTEGER, porcentagem_p INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;
 		UPDATE artefato_atividade SET porcentagem_gerada = porcentagem_p WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
 		IF (FOUND) THEN
@@ -49,9 +57,13 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETES
 
-CREATE OR REPLACE FUNCTION artefato_atividadeExcluir(id_atividade INTEGER, id_artefato INTEGER)
+CREATE OR REPLACE FUNCTION artefato_atividadeExcluir(idUsuario INTEGER, idProjeto INTEGER, id_atividade INTEGER, id_artefato INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE delete;
 		DELETE FROM artefato_atividade WHERE fk_atividade = id_atividade AND fk_artefato = id_artefato;
 		IF (FOUND) THEN

@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION membro_do_projetoAceita (idUsuario INTEGER, idProjeto
 		END IF;	
 
 		SET ROLE update;
-		UPDATE membro_do_projeto SET aceito = true WHERE fk_projeto = idProjeto AND fk_usuario = idMembro; 
+		UPDATE membro_do_projeto SET aceito = true WHERE fk_projeto = idProjeto AND fk_usuario = idUsuario; 
 		EXECUTE mensagemDeSucesso('convite', 'aceito');		
 		RETURN 1;
 	END;

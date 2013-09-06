@@ -124,16 +124,33 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			--escreve mensagem do gerente
 			id_mensagem := mensagemEscreve(id_projeto, 'mensagem do gerente', 'Bem vindo ao projeto', id_gerente);
 			--envia mensagem do gerente para os membros
-			confirm := mensagem_enviadaEnvia(id_membro1, id_projeto, id_mensagem, CURRENT_DATE);
-			confirm := mensagem_enviadaEnvia(id_membro2, id_projeto, id_mensagem, CURRENT_DATE);		
-			confirm := mensagem_enviadaEnvia(id_membro3, id_projeto, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_membro1, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_membro2, id_mensagem, CURRENT_DATE);		
+			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_membro3, id_mensagem, CURRENT_DATE);
 			
 			--escreve mensagem de um membro
 			id_mensagem := mensagemEscreve(id_projeto, 'Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo', id_membro2);
 			--envia mensagem para o gerente
-			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_membro2, id_projeto, id_gerente, id_mensagem, CURRENT_DATE);
 		END LOOP;
 		RETURN 'TRUE';
+	END;
+$$ LANGUAGE PLPGSQL;
+
+
+--teste para ver se pede para o usuario logar...dá erro que não existe a função de cadastrarProjeto
+CREATE OR REPLACE FUNCTION teste() RETURNS boolean AS $$
+	DECLARE
+		trash INTEGER;
+	BEGIN
+		
+		SET ROLE update;
+		UPDATE usuario SET sessao = '2013-09-06 04:23:04.524286' WHERE id_usuario = 1;
+
+		SET ROLE function;
+		trash := projetoCastrar (1, 'teste de criaçao', 10.000, 'meu teste');
+		
+		RETURN true;
 	END;
 $$ LANGUAGE PLPGSQL;
 

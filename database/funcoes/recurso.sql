@@ -1,11 +1,11 @@
 --INSERTS
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsusario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_recurso INTEGER;
 	BEGIN
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
 			RETURN 0;
 		END IF;
 
@@ -24,12 +24,12 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsusario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_recurso INTEGER;
 	BEGIN
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
 			RETURN 0;
 		END IF;
 
@@ -48,12 +48,12 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsusario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_recurso INTEGER;
 	BEGIN
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
 			RETURN 0;
 		END IF;
 
@@ -72,12 +72,12 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsusario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_recurso INTEGER;
 	BEGIN
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
 			RETURN 0;
 		END IF;
 
@@ -100,10 +100,10 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATE
 
-CREATE OR REPLACE FUNCTION recursoAtualizar (idUsusario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao TEXT, id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoAtualizar (idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao TEXT, id_projeto INTEGER, id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isGerente(idUsuario, id_projeto) THEN
 			RETURN 0;
 		END IF;
 
@@ -129,7 +129,7 @@ $$ LANGUAGE PLPGSQL;
 --DELETE
 
 --delete por id
-CREATE OR REPLACE FUNCTION recursoExcluir(idUsusario INTEGER, idProjeto INTEGER, id INTEGER)
+CREATE OR REPLACE FUNCTION recursoExcluir(idUsuario INTEGER, idProjeto INTEGER, id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, idProjeto) THEN
