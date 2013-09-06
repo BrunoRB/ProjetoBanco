@@ -43,7 +43,7 @@ CREATE OR REPLACE FUNCTION isMembro(idUsuario INTEGER, idProjeto INTEGER) RETURN
 		SELECT INTO flag id_projeto FROM projeto 
 			INNER JOIN membro_do_projeto ON id_projeto = fk_projeto  
 			INNER JOIN usuario ON id_usuario = fk_usuario 
-			WHERE idUsuario = id_usuario AND LOWER(funcao) = 'membro' AND idProjeto = id_projeto;
+			WHERE idUsuario = id_usuario AND LOWER(funcao) != 'gerente' AND idProjeto = id_projeto;
 		
 		IF NOT FOUND THEN
 			RAISE NOTICE 'Não é um membro válido deste projeto!';

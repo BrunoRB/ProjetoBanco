@@ -22,13 +22,22 @@ $$ LANGUAGE SQL;
 * @param TEXT valores Valores a serem utilizados para atualização dos campos, devem ser separados por vírgula e estarem na mesma ordem dos campos
 * @return INTEGER quantidade de campos atualizados
 */
-CREATE OR REPLACE FUNCTION generalUpdate(nome_tabela TEXT, id_atualizar INTEGER, campos TEXT, valores TEXT) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION generalUpdate(
+	idUsuario INTEGER, roleUsuario VARCHAR(100), nome_tabela TEXT, id_atualizar INTEGER, campos TEXT, valores TEXT
+) RETURNS INTEGER AS $$
 	DECLARE
 		arrayCampos VARCHAR(255) ARRAY;
 		arrayValores VARCHAR(255) ARRAY;
 		countCamposAlterados INTEGER := 0;
 		tempVal TEXT;
-	BEGIN 
+	BEGIN
+		IF LOWER(roleUsuario) = 'gerente' AND NOT isGerente(idUsuario) THEN
+			RETURN 0;
+		ELSEIF LOWER(roleUsuario) != 'membro' AND NOT isMembro(idUsuario) THEN
+			RETURN 0;
+		END IF;
+	
+	
 		-- Remove all whitespaces
 		campos := REGEXP_REPLACE(campos, '\$,\$', ',');
 		valores := REGEXP_REPLACE(valores, '\$,\$', ',');
