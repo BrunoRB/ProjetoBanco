@@ -49,7 +49,7 @@ CREATE OR REPLACE VIEW artefato_atividadeView AS
 -- View Listagem das fases de um projeto
 CREATE OR REPLACE VIEW fase_projetoView AS
 	SELECT projeto.id_projeto AS projeto, fase.nome AS fase, fase_1.nome AS predecessora 
-	FROM ((fase INNER JOIN fase fase_1 ON fase.fk_predecessora = fase_1.id_fase) 
+	FROM ((fase LEFT JOIN fase fase_1 ON fase.fk_predecessora = fase_1.id_fase) 
 		INNER JOIN projeto ON fase.fk_projeto = projeto.id_projeto);
 
 
@@ -57,7 +57,7 @@ CREATE OR REPLACE VIEW fase_projetoView AS
 CREATE OR REPLACE VIEW atividade_completa_projetoView AS
 	SELECT projeto.id_projeto AS projeto, atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, atividade.limite_atividade AS limite,
 	atividade_1.nome_atividade AS predecessora, fase.nome AS fase
-	FROM (((atividade INNER JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+	FROM (((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
 		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
 		INNER JOIN projeto ON atividade.fk_projeto = projeto.id_projeto)
 			WHERE atividade.finalizada = TRUE;
@@ -67,7 +67,7 @@ CREATE OR REPLACE VIEW atividade_completa_projetoView AS
 CREATE OR REPLACE VIEW atividade_incompleta_projetoView AS
 	SELECT projeto.id_projeto AS projeto, atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, atividade.limite_atividade AS limite,
 	atividade_1.nome_atividade AS predecessora, fase.nome AS fase
-	FROM (((atividade INNER JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+	FROM (((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
 		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
 		INNER JOIN projeto ON atividade.fk_projeto = projeto.id_projeto)
 			WHERE atividade.finalizada = FALSE;
