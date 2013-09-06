@@ -1,4 +1,4 @@
-
+﻿
 
 CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETURNS BOOLEAN AS $$
 	DECLARE
@@ -82,7 +82,7 @@ CREATE OR REPLACE FUNCTION isUsuario(idUsuario INTEGER) RETURNS BOOLEAN AS $$
 		flag INTEGER;
 	BEGIN
 		SET ROLE retrieve;
-		SELECT INTO flag id_usario FROM usuario WHERE id_usuario = idUsuario;
+		SELECT INTO flag id_usuario FROM usuario WHERE id_usuario = idUsuario;
 		RETURN FOUND;
 	END;
 $$ LANGUAGE PLPGSQL;
