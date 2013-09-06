@@ -50,11 +50,11 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 
 			--cria membros
 			email1 := 'membro' || i || 'a@membro.com';
-			id_membro1 := usuarioCadastrar ('Membro1', email, 'membro'); --cria membro 1
+			id_membro1 := usuarioCadastrar ('Membro1', email1, 'membro'); --cria membro 1
 			email2 := 'membro' || i || 'b@membro.com';
-			id_membro2 := usuarioCadastrar ('Membro2', email, 'membro'); --cria membro 2
+			id_membro2 := usuarioCadastrar ('Membro2', email2, 'membro'); --cria membro 2
 			email3 := 'membro' || i || 'c@membro.com';
-			id_membro3 := usuarioCadastrar ('Membro3', email, 'membro'); --cria membro 3
+			id_membro3 := usuarioCadastrar ('Membro3', email3, 'membro'); --cria membro 3
 
 			--gerente loga no sistema
 			id_trash := logar(email, 'admin');
