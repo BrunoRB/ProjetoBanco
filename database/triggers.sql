@@ -6,13 +6,16 @@ CREATE FUNCTION validateUniqueManagerOnProject() RETURNS TRIGGER AS $$
 	DECLARE
 		membro membro_do_projeto.funcao%TYPE;
 	BEGIN
-		SELECT INTO membro funcao FROM membro_do_projeto WHERE NEW.fk_projeto = membro_do_projeto.fk_projeto AND LOWER(membro_do_projeto.funcao) = 'gerente';
+		SELECT INTO membro funcao 
+		FROM membro_do_projeto 
+		WHERE NEW.fk_projeto = membro_do_projeto.fk_projeto 
+		AND LOWER(membro_do_projeto.funcao) = 'gerente';
 		
 		IF membro IS NOT NULL AND LOWER(NEW.funcao) = 'gerente'  THEN
-			RAISE EXCEPTION '[ERRO] apenas um gerente é permitido no projeto.';
+			RAISE EXCEPTION '[ERRO] É permitido apenas um gerente por projeto.';
 		END IF;
 		
-		RETURN NEW; 
+		RETURN NEW; 	
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -27,8 +30,13 @@ CREATE TRIGGER validateUniqueManagerOnProject BEFORE INSERT OR UPDATE ON membro_
 CREATE FUNCTION validaMensagemEnviada() RETURNS TRIGGER AS $$
 	DECLARE
 		usuario mensagem.fk_usuario%TYPE;
+		idMsg integer;
 	BEGIN
-		SELECT fk_usuario FROM mensagem WHERE NEW.fk_mensagem = mensagem.id_mensagem INTO usuario;
+		SELECT fk_usuario, fk_mensagem 
+		FROM mensagem 
+		INNER JOIN mensagem_enviada
+		ON NEW.fk_mensagem = mensagem.id_mensagem 
+		INTO usuario, idMsg;
 		
 		IF (NEW.fk_destinatario = usuario) THEN
 			RAISE EXCEPTION '[ERRO] Não é permitido mandar mensagem para si mesmo.';
@@ -51,7 +59,10 @@ CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 		orcamento2 projeto.orcamento%TYPE;
 	BEGIN
 		IF (NEW.valor IS NOT NULL) THEN
-			SELECT orcamento FROM projeto WHERE NEW.fk_projeto = projeto.id_projeto INTO orcamento2;
+			SELECT orcamento 
+			FROM projeto 
+			WHERE NEW.fk_projeto = projeto.id_projeto 
+			INTO orcamento2;
 
 			UPDATE projeto
 			SET orcamento = orcamento2 - NEW.valor
@@ -69,21 +80,18 @@ CREATE TRIGGER verificaValorDespesa BEFORE INSERT ON despesa FOR EACH ROW EXECUT
 CREATE FUNCTION verificaValorDespesa2() RETURNS TRIGGER AS $$
 	DECLARE
 		orcamento2 projeto.orcamento%TYPE;
+		projId integer;
 	BEGIN
 		IF (NEW.valor IS NOT NULL) THEN
-			SELECT orcamento FROM projeto WHERE despesa.fk_projeto = projeto.id_projeto INTO orcamento2;
+			SELECT orcamento, fk_projeto 
+			FROM projeto 
+			INNER JOIN despesa 
+			ON projeto.id_projeto = despesa.fk_projeto  
+			INTO orcamento2, projId;
 
-			IF (OLD.valor IS NOT NULL) THEN
-				UPDATE projeto
-				SET orcamento = orcamento2 - NEW.valor + OLD.valor
-				WHERE despesa.fk_projeto = projeto.id_projeto;
-			END IF;
-
-			IF (OLD.valor IS NULL) THEN
-				UPDATE projeto
-				SET orcamento = orcamento2 - NEW.valor
-				WHERE despesa.fk_projeto = projeto.id_projeto;
-			END IF;
+			UPDATE projeto
+			SET orcamento = orcamento2 - NEW.valor + OLD.valor
+			WHERE projeto.id_projeto = projId;
 		END IF;
 		RETURN NEW; 
 	END;
@@ -100,12 +108,16 @@ CREATE TRIGGER verificaValorDespesa2 BEFORE UPDATE ON despesa FOR EACH ROW EXECU
 CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
 	DECLARE
 		fim atividade.fim_atividade%TYPE;
-		finalizado atividade.finalizada%TYPE;
+		finaliza atividade.finalizada%TYPE;
 		fase atividade.fk_fase%TYPE;
 	BEGIN
 		IF (NEW.fk_predecessora IS NOT NULL) THEN
-			SELECT fim_atividade, finalizada, fk_fase FROM atividade WHERE id_atividade = NEW.fk_predecessora INTO fim, finalizado, fase;
-			IF (finalizado = true) THEN			
+			SELECT fim_atividade, finalizada, fk_fase 
+			FROM atividade 
+			WHERE id_atividade = NEW.fk_predecessora 
+			INTO fim, finaliza, fase;
+
+			IF (finaliza = true) THEN			
 				IF (NEW.inicio_atividade < fim) THEN
 					RAISE EXCEPTION '[ERRO] Não é permitido iniciar uma atividade sem antes terminar a atividade predecessora.';
 				END IF;
@@ -128,16 +140,25 @@ CREATE FUNCTION verificaAtividadeConcluida() RETURNS TRIGGER AS $$
 	DECLARE
 		porcentagem artefato_atividade.porcentagem_gerada%TYPE;
 		soma artefato.porcentagem_concluida%TYPE;
-		artefato artefato_atividade.fk_artefato%TYPE;
+		artefat artefato_atividade.fk_artefato%TYPE;
+		idAtiv integer;
 	BEGIN
-		IF (NEW.finalizada IS NOT NULL) THEN
-			SELECT porcentagem_gerada, fk_artefato FROM artefato_atividade WHERE artefato_atividade.fk_atividade = atividade.id_atividade INTO porcentagem, artefato;
+		IF (NEW.finalizada = true) THEN
+			SELECT porcentagem_gerada, fk_artefato, id_atividade 
+			FROM artefato_atividade 
+			INNER JOIN atividade 
+			ON artefato_atividade.fk_atividade = atividade.id_atividade 
+			INTO porcentagem, artefat, idAtiv;
 
-			SELECT porcentagem_concluida FROM artefato WHERE artefato.id_artefato = artefato INTO soma;
+			SELECT porcentagem_concluida 
+			FROM artefato 
+			INNER JOIN artefato_atividade 
+			ON artefato.id_artefato = artefato_atividade.fk_artefato 
+			INTO soma;
 
 			UPDATE artefato
 			SET porcentagem_concluida = soma + porcentagem
-			WHERE artefato.id_artefato = artefato;
+			WHERE artefato.id_artefato = artefat;
 		END IF;
 
 		RETURN NEW; 
