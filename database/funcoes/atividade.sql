@@ -2,7 +2,7 @@
 
 --todos
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER, idProjeto INTEGER
+	idUsuario INTEGER, idProjeto INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER
 ) RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
@@ -23,7 +23,7 @@ $$ LANGUAGE PLPGSQL;
 
 --sem predecessora
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, fase INTEGER, idProjeto INTEGER) 
+	idUsuario INTEGER, idProjeto INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), descricao TEXT, fase INTEGER) 
 RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
@@ -44,7 +44,7 @@ $$ LANGUAGE PLPGSQL;
 
 --sem descrição
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), predecessora INTEGER, fase INTEGER, idProjeto INTEGER)
+	idUsuario INTEGER, idProjeto INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100), predecessora INTEGER, fase INTEGER)
  RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
@@ -65,7 +65,7 @@ $$ LANGUAGE PLPGSQL;
 
 --sem descricao e predecessora
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
-	idUsuario INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100),fase INTEGER, idProjeto INTEGER) 
+	idUsuario INTEGER, idProjeto INTEGER, inicio TIMESTAMP, limite TIMESTAMP, nome VARCHAR(100),fase INTEGER) 
 RETURNS INTEGER AS $$
 	DECLARE
 		id_gerada INTEGER;
@@ -90,8 +90,8 @@ $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION atividadeAtualizar(
-	idUsuario INTEGER, id INTEGER, inicio TIMESTAMP, limite TIMESTAMP, 
-	nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER, idProjeto INTEGER
+	idUsuario INTEGER, idProjeto INTEGER, id INTEGER, inicio TIMESTAMP, limite TIMESTAMP, 
+	nome VARCHAR(100), descricao TEXT, predecessora INTEGER, fase INTEGER
 ) RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, idProjeto) THEN
@@ -114,8 +114,8 @@ $$ LANGUAGE PLPGSQL;
 
 --sem predecessora
 CREATE OR REPLACE FUNCTION atividadeAtualizar(
-	idUsuario INTEGER, id INTEGER, inicio TIMESTAMP, limite TIMESTAMP,
-	nome VARCHAR(100), descricao TEXT, fase INTEGER, idProjeto INTEGER
+	idUsuario INTEGER, idProjeto INTEGER, id INTEGER, inicio TIMESTAMP, limite TIMESTAMP,
+	nome VARCHAR(100), descricao TEXT, fase INTEGER
 ) RETURNS INTEGER AS $$
 	BEGIN	
 		IF NOT isGerente(idUsuario, idProjeto) THEN
