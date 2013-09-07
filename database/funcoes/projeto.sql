@@ -174,6 +174,7 @@ CREATE OR REPLACE FUNCTION projetoExibirGerente(
 	idUsuario INTEGER, idProjeto INTEGER, OUT nome VARCHAR, OUT orcamento NUMERIC, 
 	OUT data_de_cadastro DATE, OUT descricao TEXT, OUT data_de_termino DATE
 ) RETURNS SETOF RECORD AS $$
+	BEGIN
 		IF NOT isGerente(idUsuario, idProjeto) THEN
 			RETURN;
 		END IF;
@@ -187,8 +188,6 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION projetoExibirMembro(
 	idUsuario INTEGER, idProjeto INTEGER, OUT nome VARCHAR, OUT DESCRICAO TEXT, OUT data_de_termino DATE
 ) RETURNS SETOF RECORD AS $$
-	DECLARE
-		funcao VARCHAR(100);
 	BEGIN
 		IF NOT isMembro(idUsuario, idProjeto) THEN
 			RETURN;

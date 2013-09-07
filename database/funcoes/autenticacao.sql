@@ -10,6 +10,10 @@ CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETUR
 			RAISE NOTICE 'Não é um usuário válido!';
 			RETURN false;
 		END IF;
+		
+		IF NOT isLogado(idUsuario) THEN
+			RETURN false;
+		END IF;
 	
 		SELECT INTO flag id_projeto FROM projeto 
 			INNER JOIN membro_do_projeto ON id_projeto = fk_projeto  
