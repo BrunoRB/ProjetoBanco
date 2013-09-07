@@ -169,25 +169,33 @@ CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT id_projeto INTE
 	SELECT id_projeto, nome, funcao FROM projetoView WHERE id_usuario = $1;
 $$ LANGUAGE SQL;
 
---TODO projetoExibirMembro e projetoExibirGerente
-CREATE OR REPLACE FUNCTION projetoExibir (idUsuario INTEGER, OUT id INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
-	DECLARE
-		funcao VARCHAR(100);
-	BEGIN
-		SET ROLE retrieve;
-		SELECT INTO funcao funcao FROM membro_do_projeto INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario; 
 
-		IF LOWER(funcao) = 'gerente' THEN
-			SELECT projeto.nome, projeto.orcamento, projeto.data_de_cadastro, projeto.descricao, projeto.data_de_termino, usuario.nome AS gerente 
-				FROM projeto INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto 
-				INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario 
-				WHERE usuario.id_usuario = idUsuario AND LOWER(membro_do_projeto.funcao) = 'gerente';
-		ELSE
-			SELECT projeto.nome AS projeto, projeto.descricao, projeto.data_de_termino, usuario.nome AS gerente
-				FROM projeto INNER JOIN membro_do_projeto ON projeto.id_projeto = membro_do_projeto.fk_projeto 
-				INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario 
-				WHERE usuario.id_usuario = idUsuario AND LOWER(membro_do_projeto.funcao) = 'gerente';
+CREATE OR REPLACE FUNCTION projetoExibirGerente(
+	idUsuario INTEGER, idProjeto INTEGER, OUT nome VARCHAR, OUT orcamento NUMERIC, 
+	OUT data_de_cadastro DATE, OUT descricao TEXT, OUT data_de_termino DATE
+) RETURNS SETOF RECORD AS $$
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
 		END IF;
+		
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT nome, orcamento, data_de_cadastro, descricao, data_de_termino 
+			FROM projeto WHERE id_projeto =' || idProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
 
+CREATE OR REPLACE FUNCTION projetoExibirMembro(
+	idUsuario INTEGER, idProjeto INTEGER, OUT nome VARCHAR, OUT DESCRICAO TEXT, OUT data_de_termino DATE
+) RETURNS SETOF RECORD AS $$
+	DECLARE
+		funcao VARCHAR(100);
+	BEGIN
+		IF NOT isMembro(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT nome, descricao, data_de_termino 
+			FROM projeto WHERE id_projeto =' || idProjeto;
+	END;
+$$ LANGUAGE PLPGSQL;
