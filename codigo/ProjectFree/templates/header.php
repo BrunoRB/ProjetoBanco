@@ -35,7 +35,7 @@ class Header{
 		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/jquery-ui-1.10.3.custom.js"></script>
 		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/bootstrap.js"></script>
 		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/cleditor/jquery.cleditor.min.js"></script>
-		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/ProjetoBanco/codigo/ProjectFree.js"></script>
+		<script type="text/javascript" src="/ProjetoBanco/codigo/ProjectFree/resources/js/projectfree.js"></script>
 		<?php
 		if (isset($this->extraHeader)) {
 			foreach ($this->extraHeader as $extra) {
@@ -125,7 +125,7 @@ class Header{
 		<div class="pull-right">
 			<ul class="nav">
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/projeto.php">Projetos</a></li>
-				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/mensagem.php">Mensagens</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/mensagem.php">Mensagens</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/nota.php">Notas</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/">Convites</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/">Perfil</a></li>

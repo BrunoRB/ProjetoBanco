@@ -51,6 +51,16 @@ class PostgresConnection {
 		return pg_prepare($this->connection, $functionName, $statement);
 	}
 
+	public function prepareFunctionStatementSelect($functionName, $numberOfParameters) {
+		$parameters = '$1';
+		for ($i=2; $i<=$numberOfParameters; $i++) {
+			$parameters .= ', $' . $i;
+		}
+		$parameters = $numberOfParameters > 0 ? $parameters : '';
+		$statement = "SELECT * FROM $functionName ($parameters)";
+		return pg_prepare($this->connection, $functionName, $statement);
+	}
+
 	/**
 	 * Executa função após query ter sido preparada por prepareFunctionStatement
 	 *
@@ -60,6 +70,18 @@ class PostgresConnection {
 	 */
 	public function executeFunctionStatement($functionName, array $values) {
 		return pg_execute($this->connection, $functionName, $values);
+	}
+
+	public function getArrayOfResultsFromSelect($result) {
+		$data = array();
+		$rows = pg_num_rows($result);
+		if ($rows > 0) {
+			$cols = pg_num_fields($result);
+			for ($i = 0; $i < $rows; $i++) {
+				$data[] = pg_fetch_assoc($result, $i);
+			}
+		}
+		return $data;
 	}
 
 	/**

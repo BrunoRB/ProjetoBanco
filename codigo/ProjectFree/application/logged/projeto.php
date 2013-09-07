@@ -32,15 +32,23 @@ class Page_Projeto extends Main {
 						</tr>
 					</thead>
 					<tbody>
-					<?php
+						<?php
 						$this->retrieveList('projeto', array($this->getUserId()), array('nome', 'funcao'));
-					?>
+						?>
 					</tbody>
 				</table>
 			</div>
 			<div class="span5">
 				<a class="btn btn-primary btn-large" href="projeto.php?novo=true">Cadastrar novo projeto</a>
 			</div>
+		</div>
+		<?php
+	}
+
+	protected function extraCallOnSucessForShow(){
+		?>
+		<div class="span5">
+			<a class="btn btn-large btn-primary">Selecionar projeto</a>
 		</div>
 		<?php
 	}

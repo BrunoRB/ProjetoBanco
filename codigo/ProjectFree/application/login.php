@@ -21,8 +21,7 @@ class Login extends Main {
 		}
 		else {
 			if (isset($_GET['logout']) && $_GET['logout'] == true) {
-				$this->storeloginOnSession(false);
-				redirect('index.php');
+				$this->deslogar();
 			}
 			else {
 				$this->showAlredyLogged();
@@ -63,6 +62,23 @@ class Login extends Main {
 		<?php
 	}
 
+	protected function deslogar() {
+		$pgConnect = new PostgresConnection();
+		$functionName = 'deslogar';
+		global $userId;
+		$parameters = array($userId);
 
+		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+
+		$result = $pgConnect->getResult($retval);
+
+		$id = current(current($result));
+
+		$pgConnect->closeConnection();
+		$this->storeloginOnSession(false);
+		redirect('index.php');
+	}
 
 } new Login();
