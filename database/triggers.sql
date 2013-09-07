@@ -6,6 +6,8 @@ CREATE FUNCTION validateUniqueManagerOnProject() RETURNS TRIGGER AS $$
 	DECLARE
 		membro membro_do_projeto.funcao%TYPE;
 	BEGIN
+		SET ROLE retrieve;
+
 		SELECT INTO membro funcao 
 		FROM membro_do_projeto 
 		WHERE NEW.fk_projeto = membro_do_projeto.fk_projeto 
@@ -32,6 +34,8 @@ CREATE FUNCTION validaMensagemEnviada() RETURNS TRIGGER AS $$
 		usuario mensagem.fk_usuario%TYPE;
 		idMsg integer;
 	BEGIN
+		SET ROLE retrieve;
+
 		SELECT fk_usuario, fk_mensagem 
 		FROM mensagem 
 		INNER JOIN mensagem_enviada
@@ -59,10 +63,14 @@ CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 		orcamento2 projeto.orcamento%TYPE;
 	BEGIN
 		IF (NEW.valor IS NOT NULL) THEN
+			SET ROLE retrieve;
+
 			SELECT orcamento 
 			FROM projeto 
 			WHERE NEW.fk_projeto = projeto.id_projeto 
 			INTO orcamento2;
+
+			SET ROLE update;
 
 			UPDATE projeto
 			SET orcamento = orcamento2 - NEW.valor
@@ -83,11 +91,15 @@ CREATE FUNCTION verificaValorDespesa2() RETURNS TRIGGER AS $$
 		projId integer;
 	BEGIN
 		IF (NEW.valor IS NOT NULL) THEN
+			SET ROLE retrieve;
+
 			SELECT orcamento, fk_projeto 
 			FROM projeto 
 			INNER JOIN despesa 
 			ON projeto.id_projeto = despesa.fk_projeto  
 			INTO orcamento2, projId;
+
+			SET ROLE update;
 
 			UPDATE projeto
 			SET orcamento = orcamento2 - NEW.valor + OLD.valor
@@ -112,6 +124,8 @@ CREATE FUNCTION verificaAtividadePredecessora() RETURNS TRIGGER AS $$
 		fase atividade.fk_fase%TYPE;
 	BEGIN
 		IF (NEW.fk_predecessora IS NOT NULL) THEN
+			SET ROLE retrieve;
+
 			SELECT fim_atividade, finalizada, fk_fase 
 			FROM atividade 
 			WHERE id_atividade = NEW.fk_predecessora 
@@ -144,6 +158,8 @@ CREATE FUNCTION verificaAtividadeConcluida() RETURNS TRIGGER AS $$
 		idAtiv integer;
 	BEGIN
 		IF (NEW.finalizada = true) THEN
+			SET ROLE retrieve;
+
 			SELECT porcentagem_gerada, fk_artefato, id_atividade 
 			FROM artefato_atividade 
 			INNER JOIN atividade 
@@ -155,6 +171,8 @@ CREATE FUNCTION verificaAtividadeConcluida() RETURNS TRIGGER AS $$
 			INNER JOIN artefato_atividade 
 			ON artefato.id_artefato = artefato_atividade.fk_artefato 
 			INTO soma;
+
+			SET ROLE update;
 
 			UPDATE artefato
 			SET porcentagem_concluida = soma + porcentagem
