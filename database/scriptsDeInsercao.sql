@@ -122,14 +122,14 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			id_trash := recursoCadastrar(id_gerente, id_projeto, 'recurso 2');
 			
 			--escreve mensagem do gerente
-			id_mensagem := mensagemEscreveGerente(id_gerente, 'mensagem do gerente', 'Bem vindo ao projeto');
+			id_mensagem := mensagemEscreve(id_gerente, 'mensagem do gerente', 'Bem vindo ao projeto');
 			--envia mensagem do gerente para os membros
 			confirm := mensagem_enviadaEnvia(id_gerente, id_membro1, id_mensagem, CURRENT_DATE);
 			confirm := mensagem_enviadaEnvia(id_gerente, id_membro2, id_mensagem, CURRENT_DATE);		
 			confirm := mensagem_enviadaEnvia(id_gerente, id_membro3, id_mensagem, CURRENT_DATE);
 			
 			--escreve mensagem de um membro
-			id_mensagem := mensagemEscreveMembro(id_membro1, 'Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo');
+			id_mensagem := mensagemEscreve(id_membro1, 'Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo');
 			--envia mensagem para o gerente
 			confirm := mensagem_enviadaEnvia(id_membro2, id_gerente, id_mensagem, CURRENT_DATE);
 		END LOOP;
