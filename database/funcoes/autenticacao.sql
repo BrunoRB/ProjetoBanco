@@ -1,5 +1,16 @@
 ﻿
 
+CREATE OR REPLACE FUNCTION getRole(idUsuario INTEGER, idProjeto INTEGER) RETURNS TEXT AS $$
+	BEGIN
+		IF isGerente(idUsuario, idProjeto) THEN
+			RETURN 'gerente';
+		ELSEIF isMembro(idUsuario, idProjeto) THEN
+			RETURN 'membro';
+		END IF;
+		RETURN 'nada';
+	END;
+$$ LANGUAGE PLPGSQL;
+
 CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETURNS BOOLEAN AS $$
 	DECLARE
 		flag INTEGER;
