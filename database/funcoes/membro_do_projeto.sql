@@ -42,8 +42,8 @@ CREATE OR REPLACE FUNCTION membro_do_projetoRejeita (idUsuario INTEGER, idProjet
 		END IF;	
 
 		SET ROLE delete;
-		DELETE FROM membro_do_projeto WHERE fk_projeto = idProjeto AND fk_usuario = idMembro;
-		RAISE NOTICE 'Convite não aceito!';
+		DELETE FROM membro_do_projeto WHERE fk_projeto = idProjeto AND fk_usuario = idUsuario;
+		RAISE NOTICE 'Convite recusado!';
 		RETURN 1;
 	END;
 $$ LANGUAGE PLPGSQL;

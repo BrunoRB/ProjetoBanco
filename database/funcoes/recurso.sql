@@ -1,6 +1,6 @@
 --INSERTS
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, id_projeto INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_recurso INTEGER;
@@ -24,7 +24,7 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, id_projeto INTEGER, nome_p VARCHAR(100), descricao_p TEXT)
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_recurso INTEGER;
@@ -48,7 +48,7 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, id_projeto INTEGER, nome_p VARCHAR(100), id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_recurso INTEGER;
@@ -72,7 +72,7 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION recursoCadastrar (idUsuario INTEGER, id_projeto INTEGER, nome_p VARCHAR(100))
 RETURNS INTEGER AS $$
 	DECLARE 
 		cod_recurso INTEGER;
@@ -100,7 +100,7 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATE
 
-CREATE OR REPLACE FUNCTION recursoAtualizar (idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), descricao TEXT, id_projeto INTEGER, id_despesa INTEGER)
+CREATE OR REPLACE FUNCTION recursoAtualizar (idUsuario INTEGER, id_projeto INTEGER, id INTEGER, nome_p VARCHAR(100), descricao TEXT, id_despesa INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, id_projeto) THEN

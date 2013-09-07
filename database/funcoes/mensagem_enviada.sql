@@ -1,10 +1,8 @@
-CREATE OR REPLACE FUNCTION mensagem_enviadaEnvia(idUsuario INTEGER, idProjeto INTEGER, id_destinatario INTEGER, id_mensagem INTEGER, data TIMESTAMP) 
+CREATE OR REPLACE FUNCTION mensagem_enviadaEnvia(idUsuario INTEGER, id_destinatario INTEGER, id_mensagem INTEGER, data TIMESTAMP) 
 RETURNS BOOLEAN AS $$
 	BEGIN
-		IF NOT isGerente(idUsuario, idProjeto) THEN
-			IF NOT isMembro(idUsuario, idProjeto) THEN
-				RETURN 0;
-			END IF;
+		IF NOT isLogado(idUsuario) THEN
+			RETURN 0;
 		END IF;
 
 		SET ROLE insert;

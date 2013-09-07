@@ -1,14 +1,12 @@
 --INSERT;
 
-CREATE OR REPLACE FUNCTION mensagemEscreve (idProjeto INTEGER, assunto_mens VARCHAR(100), texto_mens TEXT, id_usuario INTEGER)
+CREATE OR REPLACE FUNCTION mensagemEscreve(id_usuario INTEGER, assunto_mens VARCHAR(100), texto_mens TEXT)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_mensagem INTEGER;
 	BEGIN
-		IF NOT isGerente(id_usuario, idProjeto) THEN
-			IF NOT isMembro(id_usuario, idProjeto) THEN
-				RETURN 0;
-			END IF;
+		IF NOT isLogado(id_usuario) THEN	
+			RETURN 0;
 		END IF;
 
 		SET ROLE insert;

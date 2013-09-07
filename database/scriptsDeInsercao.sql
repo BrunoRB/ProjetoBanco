@@ -81,17 +81,17 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 
 			--cria fases
 			--descrição paremetros->   		nome          descrição		    id_proj    fase predecessora
-			id_fase1 := faseCadastrar(id_gerente, 'Fase 1', 'Primeira fase do projeto', id_projeto);
-			id_fase2 := faseCadastrar(id_gerente, 'Fase 2', 'Segunda fase do projeto', id_projeto, id_fase1);
-			id_fase3 := faseCadastrar(id_gerente, 'Fase 3', 'Terceira fase do projeto', id_projeto, id_fase2);
+			id_fase1 := faseCadastrar(id_gerente, id_projeto, 'Fase 1', 'Primeira fase do projeto');
+			id_fase2 := faseCadastrar(id_gerente, id_projeto, 'Fase 2', 'Segunda fase do projeto', id_fase1);
+			id_fase3 := faseCadastrar(id_gerente, id_projeto, 'Fase 3', 'Terceira fase do projeto', id_fase2);
 
 			--cria atividades
-			id_atividade1 := atividadeCadastrar(id_gerente, CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1, id_projeto);
-			id_atividade2 := atividadeCadastrar(id_gerente, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1, id_projeto);
-			id_atividade3 := atividadeCadastrar(id_gerente, CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2, id_projeto);
-			id_atividade4 := atividadeCadastrar(id_gerente, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2, id_projeto);
-			id_atividade5 := atividadeCadastrar(id_gerente, CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3, id_projeto);
-			id_atividade6 := atividadeCadastrar(id_gerente, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3, id_projeto);		
+			id_atividade1 := atividadeCadastrar(id_gerente, id_projeto, CURRENT_DATE, (CURRENT_DATE + randVal), 'Testes unitários', 'descrição desta atividade', id_fase1);
+			id_atividade2 := atividadeCadastrar(id_gerente, id_projeto, CURRENT_DATE, (CURRENT_DATE + randVal + (i*2)), 'Codificação', id_atividade1, id_fase1);
+			id_atividade3 := atividadeCadastrar(id_gerente, id_projeto, CURRENT_DATE, (CURRENT_DATE + randVal), 'Refatoração', id_fase2);
+			id_atividade4 := atividadeCadastrar(id_gerente, id_projeto, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Testes unitários', 'descrição desta atividade', id_atividade3, id_fase2);
+			id_atividade5 := atividadeCadastrar(id_gerente, id_projeto, CURRENT_DATE, (CURRENT_DATE + randVal), 'Codificação', id_fase3);
+			id_atividade6 := atividadeCadastrar(id_gerente, id_projeto, (CURRENT_DATE + randval + i), (CURRENT_DATE + randVal + (i*2)), 'Refatoração', id_atividade5, id_fase3);		
 
 			 --atribui atividades
 			id_trash := atividade_do_membroCadastrar(id_gerente, id_projeto, membro_projeto1, id_atividade1);
@@ -114,24 +114,24 @@ CREATE OR REPLACE FUNCTION insertData() RETURNS BOOLEAN AS $$
 			confirm := artefato_atividadeCadastrar(id_gerente, id_projeto, id_artefato2, id_atividade6, 35);
 
 			--cria despesas
-			id_despesa1 := despesaCadastrar (id_gerente, 'despesa 1', 100, id_projeto);
-			id_despesa2 := despesaCadastrar (id_gerente, 'despesa 2', 450.67, 'Despesa referente a um recurso', id_projeto);
+			id_despesa1 := despesaCadastrar(id_gerente, id_projeto, 'despesa 1', 100);
+			id_despesa2 := despesaCadastrar(id_gerente, id_projeto, 'despesa 2', 450.67, 'Despesa referente a um recurso');
 
 			--cria recursos
-			id_trash := recursoCadastrar(id_gerente, 'recurso 1', 'descricao do recurso 1', id_projeto, id_despesa2);
-			id_trash := recursoCadastrar(id_gerente, 'recurso 2', id_projeto);
+			id_trash := recursoCadastrar(id_gerente, id_projeto, 'recurso 1', 'descricao do recurso 1', id_despesa2);
+			id_trash := recursoCadastrar(id_gerente, id_projeto, 'recurso 2');
 			
 			--escreve mensagem do gerente
-			id_mensagem := mensagemEscreve(id_projeto, 'mensagem do gerente', 'Bem vindo ao projeto', id_gerente);
+			id_mensagem := mensagemEscreveGerente(id_gerente, 'mensagem do gerente', 'Bem vindo ao projeto');
 			--envia mensagem do gerente para os membros
-			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_membro1, id_mensagem, CURRENT_DATE);
-			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_membro2, id_mensagem, CURRENT_DATE);		
-			confirm := mensagem_enviadaEnvia(id_gerente, id_projeto, id_membro3, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_gerente, id_membro1, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_gerente, id_membro2, id_mensagem, CURRENT_DATE);		
+			confirm := mensagem_enviadaEnvia(id_gerente, id_membro3, id_mensagem, CURRENT_DATE);
 			
 			--escreve mensagem de um membro
-			id_mensagem := mensagemEscreve(id_projeto, 'Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo', id_membro2);
+			id_mensagem := mensagemEscreveMembro(id_membro1, 'Prazo para a atividade X', 'Acho que não será possível terminar essa atividade no prazo');
 			--envia mensagem para o gerente
-			confirm := mensagem_enviadaEnvia(id_membro2, id_projeto, id_gerente, id_mensagem, CURRENT_DATE);
+			confirm := mensagem_enviadaEnvia(id_membro2, id_gerente, id_mensagem, CURRENT_DATE);
 		END LOOP;
 		RETURN 'TRUE';
 	END;

@@ -1,6 +1,6 @@
 --INSERT
 
-CREATE OR REPLACE FUNCTION despesaCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION despesaCadastrar (idUsuario INTEGER, id_projeto INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT)
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_despesa INTEGER;
@@ -24,7 +24,7 @@ RETURNS INTEGER AS $$
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION despesaCadastrar (idUsuario INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION despesaCadastrar (idUsuario INTEGER, id_projeto INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0))
 RETURNS INTEGER AS $$
 	DECLARE
 		cod_despesa INTEGER;
@@ -52,7 +52,7 @@ $$ LANGUAGE PLPGSQL;
 
 --UPDATE
 
-CREATE OR REPLACE FUNCTION despesaAtualizar(idUsuario INTEGER, id INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT, id_projeto INTEGER)
+CREATE OR REPLACE FUNCTION despesaAtualizar(idUsuario INTEGER, id_projeto INTEGER, id INTEGER, nome_p VARCHAR(100), valor_p NUMERIC(19,0), descricao_p TEXT)
 RETURNS INTEGER AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, id_projeto) THEN

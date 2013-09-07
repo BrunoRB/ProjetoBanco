@@ -18,8 +18,8 @@ CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100
 		
 		--Seta esse ususario como gerente deste projeto
 		SET ROLE insert;
-		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao) 
-		VALUES (id_gerada, idUsuario, 'Gerente');
+		INSERT INTO membro_do_projeto (fk_projeto, fk_usuario, funcao, aceito) 
+		VALUES (id_gerada, idUsuario, 'Gerente', true);
 		
 		EXECUTE mensagemDeSucesso('PROJETO', 'CADASTRADO'); -- raise notice, ver zFuncoesGerais
 		

@@ -40,6 +40,24 @@ CREATE OR REPLACE FUNCTION isGerente(idUsuario INTEGER, idProjeto INTEGER) RETUR
 	END;
 $$ LANGUAGE PLPGSQL;
 
+CREATE OR REPLACE FUNCTION isInAtividade(idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER) RETURNS BOOLEAN AS $$
+	DECLARE
+		flag INTEGER;
+	BEGIN
+		SELECT INTO flag id_atividade FROM atividade AS a INNER JOIN atividade_do_membro AS am ON a.id_atividade = am.fk_atividade 
+							INNER JOIN membro_do_projeto AS mp ON am.fk_membro_do_projeto = mp.id_membro_do_projeto
+							INNER JOIN usuario AS u ON u.id_usuario = mp.fk_usuario
+							INNER JOIN projeto AS p ON mp.fk_projeto = p.id_projeto
+							WHERE u.id_usuario = idUsuario AND a.id_atividade = idAtividade AND p.id_projeto = idProjeto;
+		IF NOT FOUND THEN
+			RAISE NOTICE 'Está atividade não foi atribuida a este membro.';
+			RETURN false;			
+		END IF;
+
+		RETURN true;
+	END;
+$$ LANGUAGE PLPGSQL;
+
 CREATE OR REPLACE FUNCTION isMembro(idUsuario INTEGER, idProjeto INTEGER) RETURNS BOOLEAN AS $$
 	DECLARE
 		flag INTEGER;
@@ -110,7 +128,8 @@ CREATE OR REPLACE FUNCTION mensagemDeSucesso(entity VARCHAR(100), operation VARC
 	END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION logar (login VARCHAR, password VARCHAR) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION logar (login VARCHAR, password VARCHAR)
+RETURNS INTEGER AS $$
 	DECLARE
 		id INT;
 		name VARCHAR;
@@ -122,7 +141,7 @@ CREATE OR REPLACE FUNCTION logar (login VARCHAR, password VARCHAR) RETURNS INTEG
 			SELECT INTO inatividade inativo FROM usuario WHERE id_usuario = id;
 			IF (inatividade = TRUE) THEN
 				SET ROLE update;
-				UPDATE usuario SET inativo = FALSE, data_inatividade = NULL, sessao = NOW() + 30 WHERE id_usuario = (id);
+				UPDATE usuario SET inativo = FALSE, data_inatividade = NULL, sessao = (NOW() + INTERVAL '1 hour') WHERE id_usuario = (id);
 				RAISE NOTICE 'Sua conta foi reativada!';
 			END IF;	
 
@@ -144,11 +163,14 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION deslogar (idUsuario INTEGER) RETURNS INTEGER AS $$
 	BEGIN 
-		UPDATE usuario SET sessao = NULL WHERE id_usuario = idUsuario;
-		IF FOUND THEN
-			RETURN 1;
+		IF NOT isLogado(idUsuario) THEN
+			RETURN 0;
 		END IF;
-		RETURN 0;
+		
+		SET ROLE update;
+		UPDATE usuario SET sessao = null WHERE id_usuario = (idUsuario);
+		RAISE NOTICE 'Usuário deslogado!';
+		RETURN 1;
 	END;
 $$ LANGUAGE PLPGSQL;
 
