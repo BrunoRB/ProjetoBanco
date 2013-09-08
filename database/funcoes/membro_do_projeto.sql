@@ -1,4 +1,4 @@
-
+﻿
 
 CREATE OR REPLACE FUNCTION membro_do_projetoCadastrar(idUsuario INTEGER, projeto_p INTEGER, membro_p INTEGER, funcao_p VARCHAR(100)) 
 RETURNS INTEGER AS $$
@@ -55,12 +55,28 @@ CREATE OR REPLACE FUNCTION membroRemoverDeProjeto(idUsuario INTEGER, projeto INT
 		END IF;	
 
 		SET ROLE delete;
-		DELETE FROM Mmembro_do_projeto WHERE fk_projeto = projeto AND fk_membro = membro;
+		DELETE FROM membro_do_projeto WHERE fk_projeto = projeto AND fk_membro = membro;
 		EXECUTE mensagemDeSucesso('Relação membro/projeto', 'excluida');
 		IF (FOUND) THEN
 			RETURN 1;
 		ELSE
 			RETURN 0;
 		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+
+--SELECTS;
+
+CREATE OR REPLACE FUNCTION membrosListar(
+	idUsuario INTEGER, idProjeto INTEGER, OUT membro VARCHAR, OUT funcao VARCHAR, OUT qtd_atividade INTEGER		
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT membro, funcao, qtd_atividade FROM membro_projetoView 
+						WHERE projeto =' || idProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
