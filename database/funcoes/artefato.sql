@@ -240,7 +240,7 @@ $$ LANGUAGE PLPGSQL;
 --SELECTS;
 
 CREATE OR REPLACE FUNCTION artefatoListar(
-	idUsuario INTEGER, idProjeto INTEGER, OUT idArtefato INTEGER, OUT artefato VARCHAR, OUT tipo VARCHAR, 
+	idUsuario INTEGER, idProjeto INTEGER, OUT id_artefato INTEGER, OUT nome VARCHAR, OUT tipo VARCHAR, 
 	OUT porcentagem_concluida INTEGER		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
