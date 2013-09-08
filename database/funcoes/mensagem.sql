@@ -46,7 +46,7 @@ $$ LANGUAGE PLPGSQL;
 --SELECTS;
 
 CREATE OR REPLACE FUNCTION mensagemListar(
-	idUsuario INTEGER, idProjeto INTEGER, OUT idFase INTEGER, OUT fase VARCHAR, OUT predecessora VARCHAR		
+	idUsuario INTEGER, OUT idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isLogado(idUsuario) THEN
