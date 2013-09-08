@@ -134,6 +134,28 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 	END;
 $$ LANGUAGE PLPGSQL;
 
+--sem descrição
+CREATE OR REPLACE FUNCTION atividadeAtualizar(
+	idUsuario INTEGER, idProjeto INTEGER, id INTEGER, inicio TIMESTAMP, limite TIMESTAMP,
+	nome VARCHAR(100), predecessora INTEGER, fase INTEGER
+) RETURNS INTEGER AS $$
+	BEGIN	
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+		
+		SET ROLE update;	
+		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, fk_predecessora = predecessora, fk_fase = fase WHERE id_atividade = id;
+		IF (FOUND) THEN
+			EXECUTE mensagemDeSucesso('Atividade', 'atualizada');
+			RETURN 1;
+		ELSE
+			RAISE NOTICE 'Erro ao atualizar a atividade.';
+			RETURN 0;
+		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
+
 --finaliza a atividade
 CREATE OR REPLACE FUNCTION atividadeFinalizar(idUsuario INTEGER, idProjeto INTEGER, id INTEGER)
 RETURNS INTEGER AS $$
