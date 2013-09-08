@@ -1,4 +1,4 @@
---INSERTS;
+﻿--INSERTS;
 
 --todos
 CREATE OR REPLACE FUNCTION atividadeCadastrar(
@@ -240,3 +240,20 @@ CREATE OR REPLACE FUNCTION atividadeExcluir(idUsuario INTEGER, idProjeto INTEGER
 $$ LANGUAGE PLPGSQL;
 
 --END DELETES;
+
+
+--SELECTS;
+
+CREATE OR REPLACE FUNCTION atividadeIncompletaListarGerente (
+	idUsuario INTEGER, idProjeto INTEGER, OUT idAtividade INTEGER, OUT atividade VARCHAR, OUT inicio DATE,
+	OUT limite DATE, OUT predecessora VARCHAR, OUT fase VARCHAR
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT id_projeto, atividade, inicio, limite, predecessora, fase 
+			FROM atividade_incompleta_projetoView WHERE id_projeto =' || idProjeto;
+	END;
+$$ LANGUAGE PLPGSQL;
