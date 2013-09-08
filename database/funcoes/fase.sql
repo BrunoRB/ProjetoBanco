@@ -198,7 +198,7 @@ $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION faseListar(
-	idUsuario INTEGER, idProjeto INTEGER, OUT idFase INTEGER, OUT fase VARCHAR, OUT predecessora VARCHAR		
+	idUsuario INTEGER, idProjeto INTEGER, OUT id_fase INTEGER, OUT nome VARCHAR, OUT predecessora VARCHAR		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
@@ -211,7 +211,7 @@ $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION faseExibirGerente(
-	idUsuario INTEGER, idProjeto INTEGER, idFase INTEGER, OUT nome VARCHAR, OUT descricao TEXT, OUT predecessora VARCHAR
+	idUsuario INTEGER, idProjeto INTEGER, id_fase INTEGER, OUT nome VARCHAR, OUT descricao TEXT, OUT predecessora VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN
 		IF NOT isGerente(idUsuario, idProjeto) THEN
