@@ -80,6 +80,6 @@ CREATE OR REPLACE VIEW notaView AS
 
 -- View Listagem das mensagens recebidas
 CREATE OR REPLACE VIEW mensagem_recebidaView AS
-	SELECT mensagem_enviada.fk_destinatario AS usuario, usuario.nome AS remetente, mensagem.assunto FROM mensagem 
+	SELECT mensagem_enviada.fk_destinatario AS usuario, mensagem.id_mensagem AS idMensagem, usuario.nome AS remetente, mensagem.assunto FROM mensagem 
 		INNER JOIN usuario ON mensagem.fk_usuario = usuario.id_usuario
 		INNER JOIN mensagem_enviada ON mensagem.id_mensagem = mensagem_enviada.fk_mensagem;
