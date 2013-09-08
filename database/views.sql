@@ -1,6 +1,6 @@
 -- View do Cronograma
 
-CREATE OR REPLACE VIEW cronogramView AS
+CREATE OR REPLACE VIEW cronogramaView AS
 	SELECT
 	"public".membro_do_projeto.fk_projeto AS projeto,  -- ID para identificar o projeto a qual pertencem essas atividades, utilizado para filtar as atividades por projeto
 	"public".atividade.id_atividade AS codigo, 
@@ -21,6 +21,24 @@ CREATE OR REPLACE VIEW cronogramView AS
 			ORDER BY fase.id_fase; -- Ordenando as atividade pela sua fase
 
 
+-- Função para chamar a view do cronograma validando se o usuário é um gerente do projeto em questão
+
+CREATE OR REPLACE FUNCTION cronogramaListar(
+	idUsuario INTEGER, idProjeto INTEGER, OUT codigo VARCHAR, OUT atividade VARCHAR, 
+	OUT data_inicio DATE, OUT data_limite DATE, OUT data_fim DATE, OUT predecessora INTEGER, OUT fase VARCHAR  		
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT codigo, atividade, data_inicio, data_limite, data_fim, predecessora, fase 
+			FROM cronogramaView WHERE projeto =' || idProjeto;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+
+
 --View Listagem de projetos
 CREATE OR REPLACE VIEW projetoView AS 
 	SELECT projeto.id_projeto, projeto.nome, membro_do_projeto.funcao, usuario.id_usuario FROM projeto 
@@ -30,7 +48,7 @@ CREATE OR REPLACE VIEW projetoView AS
 
 -- View Listagem dos membros de um projeto
 CREATE OR REPLACE VIEW membro_projetoView AS
-	SELECT membro_do_projeto.fk_projeto AS projeto, usuario.nome AS membro, membro_do_projeto.funcao, Count(atividade_do_membro.fk_atividade) AS qtd_atividade 
+	SELECT membro_do_projeto.fk_projeto AS projeto, usuario.id_usuario AS idMembro, usuario.nome AS membro, membro_do_projeto.funcao, Count(atividade_do_membro.fk_atividade) AS qtd_atividade 
 	FROM membro_do_projeto
 		INNER JOIN usuario ON membro_do_projeto.fk_usuario = usuario.id_usuario
 		INNER JOIN atividade_do_membro ON atividade_do_membro.fk_membro_do_projeto = membro_do_projeto.id_membro_do_projeto
