@@ -245,8 +245,8 @@ $$ LANGUAGE PLPGSQL;
 --SELECTS;
 
 CREATE OR REPLACE FUNCTION atividadeIncompletaListarGerente (
-	idUsuario INTEGER, idProjeto INTEGER, OUT id_atividade INTEGER, OUT atividade_nome VARCHAR, OUT atividade_inicio DATE,
-	OUT atividade_limite DATE, OUT predecessora VARCHAR, OUT nome VARCHAR
+	idUsuario INTEGER, idProjeto INTEGER, OUT id_atividade INTEGER, OUT nome_atividade VARCHAR, OUT inicio_atividade DATE,
+	OUT limite_atividade DATE, OUT predecessora VARCHAR, OUT nome VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
@@ -261,8 +261,8 @@ $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION atividadecompletaListarGerente (
-	idUsuario INTEGER, idProjeto INTEGER, OUT id_atividade INTEGER, OUT atividade_nome VARCHAR, OUT atividade_inicio DATE,
-	OUT atividade_limite DATE, OUT atividade_fim DATE, OUT predecessora VARCHAR, OUT nome VARCHAR
+	idUsuario INTEGER, idProjeto INTEGER, OUT id_atividade INTEGER, OUT nome_atividade VARCHAR, OUT inicio_atividade DATE,
+	OUT limite_atividade DATE, OUT fim_atividade DATE, OUT predecessora VARCHAR, OUT nome VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
