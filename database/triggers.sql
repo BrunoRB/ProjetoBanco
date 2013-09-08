@@ -64,7 +64,7 @@ CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 		idProj integer;
 	BEGIN
 		idProj = NEW.fk_projeto;
-		RAISE EXCEPTION idProj;
+
 		IF (NEW.valor IS NOT NULL) THEN
 			SET ROLE retrieve;
 
