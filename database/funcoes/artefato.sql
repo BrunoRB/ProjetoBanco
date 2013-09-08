@@ -1,4 +1,4 @@
---INSERTS
+﻿--INSERTS
 
 CREATE OR REPLACE FUNCTION artefatoCadastrar (idUsuario INTEGER, idProjeto INTEGER, nome_p VARCHAR(100), tipo_p VARCHAR(100), descricao_p TEXT, porcentagem_concluida_p INTEGER) 
 RETURNS INTEGER AS $$
@@ -237,3 +237,25 @@ $$ LANGUAGE PLPGSQL;
 --END DELETES
 
 
+--SELECTS;
+
+
+CREATE OR REPLACE FUNCTION artefatoExibirGerente(
+	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, idArtefato INTEGER, OUT nome VARCHAR, OUT tipo VARCHAR, 
+	OUT descricao TEXT, OUT porcentagem_concluida INTEGER
+) RETURNS SETOF RECORD AS $$
+	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT artefato.nome, artefato.tipo, artefato.descricao, artefato.porcentagem_concluida 
+			FROM artefato
+			INNER JOIN artefato_atividade ON artefato_atividade.fk_artefato = artefato.id_artefato
+			INNER JOIN atividade ON atividade.id_atividade = artefato_atividade.fk_atividade
+			INNER JOIN projeto ON atividade.fk_projeto = projeto.id_projeto
+			WHERE projeto.id_projeto =' || idProjeto || 'AND atividade.id_atividade =' || idAtividade || 
+				'AND artefato.id_artefato =' || idArtefato;
+	END;
+$$ LANGUAGE PLPGSQL;
