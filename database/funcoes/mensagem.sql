@@ -46,21 +46,22 @@ $$ LANGUAGE PLPGSQL;
 --SELECTS;
 
 CREATE OR REPLACE FUNCTION mensagemListar(
-	idUsuario INTEGER, OUT idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR		
+	idUsuario INTEGER, OUT idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR, OUT data_hora_envio TIMESTAMP		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isLogado(idUsuario) THEN
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT idMensagem, remetente, assunto FROM mensagem_recebidaView 
-						WHERE usuario =' || idUsuario;
+		RETURN QUERY EXECUTE 'SELECT idMensagem, remetente, assunto, data_hora_envio
+				FROM mensagem_recebidaView WHERE usuario =' || idUsuario;
 	END;
 $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION mensagemExibirUsuario(
-	idUsuario INTEGER, idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR, OUT mensagem TEXT
+	idUsuario INTEGER, idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR, OUT data_hora_envio TIMESTAMP, 
+	OUT mensagem TEXT
 ) RETURNS SETOF RECORD AS $$
 	BEGIN
 		IF NOT isLogado(idUsuario) THEN
@@ -68,7 +69,8 @@ CREATE OR REPLACE FUNCTION mensagemExibirUsuario(
 		END IF;
 		
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT usuario.nome AS remetente, mensagem.assunto, mensagem.texto AS mensagem
+		RETURN QUERY EXECUTE 'SELECT usuario.nome AS remetente, mensagem.assunto, 
+			mensagem_enviada.data_hora_envio, mensagem.texto AS mensagem 
 		FROM mensagem 
 		INNER JOIN usuario ON mensagem.fk_usuario = usuario.id_usuario
 		INNER JOIN mensagem_enviada ON mensagem.id_mensagem = mensagem_enviada.fk_mensagem 
