@@ -110,8 +110,29 @@ CREATE OR REPLACE FUNCTION projetoAtualizar (
 			EXECUTE mensagemDeSucesso('PROJETO', 'atualizado'); -- raise notice, ver zFuncoesGerais
 			RETURN 1;
 		ELSE
+			RAISE NOTICE 'Erro ao atualizar projeto!';
 			RETURN 0;
 		END IF;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION ProjetoFinalizar(idUsuario INTEGER, idProjeto INTEGER) RETURNS INTEGER AS $$
+	BEGIN
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN 0;
+		END IF;
+
+		SET ROLE update;
+		UPDATE projeto SET data_de_termino = now() WHERE id_projeto = idProjeto;
+
+		IF (FOUND) THEN
+			EXECUTE mensagemDeSucesso('PROJETO', 'finalizado'); -- raise notice, ver zFuncoesGerais
+			RETURN 1;
+		ELSE
+			RAISE NOTICE 'Erro ao finalizar projeto!';
+			RETURN 0;
+		END IF;
+		
 	END;
 $$ LANGUAGE PLPGSQL;
 
