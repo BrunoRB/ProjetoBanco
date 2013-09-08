@@ -1,4 +1,4 @@
-
+﻿
 --INSERTS;
 
 CREATE OR REPLACE FUNCTION projetoCadastrar (idUsuario INTEGER, nome VARCHAR(100), orcamento NUMERIC(10, 2), descricao TEXT) RETURNS INTEGER AS $$
@@ -201,7 +201,7 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
---TODO, modificar para função PLPGSQL (if é necessário para validar gerente)
+--TODO
 CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT id_projeto INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isLogado(idUsuario) THEN
