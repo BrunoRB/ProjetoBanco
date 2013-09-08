@@ -3,7 +3,6 @@
 
 require_once 'main.php';
 
-
 class Index extends Main {
 	public function __construct() {
 		$this->setTitle('Home');

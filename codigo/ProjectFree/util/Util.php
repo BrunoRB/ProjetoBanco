@@ -22,7 +22,7 @@ MESSAGE;
 
 function printWarningMessage($message) {
 	echo <<<MESSAGE
-	<div class="warning text-warning">
+	<div class="alert alert-warning">
   		<span><i class="icon-warning-sign"></i> $message</span>
 	</div>
 MESSAGE;
@@ -30,7 +30,7 @@ MESSAGE;
 
 function printSuccessMessage($message) {
 	echo <<<MESSAGE
-	<div class="sucess text-success">
+	<div class="alert alert-success">
   		<span><i class="icon-success-sign"></i> $message</span>
 	</div>
 MESSAGE;

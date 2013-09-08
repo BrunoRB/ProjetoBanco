@@ -201,9 +201,14 @@ $$ LANGUAGE PLPGSQL;
 
 --TODO, modificar para função PLPGSQL (if é necessário para validar gerente)
 CREATE OR REPLACE FUNCTION projetoListar (idUsuario INTEGER, OUT id_projeto INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR) RETURNS SETOF RECORD AS $$
-	SET ROLE retrieve;
-	SELECT id_projeto, nome, funcao FROM projetoView WHERE id_usuario = $1;
-$$ LANGUAGE SQL;
+	BEGIN		
+		IF NOT isLogado(idUsuario) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT id_projeto, nome, funcao FROM projetoView WHERE id_usuario =' || idUsuario;
+	END;
+$$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION projetoExibirGerente(

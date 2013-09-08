@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename source module &apos;core.Permissions.php&apos; to &apos;permissions.php&apos;&#x0A;- Original element: &apos;core\Permissions.php&apos;&#x0A;- Renamed element: &apos;core\permissions.php&apos;" description="Rename source module &apos;Permissions.php&apos;" flags="589830" id="org.eclipse.dltk.ui.rename.sourcemodule" input="/&lt;core{Permissions.php" name="permissions.php" stamp="1378578093740" version="1.0"/>
+</session>

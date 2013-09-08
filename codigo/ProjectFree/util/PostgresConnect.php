@@ -84,6 +84,24 @@ class PostgresConnection {
 		return $data;
 	}
 
+	public function getTypes($result) {
+		$types = array();
+		$cols = pg_num_fields($result);
+		for ($i = 0; $i < $cols; $i++) {
+			$types[] = pg_field_type($result, $i);
+		}
+		return $types;
+	}
+
+	public function getNames($result) {
+		$names = array();
+		$cols = pg_num_fields($result);
+		for ($i = 0; $i < $cols; $i++) {
+			$names[] = pg_field_name($result, $i);
+		}
+		return $names;
+	}
+
 	/**
 	 *
 	 * @param unknown $query

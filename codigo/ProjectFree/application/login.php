@@ -11,7 +11,7 @@ class Login extends Main {
 
 	public function loadBody() {
 		global $userId;
-		if ($userId === false) {
+		if ($userId === false || !isset($userId)) {
 			if (isset($_POST['submit'])) {
 				$this->login();
 			}
@@ -60,6 +60,43 @@ class Login extends Main {
 				</a>
 			</h2>
 		<?php
+	}
+
+	protected function login() {
+		if (empty($_POST['email']) || empty($_POST['senha'])) {
+			$this->show();
+			printErrorMessage('Erro, preencha os campos login e senha !');
+		}
+		else {
+			$pgConnect = new PostgresConnection();
+			$functionName = 'logar';
+			$parameters = array($_POST['email'], $_POST['senha']);
+			$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+			$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+			$result = $pgConnect->getResult($retval);
+			$result = current($result)['logar'];
+			$pgConnect->closeConnection();
+
+			if (isset($result) && $result > 0) {
+				$this->storeloginOnSession($result);
+				redirect('logged/index.php');
+			}
+			else {
+				unset($_POST);
+				$this->show();
+				printErrorMessage('Erro, login e/ou senha inválidos !');
+			}
+		}
+	}
+
+	protected function storeloginOnSession($id) {
+		if (isset($id) && $id !== false) {
+			$_SESSION['userId'] = $id;
+		}
+		else {
+			unset($_SESSION['userId']);
+			unset($_SESSION['projectId']);
+		}
 	}
 
 	protected function deslogar() {

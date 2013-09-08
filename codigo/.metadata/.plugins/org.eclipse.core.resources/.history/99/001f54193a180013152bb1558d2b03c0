@@ -1,0 +1,10 @@
+<?php
+
+
+class Artefato {
+	private $id_artefato;
+	private $nome;
+	private $tipo;
+	private $descricao;
+	private $porcentagem_concluida;
+}
