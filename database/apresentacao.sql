@@ -1,12 +1,11 @@
 --Cadastra o gerente
 SET ROLE retrieve;
-SELECT usuarioCadastrar('Ebara', 'ebara@projectfree.com', 'ebara');--Nome, email/login, senha
+SELECT usuarioCadastrar('Ebara', 'ebara@projectfree.com', 'admin');--Nome, email/login, senha
 
 --erro ao gerente logar no sistema
-SELECT logar('gerente@gerente.com', 'admin');
-
+SELECT logar('gerente@gerente.com', 'ebara');
 --Gerente loga no sistema
-SELECT logar('ebara@projectfree.com', 'ebara');
+SELECT logar('ebara@projectfree.com', 'admin');
 
 --Gerente cria um projeto
 SELECT projetoCadastrar(1, 'Sistemas de bancos de dados', 10.000, 'terceiro projeto integrador');--usuário/gerente, nome, orçamento, descrição
@@ -16,8 +15,13 @@ SELECT usuarioCadastrar('Roberto', 'roberto@projectfree.com', 'roberto');
 SELECT usuarioCadastrar('Maikon', 'maikon@projectfree.com', 'maikon');
 SELECT usuarioCadastrar('bruno', 'bruno@projectfree.com', 'bruno');
 SELECT usuarioCadastrar('fabricio', 'fabricio@projectfree.com', 'fabricio');
-
 SELECT usuarioCadastrar('outro_usuário', 'outro@projectfree.com', 'outro');
+
+SELECT * from buscarUsuarios('rob');
+SELECT * from buscarUsuarios('maik');
+SELECT * from buscarUsuarios('br');
+SELECT * from buscarUsuarios('fab');
+SELECT * from buscarUsuarios('outro');
 
 --gerente convida os membros
 SELECT membro_do_projetoCadastrar(1, 1, 2, 'programador');--gerente, projeto, usuário, função
