@@ -80,3 +80,4 @@ CREATE OR REPLACE FUNCTION membrosListar(
 						WHERE projeto =' || idProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
+
