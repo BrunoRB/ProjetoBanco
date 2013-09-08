@@ -119,7 +119,7 @@ $$ LANGUAGE PLPGSQL;
 
 --DELETES;
 
-CREATE OR REPLACE FUNCTION projetoExcluir (idUsuario INTEGER, idProjeto INTEGER)	RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION projetoExcluir (idUsuario INTEGER, idProjeto INTEGER) RETURNS INTEGER AS $$
 	DECLARE
 		id_mdp INTEGER;
 		id_atdm INTEGER;
@@ -130,26 +130,37 @@ CREATE OR REPLACE FUNCTION projetoExcluir (idUsuario INTEGER, idProjeto INTEGER)
 			RETURN 0;
 		END IF;
 		
-		SET ROLE retrieve;
-		SELECT INTO id_mdp id_membro_do_projeto FROM membro_do_projeto WHERE fk_projeto = idProjeto;
-		SELECT INTO id_atdm id_atividade_do_membro FROM atividade_do_membro WHERE fk_membro=id_membro AND fk_atividade=id_atividade;
-		SELECT INTO id_com id_comentario FROM comentario WHERE fk_atividade_do_membro = id_atdm;
-		SELECT INTO id_ati id_atividade FROM atividade WHERE fk_projeto = idProjeto;
+		
+		--SELECT INTO id_ati id_atividade FROM atividade WHERE fk_projeto = idProjeto;
 
 		SET ROLE delete;
 
-		DELETE FROM recurso WHERE fk_projeto = id;
-		DELETE FROM despesa WHERE fk_projeto = id;
+		DELETE FROM recurso WHERE fk_projeto = idProjeto;
+		DELETE FROM despesa WHERE fk_projeto = idProjeto;
 
-		DELETE FROM imagem WHERE fk_comentario = id_com;
-		DELETE FROM comentario WHERE fk_atividade_do_membro = id_atdm;
+		
 
-		DELETE FROM atividade_do_membro WHERE fk_membro_do_projeto = id_mdp;
+		FOR id_mdp IN SELECT id_membro_do_projeto FROM membro_do_projeto WHERE fk_projeto = idProjeto LOOP
+			SET ROLE retrieve;
+			SELECT INTO id_atdm id_atividade_do_membro FROM atividade_do_membro WHERE fk_membro_do_projeto = id_mdp;
+			SELECT INTO id_com id_comentario FROM comentario WHERE fk_atividade_do_membro = id_atdm;
+
+			SET ROLE delete;			
+
+			DELETE FROM imagem WHERE fk_comentario = id_com;
+			DELETE FROM comentario WHERE fk_atividade_do_membro = id_atdm;
+
+			DELETE FROM atividade_do_membro WHERE fk_membro_do_projeto = id_mdp;
+		END LOOP;
+		
+		SET ROLE delete;
 		DELETE FROM membro_do_projeto WHERE fk_projeto = idProjeto;
 
-		DELETE FROM artefato_atividade WHERE fk_atividade = id_ati;
+		FOR id_ati IN SELECT id_atividade FROM atividade WHERE fk_projeto = idProjeto LOOP
+			DELETE FROM artefato_atividade WHERE fk_atividade = id_ati;
+		END LOOP;
 
-		DELETE FROM atividade WHERE id_atividade = id_ati;
+		DELETE FROM atividade WHERE fk_projeto = idProjeto;
 
 		DELETE FROM fase WHERE fk_projeto = idProjeto;
 
