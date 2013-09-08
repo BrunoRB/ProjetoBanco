@@ -58,7 +58,7 @@ CREATE OR REPLACE VIEW fase_projetoView AS
 CREATE OR REPLACE VIEW atividade_completa_projetoView AS
 	SELECT atividade.fk_projeto AS projeto, atividade.id_atividade AS idAtividade, 
 		atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, 
-		atividade.limite_atividade AS limite, atividade.fim_atividade AS fim
+		atividade.limite_atividade AS limite, atividade.fim_atividade AS fim,
 		atividade_1.nome_atividade AS predecessora, fase.nome AS fase
 	FROM ((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
 		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
