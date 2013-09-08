@@ -41,14 +41,14 @@ CREATE OR REPLACE VIEW membro_projetoView AS
 
 -- View Listagem dos artefatos de uma atividade
 CREATE OR REPLACE VIEW artefato_atividadeView AS
-	SELECT artefato_atividade.fk_atividade AS atividade, artefato.nome AS artefato, artefato.descricao AS descricao, artefato.tipo, artefato.porcentagem_concluida 
+	SELECT artefato_atividade.fk_atividade AS atividade, artefato.id_artefato AS idArtefato, artefato.nome AS artefato, artefato.tipo, artefato.porcentagem_concluida 
 	FROM artefato
 		INNER JOIN artefato_atividade ON artefato.id_artefato = artefato_atividade.fk_artefato;
 
 
 -- View Listagem das fases de um projeto
 CREATE OR REPLACE VIEW fase_projetoView AS
-	SELECT projeto.id_projeto AS projeto, fase.nome AS fase, fase.descricao AS descricao, fase_1.nome AS predecessora 
+	SELECT projeto.id_projeto AS projeto, fase.id_fase AS idFase, fase.nome AS fase, fase_1.nome AS predecessora 
 	FROM ((fase LEFT JOIN fase fase_1 ON fase.fk_predecessora = fase_1.id_fase) 
 		INNER JOIN projeto ON fase.fk_projeto = projeto.id_projeto);
 

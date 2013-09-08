@@ -196,6 +196,20 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
+
+CREATE OR REPLACE FUNCTION faseListar(
+	idUsuario INTEGER, idProjeto INTEGER, OUT idFase INTEGER, OUT fase VARCHAR, OUT predecessora VARCHAR		
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT idFase, fase, predecessora FROM fase_projetoView WHERE projeto =' || idProjeto;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+
 CREATE OR REPLACE FUNCTION faseExibirGerente(
 	idUsuario INTEGER, idProjeto INTEGER, idFase INTEGER, OUT nome VARCHAR, OUT descricao TEXT, OUT predecessora VARCHAR
 ) RETURNS SETOF RECORD AS $$

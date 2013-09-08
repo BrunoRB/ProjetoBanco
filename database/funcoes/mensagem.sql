@@ -57,7 +57,7 @@ CREATE OR REPLACE FUNCTION mensagemExibirUsuario(
 		RETURN QUERY EXECUTE 'SELECT usuario.nome AS remetente, mensagem.assunto, mensagem.texto AS mensagem
 		FROM mensagem 
 		INNER JOIN usuario ON mensagem.fk_usuario = usuario.id_usuario
-		INNER JOIN mensagem_enviada ON mensagem.id_mensagem = mensagem_enviada.fk_mensagem; 
+		INNER JOIN mensagem_enviada ON mensagem.id_mensagem = mensagem_enviada.fk_mensagem 
 		WHERE mensagem_enviada.fk_destinatario =' || idUsuario || ' AND mensagem.id_mensagem =' || idMensagem;
 	END;
 $$ LANGUAGE PLPGSQL;
