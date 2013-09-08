@@ -73,7 +73,9 @@ CREATE OR REPLACE FUNCTION membrosListar(
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
-			RETURN;
+			IF NOT isMembro(idUsuario, idProjeto) THEN
+				RETURN;
+			END IF;
 		END IF;
 		SET ROLE retrieve;
 		RETURN QUERY EXECUTE 'SELECT membro, funcao, qtd_atividade FROM membro_projetoView 
