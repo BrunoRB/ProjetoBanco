@@ -45,11 +45,25 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
+CREATE OR REPLACE FUNCTION mensagemListar(
+	idUsuario INTEGER, idProjeto INTEGER, OUT idFase INTEGER, OUT fase VARCHAR, OUT predecessora VARCHAR		
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isLogado(idUsuario) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT idMensagem, remetente, assunto FROM mensagem_recebidaView 
+						WHERE usuario =' || idUsuario;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+
 CREATE OR REPLACE FUNCTION mensagemExibirUsuario(
 	idUsuario INTEGER, idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR, OUT mensagem TEXT
 ) RETURNS SETOF RECORD AS $$
 	BEGIN
-		IF NOT isUsuario(idUsuario) THEN
+		IF NOT isLogado(idUsuario) THEN
 			RETURN;
 		END IF;
 		
