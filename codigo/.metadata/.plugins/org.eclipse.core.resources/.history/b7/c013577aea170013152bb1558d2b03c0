@@ -1,8 +1,0 @@
-<?php
-
-
-class permissions {
-	public static $idUsuario;
-	public static $idProjeto = null;
-	public static $isGerente = false;
-}

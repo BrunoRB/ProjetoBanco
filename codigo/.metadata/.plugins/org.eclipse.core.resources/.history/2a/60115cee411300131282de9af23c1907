@@ -1,6 +1,0 @@
-<?php
-
-
-define('ROOT_FOLDER', ($_SERVER['DOCUMENT_ROOT'] . '/ProjetoBanco/codigo/ProjectFree'));
-
-define('SAVE_FILE', '/ProjectFree/core/save.php');

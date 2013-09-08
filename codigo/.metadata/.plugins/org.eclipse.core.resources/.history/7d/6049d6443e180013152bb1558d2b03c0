@@ -1,9 +1,0 @@
-<?php
-
-class Fase {
-	private $id_fase;
-	private $nome;
-	private $descricao;
-	private $fk_projeto;
-	private $fk_predecessora;
-}
