@@ -239,9 +239,23 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
+CREATE OR REPLACE FUNCTION artefatoListar(
+	idUsuario INTEGER, idProjeto INTEGER, OUT idArtefato INTEGER, OUT artefato VARCHAR, OUT tipo VARCHAR, 
+	OUT porcentagem_concluida INTEGER		
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT idArtefato, artefato, tipo, porcentagem_concluida 
+			FROM artefato_projetoView WHERE projeto =' || idProjeto;
+	END;
+$$ LANGUAGE PLPGSQL;
+
 
 CREATE OR REPLACE FUNCTION artefatoExibirGerente(
-	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, idArtefato INTEGER, OUT nome VARCHAR, OUT tipo VARCHAR, 
+	idUsuario INTEGER, idProjeto INTEGER, idArtefato INTEGER, OUT nome VARCHAR, OUT tipo VARCHAR, 
 	OUT descricao TEXT, OUT porcentagem_concluida INTEGER
 ) RETURNS SETOF RECORD AS $$
 	BEGIN
@@ -250,12 +264,7 @@ CREATE OR REPLACE FUNCTION artefatoExibirGerente(
 		END IF;
 		
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT artefato.nome, artefato.tipo, artefato.descricao, artefato.porcentagem_concluida 
-			FROM artefato
-			INNER JOIN artefato_atividade ON artefato_atividade.fk_artefato = artefato.id_artefato
-			INNER JOIN atividade ON atividade.id_atividade = artefato_atividade.fk_atividade
-			INNER JOIN projeto ON atividade.fk_projeto = projeto.id_projeto
-			WHERE projeto.id_projeto =' || idProjeto || 'AND atividade.id_atividade =' || idAtividade || 
-				'AND artefato.id_artefato =' || idArtefato;
+		RETURN QUERY EXECUTE 'SELECT nome, tipo, descricao, porcentagem_concluida 
+			FROM artefato WHERE fk_projeto =' || idProjeto || 'AND id_artefato =' || idArtefato;
 	END;
 $$ LANGUAGE PLPGSQL;
