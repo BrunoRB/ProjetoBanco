@@ -10,8 +10,8 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, tipo, descricao, porcentagem_concluida)
-			VALUES (nome_p, tipo_p, descricao_p, porcentagem_concluida_p);
+		INSERT INTO artefato (nome, tipo, descricao, porcentagem_concluida, fk_projeto)
+			VALUES (nome_p, tipo_p, descricao_p, porcentagem_concluida_p, idProjeto);
 		
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
@@ -35,8 +35,8 @@ RETURNS INTEGER AS $$
 		END IF;		
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, tipo, descricao)
-			VALUES (nome_p, tipo_p, descricao_p);
+		INSERT INTO artefato (nome, tipo, descricao, fk_projeto)
+			VALUES (nome_p, tipo_p, descricao_p, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
@@ -56,8 +56,8 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, tipo)
-			VALUES (nome_p, tipo_p);
+		INSERT INTO artefato (nome, tipo, fk_projeto)
+			VALUES (nome_p, tipo_p, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
@@ -77,8 +77,8 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, tipo, porcentagem_concluida)
-			VALUES (nome_p, tipo_p, porcen);
+		INSERT INTO artefato (nome, tipo, porcentagem_concluida, fk_projeto)
+			VALUES (nome_p, tipo_p, porcen, idProjeto);
 		
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');		
@@ -102,8 +102,8 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, descricao, porcentagem_concluida)
-			VALUES (nome_p, descricao_p, porcentagem_concluida_p);
+		INSERT INTO artefato (nome, descricao, porcentagem_concluida, fk_Projeto)
+			VALUES (nome_p, descricao_p, porcentagem_concluida_p, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
@@ -127,8 +127,8 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, descricao)
-			VALUES (nome_p, descricao_p);
+		INSERT INTO artefato (nome, descricao, fk_Projeto)
+			VALUES (nome_p, descricao_p, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
@@ -148,8 +148,8 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE insert;
-		INSERT INTO artefato (nome, porcentagem_concluida)
-			VALUES (nome_p, porcentagem_concluida_p);
+		INSERT INTO artefato (nome, porcentagem_concluida, fk_projeto)
+			VALUES (nome_p, porcentagem_concluida_p, idProjeto);
 
 		SET ROLE retrieve;
 		SELECT INTO cod_artefato currval('artefato_id_artefato_seq');
@@ -195,7 +195,7 @@ RETURNS INTEGER AS $$
 		END IF;
 
 		SET ROLE update;
-		UPDATE artefato SET nome = nome_p, tipo = tipo_p, descricao = descricao_p, porcentagem_concluida = porc
+		UPDATE artefato SET nome = nome_p, tipo = tipo_p, descricao = descricao_p, porcentagem_concluida = porc, fk_projeto = idProjeto
 		WHERE id_artefato = id;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('Artefato', 'atualizado');

@@ -127,7 +127,9 @@ CREATE TABLE artefato
 	tipo VARCHAR(100),
 	descricao TEXT,
 	porcentagem_concluida INTEGER NOT NULL DEFAULT 0,
+	fk_projeto INTEGER NOT NULL,
 	CONSTRAINT pk_artefato PRIMARY KEY (id_artefato),
+	CONSTRAINT fk_projeto_f FOREIGN KEY (fk_projeto) REFERENCES projeto (id_projeto),
 	CONSTRAINT check_porcentagem_concluida CHECK (porcentagem_concluida::TEXT ~ '^[0-9]$|^[0-9]{2}$|^100$')
 );
 

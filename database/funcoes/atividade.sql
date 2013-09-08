@@ -100,8 +100,8 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 			
 		SET ROLE update;	
 		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, 
-			nome_atividade = nome, descricao_atividade = descricao, fk_predecessora = predecessora, fk_fase = fase 
-				WHERE id_atividade = id;
+			nome_atividade = nome, descricao_atividade = descricao, fk_predecessora = predecessora, fk_fase = fase, 
+				fk_projeto = idProjeto WHERE id_atividade = id;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('Atividade', 'atualizada');
 			RETURN 1;
@@ -123,7 +123,7 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 		END IF;
 		
 		SET ROLE update;	
-		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, descricao_atividade = 				descricao, fk_fase = fase WHERE id_atividade = id;
+		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, descricao_atividade = 				descricao, fk_fase = fase, fk_projeto = idProjeto WHERE id_atividade = id;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('Atividade', 'atualizada');
 			RETURN 1;
@@ -145,7 +145,7 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 		END IF;
 		
 		SET ROLE update;	
-		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, fk_predecessora = predecessora, fk_fase = fase WHERE id_atividade = id;
+		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, fk_predecessora = predecessora, fk_fase = fase, fk_projeto = idProjeto WHERE id_atividade = id;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('Atividade', 'atualizada');
 			RETURN 1;
@@ -167,7 +167,7 @@ CREATE OR REPLACE FUNCTION atividadeAtualizar(
 		END IF;
 		
 		SET ROLE update;	
-		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, fk_predecessora = predecessora, fk_fase = fase WHERE id_atividade = id;
+		UPDATE atividade SET inicio_atividade = inicio, limite_atividade = limite, nome_atividade = nome, fk_predecessora = predecessora, fk_fase = fase, fk_projeto = idProjeto WHERE id_atividade = id;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('Atividade', 'atualizada');
 			RETURN 1;

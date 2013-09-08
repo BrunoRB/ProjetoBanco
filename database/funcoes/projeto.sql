@@ -185,6 +185,8 @@ CREATE OR REPLACE FUNCTION projetoExcluir (idUsuario INTEGER, idProjeto INTEGER)
 
 		DELETE FROM fase WHERE fk_projeto = idProjeto;
 
+		DELETE FROM artefato WHERE fk_projeto = idProjeto;
+
 		DELETE FROM projeto WHERE id_projeto = idProjeto;
 		IF (FOUND) THEN
 			EXECUTE mensagemDeSucesso('PROJETO', 'excluído'); -- raise notice, ver zFuncoesGerais
