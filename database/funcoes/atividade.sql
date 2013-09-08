@@ -257,3 +257,4 @@ CREATE OR REPLACE FUNCTION atividadeIncompletaListarGerente (
 			FROM atividade_incompleta_projetoView WHERE id_projeto =' || idProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
+
