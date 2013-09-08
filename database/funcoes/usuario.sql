@@ -159,6 +159,12 @@ $$ LANGUAGE PLPGSQL;
 
 --END DELETES;
 
+CREATE OR REPLACE FUNCTION buscarUsuarios(letras TEXT, OUT id_usuario INTEGER, OUT nome VARCHAR, OUT email VARCHAR) RETURNS SETOF RECORD AS $$
+	BEGIN
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT id_usuario, nome, email FROM usuario WHERE nome LIKE ' || E'\'' ||  letras || E'\'' || '%''';
+	END;
+$$ LANGUAGE PLPGSQL;
 
 --LOGIN;
 
