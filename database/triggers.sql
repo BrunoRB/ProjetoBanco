@@ -61,20 +61,23 @@ CREATE TRIGGER validaMensagemEnviada BEFORE INSERT OR UPDATE ON mensagem_enviada
 CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 	DECLARE
 		orcamento2 projeto.orcamento%TYPE;
+		idProj integer;
 	BEGIN
+		idProj = NEW.fk_projeto;
+		RAISE EXCEPTION idProj;
 		IF (NEW.valor IS NOT NULL) THEN
 			SET ROLE retrieve;
 
-			SELECT orcamento 
+			SELECT orcamento
 			FROM projeto 
-			WHERE NEW.fk_projeto = projeto.id_projeto 
+			WHERE idProj = projeto.id_projeto 
 			INTO orcamento2;
 
 			SET ROLE update;
 
 			UPDATE projeto
 			SET orcamento = orcamento2 - NEW.valor
-			WHERE NEW.fk_projeto = projeto.id_projeto;
+			WHERE idProj = projeto.id_projeto;
 		END IF;
 
 		RETURN NEW; 
