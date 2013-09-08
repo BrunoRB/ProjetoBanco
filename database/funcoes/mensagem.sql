@@ -46,7 +46,7 @@ $$ LANGUAGE PLPGSQL;
 --SELECTS;
 
 CREATE OR REPLACE FUNCTION mensagemListar(
-	idUsuario INTEGER, OUT idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR, OUT data_hora_envio TIMESTAMP		
+	idUsuario INTEGER, OUT idMensagem INTEGER, OUT nome VARCHAR, OUT assunto VARCHAR, OUT data_hora_envio TIMESTAMP		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isLogado(idUsuario) THEN
@@ -60,8 +60,8 @@ $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION mensagemExibirUsuario(
-	idUsuario INTEGER, idMensagem INTEGER, OUT remetente VARCHAR, OUT assunto VARCHAR, OUT data_hora_envio TIMESTAMP, 
-	OUT mensagem TEXT
+	idUsuario INTEGER, idMensagem INTEGER, OUT nome VARCHAR, OUT assunto VARCHAR, OUT data_hora_envio TIMESTAMP, 
+	OUT texto TEXT
 ) RETURNS SETOF RECORD AS $$
 	BEGIN
 		IF NOT isLogado(idUsuario) THEN
