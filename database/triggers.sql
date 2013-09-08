@@ -57,7 +57,7 @@ CREATE TRIGGER validaMensagemEnviada BEFORE INSERT OR UPDATE ON mensagem_enviada
 
 
 --TRIGGER despesa
-
+/*
 CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 	DECLARE
 		orcamento2 projeto.orcamento%TYPE;
@@ -72,6 +72,8 @@ CREATE FUNCTION verificaValorDespesa() RETURNS TRIGGER AS $$
 			FROM projeto 
 			WHERE projId = projeto.id_projeto 
 			INTO orcamento2;
+			
+			RAISE 
 
 			SET ROLE update;
 
@@ -113,7 +115,7 @@ CREATE FUNCTION verificaValorDespesa2() RETURNS TRIGGER AS $$
 $$LANGUAGE PLPGSQL;
 
 CREATE TRIGGER verificaValorDespesa2 BEFORE UPDATE ON despesa FOR EACH ROW EXECUTE PROCEDURE verificaValorDespesa2();
-
+*/
 --END TRIGGER despesa
 
 
