@@ -17,6 +17,7 @@ SELECT usuarioCadastrar('bruno', 'bruno@projectfree.com', 'bruno');
 SELECT usuarioCadastrar('fabricio', 'fabricio@projectfree.com', 'fabricio');
 SELECT usuarioCadastrar('outro_usuário', 'outro@projectfree.com', 'outro');
 
+--gerente lista usuarios
 SELECT * from buscarUsuarios('rob');
 SELECT * from buscarUsuarios('maik');
 SELECT * from buscarUsuarios('br');
@@ -65,10 +66,10 @@ SELECT mensagem_enviadaEnvia(3, 1, 2, CURRENT_DATE);
 
 --gerente lista suas mensagens
 SET ROLE retrieve;
-SELECT mensagemListar(1);
+SELECT * FROM mensagemListar(1);
 
 --gerente visualiza a mensagem
- 
+SELECT * FROM mensagemExibirUsuario(1, 1); 
 
 --gerente cria as fases do projeto
 SELECT faseCadastrar(1, 1, 'Fase 1', 'Primeira fase do projeto');
