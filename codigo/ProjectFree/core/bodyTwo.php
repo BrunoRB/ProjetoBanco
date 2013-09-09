@@ -313,8 +313,9 @@ FOOT;
 			}
 			$parameters[] = $fieldValue;
 		}
-		if ($entity == 'cadastro') {
-			$entity = 'usuario';
+		
+		if ($this->getEntity() == 'cadastro') {
+
 		}
 		else if ($entity == 'projeto'){
 			if (!isset($_POST['alterar'])) {
@@ -333,13 +334,16 @@ FOOT;
 			}			
 		}
 
-		if (!isset($_POST['alterar'])) {
+		if ($this->getEntity() == 'cadastro') {
+			$functionName = 'usuarioCadastrar';
+		}
+		else if (!isset($_POST['alterar'])) {
 			$functionName = $this->getEntity() . 'Cadastrar';
 		}
 		else {			
 			$functionName = $this->getEntity() . 'Atualizar';
 		}
-		
+	
 		$pgConnect = new PostgresConnection();
 		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
 		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
