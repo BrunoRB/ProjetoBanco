@@ -1,15 +1,17 @@
 <?php
 
+
 require_once 'main.php';
 
-class Login extends Main {
+
+class Page_Login extends Main {
 
 	public function __construct() {
 		$this->setTitle('Home');
 		parent::__construct();
 	}
 
-	public function loadBody() {
+	protected function loadBody() {
 		global $userId;
 		if ($userId === false || !isset($userId)) {
 			if (isset($_POST['submit'])) {
@@ -118,4 +120,4 @@ class Login extends Main {
 		redirect('index.php');
 	}
 
-} new Login();
+} new Page_Login();

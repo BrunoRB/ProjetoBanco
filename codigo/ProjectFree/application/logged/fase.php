@@ -7,5 +7,10 @@ class Page_Fase extends Main {
 		$this->setTitle('Fase');
 		parent::__construct();
 	}
+	
+	protected function novo(array $campos = array()) {
+		$gerente = 'nome,descricao,fk_projeto,fk_predecessora';
+		parent::novo(array('gerente' => $gerente, 'membro' => $membro));
+	}
 
 } new Page_Fase();

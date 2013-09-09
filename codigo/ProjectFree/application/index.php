@@ -8,7 +8,7 @@ class Index extends Main {
 		parent::__construct();
 	}
 
-	public function loadBody() {
+	protected function loadBody() {
 		?>
 		<div id="container">
 			<div class="pagination-right">

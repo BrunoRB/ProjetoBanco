@@ -42,6 +42,10 @@ function printAlertMessage() {
 MESSAGE;
 }
 
+function refreshPage() {
+	echo '<script type="text/javascript">location.reload();</script>';
+}
+
 /**
  * Valida se campos foram preenchidos após o submit de o formulário POST
  *

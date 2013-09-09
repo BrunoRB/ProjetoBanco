@@ -8,7 +8,7 @@ class Cadastro extends Main {
 		$this->setTitle('Cadastro');
 		parent::__construct();
 
-		if (isset($_POST['submit'])) {
+		if (isset($_POST['salvar'])) {
 			$this->salvar();
 		}
 	}
@@ -36,7 +36,7 @@ class Cadastro extends Main {
 					<input class="input-xlarge" type="password" placeholder="Senha" name="senha">
 				</div>
 				<br>
-				<button class="btn btn-index btn-primary" type="submit" name="submit">Cadastrar !</button>
+				<button class="btn btn-index btn-primary" type="submit" name="salvar">Cadastrar !</button>
 				<input type="hidden" name="entity" value="usuario" >
 				<input type="hidden" name="fields" value="nome,email,senha">
 			</form>
