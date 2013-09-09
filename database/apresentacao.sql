@@ -65,7 +65,10 @@ SELECT mensagem_enviadaEnvia(3, 1, 2, CURRENT_DATE);
 
 --gerente lista suas mensagens
 SET ROLE retrieve;
-SELECT remetente, assunto FROM mensagem_recebidaView WHERE usuario = 1; 
+SELECT mensagemListar(1);
+
+--gerente visualiza a mensagem
+ 
 
 --gerente cria as fases do projeto
 SELECT faseCadastrar(1, 1, 'Fase 1', 'Primeira fase do projeto');
