@@ -110,9 +110,6 @@ SELECT artefato_atividadeCadastrar(1, 1, 2, 6, 35);--Artefato 2 a atividade 6 (3
 --membro conclui atividade e é atualizada a porcentagem (35%) do artefato 1
 SELECT atividadeFinalizar(2, 1, 2);--Membro, Projeto, Atividade
 
---gerente visualiza o artefato vinculado a atividade 2
---fazer uma view para isso.
-
 --membro tenta finalizar uma atividade que não lhe foi atribuida
 SELECT atividadeFinalizar(2, 1, 6);
 
@@ -124,7 +121,11 @@ SELECT despesaCadastrar(1, 1, 'despesa 2', 450.67, 'Despesa referente a um recur
 SELECT recursoCadastrar(1, 1, 'recurso 1', 'descricao do recurso 1', 2);--gerente, projeto, nome, descrição, despesa
 SELECT recursoCadastrar(1, 1, 'recurso 2');
 
---
+--gerente visualiza o cronogra
+SELECT * FROM cronogramaListar(1, 1);
+
+--gerente finaliza o projeto
+SELECT projetoFinalizar(1, 1);
 
 
 
