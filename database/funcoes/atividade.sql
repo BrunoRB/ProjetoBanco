@@ -185,6 +185,11 @@ RETURNS INTEGER AS $$
 		IF NOT isMembro(idUsuario, idProjeto) THEN
 			RETURN 0;
 		END IF;	
+
+		IF NOT isInAtividade(idUsuario, idProjeto, id) THEN
+			RETURN 0;
+		END IF;
+
 		SET ROLE update;	
 		UPDATE atividade SET fim_atividade = now(), finalizada = true WHERE id_atividade = id;
 		IF (FOUND) THEN
