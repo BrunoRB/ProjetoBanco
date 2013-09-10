@@ -54,8 +54,8 @@ CREATE OR REPLACE VIEW fase_projetoView AS
 
 
 
--- View Listagem das atividades completas de um projeto
-CREATE OR REPLACE VIEW atividade_completa_projetoView AS
+-- View Listagem das atividades completas de um projeto pelo gerente
+CREATE OR REPLACE VIEW atividade_completa_gerenteView AS
 	SELECT atividade.fk_projeto AS projeto, atividade.id_atividade AS idAtividade, 
 		atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, 
 		atividade.limite_atividade AS limite, atividade.fim_atividade AS fim,
@@ -65,13 +65,35 @@ CREATE OR REPLACE VIEW atividade_completa_projetoView AS
 			WHERE atividade.finalizada = TRUE;
 
 
--- View Listagem das atividades em andamento de um projeto
-CREATE OR REPLACE VIEW atividade_incompleta_projetoView AS
+-- View Listagem das atividades em andamento de um projeto pelo gerente
+CREATE OR REPLACE VIEW atividade_incompleta_gerenteView AS
 	SELECT atividade.fk_projeto AS projeto, atividade.id_atividade AS idAtividade, 
 		atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, 
 		atividade.limite_atividade AS limite, atividade_1.nome_atividade AS predecessora, fase.nome AS fase
 	FROM ((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
 		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
+			WHERE atividade.finalizada = FALSE;
+
+
+-- View Listagem das atividades completas de um membro em um projeto
+CREATE OR REPLACE VIEW atividade_completa_membroView AS
+	SELECT atividade.fk_projeto AS projeto, atividade_do_membro.fk_membro_do_projeto AS membro, atividade.id_atividade AS idAtividade, 
+		atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, 
+		atividade.limite_atividade AS limite, atividade_1.nome_atividade AS predecessora, fase.nome AS fase
+	FROM (((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+		INNER JOIN fase ON atividade.fk_fase = fase.id_fase) 
+		INNER JOIN atividade_do_membro ON fk_atividade = atividade.id_atividade)
+			WHERE atividade.finalizada = TRUE;
+
+
+-- View Listagem das atividades em andamento de um membro em um projeto
+CREATE OR REPLACE VIEW atividade_incompleta_membroView AS
+	SELECT atividade.fk_projeto AS projeto, atividade_do_membro.fk_membro_do_projeto AS membro, atividade.id_atividade AS idAtividade, 
+		atividade.nome_atividade AS atividade, atividade.inicio_atividade AS inicio, 
+		atividade.limite_atividade AS limite, atividade_1.nome_atividade AS predecessora, fase.nome AS fase
+	FROM (((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+		INNER JOIN fase ON atividade.fk_fase = fase.id_fase) 
+		INNER JOIN atividade_do_membro ON fk_atividade = atividade.id_atividade)
 			WHERE atividade.finalizada = FALSE;
 
 
