@@ -162,7 +162,7 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION buscarUsuarios(letras TEXT, OUT id_usuario INTEGER, OUT nome VARCHAR, OUT email VARCHAR) RETURNS SETOF RECORD AS $$
 	BEGIN
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT id_usuario, nome, email FROM usuario WHERE LOWER(nome) LIKE LOWER(' || E'\'' ||  letras || '%'')';
+		RETURN QUERY EXECUTE 'SELECT id_usuario, nome, email FROM usuario WHERE inativo != true AND LOWER(nome) LIKE LOWER(' || E'\'' ||  letras || '%'') ORDER BY nome ASC';
 	END;
 $$ LANGUAGE PLPGSQL;
 

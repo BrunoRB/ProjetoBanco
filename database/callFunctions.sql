@@ -34,8 +34,15 @@ SET CLIENT_ENCODING = 'utf8';
 \i database/funcoes/mensagem.sql
 \i database/funcoes/mensagem_enviada.sql
 \i database/funcoes/cronograma.sql
+
+--INSERTS
 \i database/scriptsDeInsercao.sql
---\i database/triggers.sql
+
+--INDEX
+\i database/indices.sql
+
+--TRIGGERS
+\i database/triggers.sql
 
 	--TODO faltando arquivos
 

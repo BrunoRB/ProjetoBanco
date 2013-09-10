@@ -13,10 +13,10 @@ CREATE OR REPLACE VIEW cronogramaView AS
 		Count(atividade_do_membro.fk_membro_do_projeto) AS qtd_membro, -- Conta a quantidade de membros na atividade
 		Count(artefato_atividade.fk_artefato) AS qtd_artefato          -- Conta a quantidade de artefatos gerados pela atividade
 	FROM atividade
-		INNER JOIN atividade_do_membro ON atividade_do_membro.fk_atividade = atividade.id_atividade
-		INNER JOIN artefato_atividade ON artefato_atividade.fk_atividade = atividade.id_atividade
-		INNER JOIN membro_do_projeto ON atividade_do_membro.fk_membro_do_projeto = membro_do_projeto.id_membro_do_projeto
-		INNER JOIN fase ON atividade.fk_fase = fase.id_fase
+		FULL JOIN atividade_do_membro ON atividade_do_membro.fk_atividade = atividade.id_atividade
+		FULL JOIN artefato_atividade ON artefato_atividade.fk_atividade = atividade.id_atividade
+		FULL JOIN membro_do_projeto ON atividade_do_membro.fk_membro_do_projeto = membro_do_projeto.id_membro_do_projeto
+		FULL JOIN fase ON atividade.fk_fase = fase.id_fase
 			GROUP BY membro_do_projeto.fk_projeto, atividade.id_atividade, fase.id_fase 
 			ORDER BY fase.id_fase; -- Ordenando as atividade pela sua fase
 
