@@ -97,6 +97,7 @@ CREATE OR REPLACE VIEW atividade_incompleta_membroView AS
 			WHERE atividade.finalizada = FALSE;
 
 
+
 -- View Listagem das notas de um usuário
 CREATE OR REPLACE VIEW notaView AS
 	SELECT fk_usuario AS usuario, titulo, texto, data FROM nota;
