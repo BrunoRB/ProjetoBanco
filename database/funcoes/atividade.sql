@@ -285,7 +285,7 @@ CREATE OR REPLACE FUNCTION atividadeIncompletaListarMembro (
 	OUT limite_atividade DATE, OUT predecessora VARCHAR, OUT nome VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isMembro(idUsuario, idProjeto) THEN
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
@@ -300,7 +300,7 @@ CREATE OR REPLACE FUNCTION atividadeCompletaListarMembro (
 	OUT limite_atividade DATE, OUT predecessora VARCHAR, OUT nome VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
-		IF NOT isGerente(idUsuario, idProjeto) THEN
+		IF NOT isMembro(idUsuario, idProjeto) THEN
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
