@@ -2,12 +2,10 @@
 
 require_once 'main.php';
 
-class Mensagem extends Main {
+class Page_Convite extends Main {
 	public function __construct() {
-		$this->setTitle('Mensagem');
+		$this->setTitle('Convites');
 		parent::__construct();
 	}
-	
-	
 
-} new Mensagem();
+} new Page_Convite();

@@ -10,7 +10,7 @@ class Page_Fase extends Main {
 	
 	protected function novo(array $campos = array()) {
 		$gerente = 'nome,descricao,fk_projeto,fk_predecessora';
-		parent::novo(array('gerente' => $gerente, 'membro' => $membro));
+		parent::novo(array('gerente' => $gerente));
 	}
 
 } new Page_Fase();

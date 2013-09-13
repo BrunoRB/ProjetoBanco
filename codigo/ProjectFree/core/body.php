@@ -25,7 +25,7 @@ class Body {
 		$this->header->setTitle($this->title);
 		$this->header->setExtraHeader($this->extraHeader);
 		$this->init();
-		$this->setHeaderType();
+		//$this->setHeaderType();
 	}
 
 	protected function init() {
@@ -34,297 +34,129 @@ class Body {
 		Footer::loadFooter();
 	}
 
-	protected function setHeaderType() {
-		$url = $_SERVER['REQUEST_URI'];
-		$entity = strtolower(str_replace('Page_', '', get_called_class()));
-		if (!$this->checkLogin()) {
-			if (strpos($url, '/logged/') !== false) {
-				$this->storeloginOnSession(false);
-				redirect('/ProjetoBanco/codigo/ProjectFree/application/index.php');
-			}
+	protected function loadBody() {
+		if (isset($_POST['salvar'])) {
+			$this->salvar();
 		}
-		else if (strpos($url, '/logged/') !== false) {
-			$role = $this->getRole();
-			session_start();
-			$_SERVER['gerente'] = (strtolower($role) == 'gerente') ? true: false;
-		}
-	}
-
-	protected function loadBody(){
-		if (isset($_POST['submit'])) {
-			$this->validateSave();
-		}
-		else if (isset($_GET['novo']) || isset($_GET['alterar'])) {
-			$this->cadastrar();
-		}
-		else if (isset($_GET['exibir'])) {
+		if (isset($_GET['exibir'])) {
 			$this->exibir();
 		}
-		else if (isset($_POST['delete'])) {
-			$this->delete();
+		else if (isset($_GET['novo']) || isset($_GET['alterar'])) {
+			$this->novo();
+		}
+		else if (isset($_POST['deletar'])) {
+			$this->deletar();
 		}
 		else {
 			$this->listar();
 		}
 	}
 
-
-	protected function setTitle($title) {
-		$this->title = $title;
-	}
-
-	protected function setExtraHeader($extraHeader) {
-		$this->extraHeader = $extraHeader;
-	}
-
-	protected function validateSave() {
-		$entityWhitelist = array(
-			'projeto', 'usuario', 'artefato' ,'fase', 'atividade',
-			'fale_conosco', 'mensagem', 'recurso', 'despesa', 'nota',
-			'imagem', 'comentario', 'forma_de_contato', 'doacao'
-		);
-		if (isset($_POST['submit']) && isset($_POST['entity'])
-			&& isset($_POST['fields']) && in_array($_POST['entity'], $entityWhitelist)
-		) {
-			$this->save();
-		}
-		else{
-			redirect('/ProjetoBanco/codigo/ProjectFree/application/logged/');
-		}
-	}
-
-	protected function save() {
-		$fields = str_replace(' ', '', split(',', $_POST['fields']));
-		$entity = ucfirst($_POST['entity']);
-		//$retval = checkMandatoryPostFields($fields);
-		$retval['flag'] = true;
-
-		if ($retval['flag']) {
-			$pgConnect = new PostgresConnection();
-			global $userId;
-			global $projectId;
-
-			$functionName = null;
-			if (isset($_POST['alterar'])) {
-				$functionName =  lcfirst($entity) . 'Atualizar';
-				if ($entity != 'projeto')
-					$parameters = array($userId, $projectId, $_GET['alterar']);
-				else
-					$parameters = array($userId, $_GET['alterar']);
-			}
-			else {
-				$functionName = lcfirst($entity) . 'Cadastrar'; // ex: usuarioCadastrar
-				if ($entity != 'projeto')
-					$parameters = array($userId, $projectId);
-				else
-					$parameters = array($userId);
-			}
-
-			$obj = new $entity();
-			foreach ($fields as $field) {
-				if ($field == '') break;
-				$value = $_POST[$field] != '' ? $_POST[$field] : null;
-				$obj->{"set$field"}($value);
-				$parameters[] = $obj->{"get$field"}();
-			}
-
-			$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
-
-			$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
-
-			$result = $pgConnect->getResult($retval);
-
-
-			$id = current(current($result));
-
-			if (isset($id) && $id > 0) {
-				printSuccessMessage($pgConnect->getNoticeString());
-				$this->extraCallOnSucessOperation();
-			}
-			else {
-				printErrorMessage($pgConnect->getErrorString());
-
-			}
-
-			$pgConnect->closeConnection();
-		}
-		else {
-			printErrorMessage('É necessário preencher todos os campos obrigatórios !');
-			?>
-			<script type="text/javascript">
-				<?php
-				foreach ($retval['invalidFields'] as $invalidField) {
-				?>
-					$('input[name="<?php echo $invalidField;?>"]').css('background-color', 'black');
-				<?php
-				}
-				if (!empty($retval['validFields'])) {
-					foreach ($retval['validFields'] as $validField) {
-					?>
-						$('input[name="<?php echo $validField;?>"]').val('<?php echo $_POST[$validField];?>');
-					<?php
-					}
-				}
-				?>
-			</script>
-			<?php
-		}
-	}
-
-	protected function show() {
-	}
-
-	protected function retrieveList(array $fields) {
-		$objectName = strtolower(str_replace('Page_', '', get_called_class()));
-		$pgConnect = new PostgresConnection();
-		$functionName = $objectName . 'Listar'; // ex: usuarioCadastrar
-		global $userId;
-		$parameters = array($userId);
-		if ($objectName != 'projeto') {
-			global $projectId;
-			$parameters[] = $projectId;
-		}
-		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
-		$retval = $pgConnect->executeQueryWithParams("SELECT * FROM $functionName($1)", $parameters);
-		$result = $pgConnect->getResult($retval);
-		if ($result !== false) {
-			foreach ($result as $projeto) {
-				?>
-				<tr class="list">
-					<?php
-					$id = $projeto["id_$objectName"];
-					$link = $objectName . '.php?exibir=' . $id;
-					foreach ($fields as $field) {
-						echo "<td><a href='$link'>$projeto[$field]</a></td>";
-					}
-					?>
-				</tr>
-				<?php
-			}
-		}
-		else {
-			printWarningMessage("Nenhum {$objectName} encontrado");
-		}
-
-		$pgConnect->closeConnection();
-	}
-
-	public function getUserId() {
-		global $userId;
-		return isset($userId) ? $userId : null;
-	}
-
-	public function getProjectId() {
-		global $projectId;
-		return isset($projectId) ? $projectId : null;
-	}
-
-	protected function cadastrar() {
-		$entity = strtolower(str_replace('Page_', '', get_called_class()));
-		?>
-		<div class="container">
-			<form action="<?php echo $entity;?>.php" method="post">
-		<?php
-		global $projectId;
-		global $userId;
-		$parameters = ($entity == 'projeto') ? array($userId, $_GET['alterar']) : array($userId, $projectId, $_GET['alterar']);
+	protected function novo(array $campos = array()) {
+		echo <<<HEAD
+<div class="container">
+	<form action="{$this->getEntity()}.php" method="post">
+HEAD;
 		$role = ucfirst($this->getRole());
+		$campos = $campos[strtolower('gerente')];
+		if (isset($_GET['novo'])) {
+			$this->novoCadastrar($campos);
+		}
+		else {
+			$this->novoAlterar(strtolower($role));
+		}
+
+		echo <<<FOOT
+		<button name="salvar" class="btn btn-large btn-primary">Salvar</button>
+	</form>
+</div>
+FOOT;
+	}
+	
+	private function novoCadastrar($campos) {
 		$pgConnect = new PostgresConnection();
-		$functionName = $entity . 'Exibir' . $role; // ex: usuarioCadastra
-
-		if (isset($_GET['alterar'])) {
-			$functionName = $entity . 'ExibirGerente'; // ex: usuarioCadastrar
-			$parameters = $entity != 'projeto' ? array($userId, $projectId, $_GET['alterar']) : array($userId, $_GET['alterar']);
-			$prepare = $pgConnect->prepareFunctionStatementSelect($functionName, count($parameters));
-			$result = $pgConnect->executeFunctionStatement($functionName, $parameters);
-			$data = current($pgConnect->getArrayOfResultsFromSelect($result));
-		}
-		else {
-			if ($entity == 'projeto') $fields = 'nome,orcamento,descricao';
-			else if ($entity == 'atividade') $fields = 'inicio_atividade,limite_atividade,nome_atividade,descricao_atividade,fk_predecessora,fk_fase';
-			else if ($entity == 'artefato') $fields = 'nome,tipo,descricao';
-			else if ($entity == 'fase') $fields = 'nome,descricao';
-			$result = pg_query($pgConnect->getConnection(), 'SELECT ' . $fields . ' FROM ' . $entity . ' LIMIT 0');
-			$data = null;
-		}
-
-		$types = $pgConnect->getTypes($result);
+		$query = 'SELECT ' . $campos . ' FROM ' . $this->getEntity() . ' LIMIT 0';
+		$result = pg_query($pgConnect->getConnection(), $query);
+		$colNames = $pgConnect->getNames($result);
+		$colTypes = $pgConnect->getTypes($result);
 		$i = 0;
-		if ($data !== null) {
-			$columnNames = 'id_' . $entity . ',';
-			echo '<input type="hidden" name="id_' . $entity .'" value="' . $_GET['alterar'] . '">';
-			foreach ($data as $colName => $colValue) {
-				$type = $types[$i];
-				echo ucfirst($colName) . ': ';
-				if ($type == 'varchar' || $type == 'numeric') {
-					echo '<input type="text" placeholder="' . $colName . '" name="' . $colName . '" value="' . $colValue . '" /><br>';
-				}
-				else if ($type == 'text') {
-					echo '<textarea data-type="text-multi" name="' . $colName . '" >' . $colValue . '</textarea> <br>';
-				}
-				else if ($type == 'date') {
-					if (isset($colValue)) {
-						$date = strtotime($colValue);
-						$colValue = date('d/m/Y', $date);
-					}
-					echo '<input type="text" data-type="date" placeholder="dd/mm/aaaa" name="' . $colName . '" " value="' . $colValue . '" /> <br>';
-				}
-				else if (strpos($type, 'int') !== false) {
-					echo '<input data-type="number" placeholder="' . $colName . '" name="' . $colName . '" value="' . $colValue . '" /><br>';
-				}
-				$i++;
-				$columnNames .= $colName . ',';
+		$campos = split(',', $campos);
+		foreach ($colTypes as $type) {
+			$name = $colNames[$i];
+			echo ucfirst($campos[$i++]) . ': ';
+			if ($type == 'varchar' || $type == 'numeric') {
+				echo '<input type="text" placeholder="' . $name . '" name="' . $name . '" /><br>';
 			}
-		}
-		else {
-			$columnNames = '';
-			$names = $pgConnect->getNames($result);
-			foreach ($types as $type) {
-				$name = $names[$i];
-				echo ucfirst($name) . ': ';
-				if ($type == 'varchar' || $type == 'numeric') {
-					echo '<input type="text" placeholder="' . $name . '" name="' . $name . '" /><br>';
-				}
-				else if ($type == 'text') {
-					echo '<textarea data-type="text-multi" name="' . $name . '" ></textarea> <br>';
-				}
-				else if ($type == 'date') {
-					echo '<input type="text" data-type="timestamp" placeholder="dd/mm/aaaa" name="dataInicio" /> <br>';
-				}
-				else if (strpos($type, 'int') !== false) {
-					echo '<input name="' . $name . '" data-type="text-number" type="text" value="' . $colValue . '" /><br>';
-				}
-				$i++;
-				$columnNames .= $name . ',';
+			else if ($type == 'text') {
+				echo '<textarea data-type="text-multi" name="' . $name . '" ></textarea> <br>';
+			}
+			else if ($type == 'date') {
+				echo '<input type="text" data-type="timestamp" placeholder="dd/mm/aaaa" name="dataInicio" /> <br>';
+			}
+			else if ($type == 'timestamp') {
+				echo '<input type="text" data-type="timestamp" placeholder="dd/mm/aaaa" name="dataInicio" /> <br>';
+			}
+			else if (strpos($type, 'int') !== false) {
+				echo '<input name="' . $name . '" data-type="text-number" value="' . $colValue . '" /><br>';
 			}
 		}
 		$pgConnect->closeConnection();
-		if (isset($_GET['alterar'])) echo '<input type="hidden" name="alterar" value="true"/>';
-		?>
-				<button type="submit" class="btn btn-primary btn-large" name="submit">Salvar</button>
-				<input type="hidden" name="entity" value="<?php echo $entity;?>" >
-				<input type="hidden" name="fields" value="<?php echo $columnNames;?>">
-			</form>
-		</div>
-		<?php
 	}
-
-	protected function listar() {}
+	
+	private function novoAlterar($role) {
+		$pgConnect = new PostgresConnection();
+		if ($this->getEntity() == 'projeto') {
+			$parameters = array($this->getUserId(), $_GET['alterar']);
+		}
+		else {
+			$parameters = array($this->getUserId(), $this->getProjectId(), $_GET['alterar']);
+		}
+		$functionName = $this->getEntity() . 'Exibir' . $role; // ex: usuarioCadastrar
+		$prepare = $pgConnect->prepareFunctionStatementSelect($functionName, count($parameters));
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+		$result = $pgConnect->getArrayOfResultsFromSelect($retval);
+		$types = $pgConnect->getTypes($retval);
+		$i = 0;
+		foreach (current($result) as $colName => $colValue) {
+			$type = $types[$i++];
+			echo ucfirst($colName) . ': ';
+			if ($type == 'varchar' || $type == 'numeric') {
+				echo '<input type="text" placeholder="' . $colName . '" name="' . $colName . '" value="' . $colValue . '" /><br>';
+			}
+			else if ($type == 'text') {
+				echo '<textarea data-type="text-multi" name="' . $colName . '" >' . $colValue . '</textarea> <br>';
+			}
+			else if ($type == 'date') {
+				if (isset($colValue)) {
+					$date = strtotime($colValue);
+					$colValue = date('d/m/Y', $date);
+				}
+				echo '<input type="text" data-type="date" placeholder="dd/mm/aaaa" name="' . $colName . '" " value="' . $colValue . '" /> <br>';
+			}
+			else if ($type == 'timestamp') {
+				if (isset($colValue)) {
+					$date = strtotime($colValue);
+					$colValue = date('d/m/Y', $date);
+				}
+				echo '<input type="text" data-type="timestamp" placeholder="dd/mm/aaaa" name="' . $colName . '" " value="' . $colValue . '" /> <br>';
+			}
+			else if (strpos($type, 'int') !== false) {
+				echo '<input data-type="text-number" placeholder="' . $colName . '" name="' . $colName . '" value="' . $colValue . '" /><br>';
+			}
+		}
+		echo '<input type="hidden" name="alterar" value="' . $_GET['alterar'] . '" />';
+		$pgConnect->closeConnection();
+	}
 
 	protected function exibir() {
-		global $projectId;
-		global $userId;
-		$entity = strtolower(str_replace('Page_', '', get_called_class()));
-		$parameters = ($entity == 'projeto') ? array($userId, $_GET['exibir']) : array($userId, $projectId, $_GET['exibir']);
+		$parameters = ($this->getEntity() == 'projeto') ? 
+			array($this->getUserId(), $_GET['exibir']) : array($this->getUserId(), $this->getProjectId(), $_GET['exibir']);
 		$role = ucfirst($this->getRole());
+		
 		$pgConnect = new PostgresConnection();
-
-		$functionName = $entity . 'Exibir' . $role; // ex: usuarioCadastrar
-
+		$functionName = $this->getEntity() . 'Exibir' . $role; // ex: usuarioCadastrar
 		$prepare = $pgConnect->prepareFunctionStatementSelect($functionName, count($parameters));
-
 		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
-
 		$result = $pgConnect->getArrayOfResultsFromSelect($retval);
 
 		if (!empty($result)) {
@@ -339,13 +171,13 @@ class Body {
 				}
 			}
 			?>
-			<form method="post" action="projeto.php">
-				<a class="btn btn-large btn-info" href="projeto.php?alterar=<?php echo $_GET['exibir'];?>">Alterar</a>
-				<button class="btn btn-large btn-danger" name="delete" value="<?php echo $_GET['exibir'];?>">Excluir</button>
+			<form method="post" action="<?php echo $this->getEntity();?>.php">
+				<a class="btn btn-large btn-info" href="<?php echo $this->getEntity();?>.php?alterar=<?php echo $_GET['exibir'];?>">Alterar</a>
+				<button class="btn btn-large btn-danger" name="deletar" value="<?php echo $_GET['exibir'];?>">Excluir</button>
 			</form>
 			<?php
 			echo '</div>';
-			$this->extraCallOnSucessForShow();
+			$this->funcaoExtraParaExibir();
 			echo '</div>';
 		}
 		else {
@@ -353,147 +185,219 @@ class Body {
 		}
 		$pgConnect->closeConnection();
 	}
+	
+	protected function funcaoExtraParaExibir() {}
 
-	protected function extraCallOnSucessForShow(){}
-
-	/**
-	 *	Sobrescreva caso necessite de uma operação extra após a finalização de alguma função CRUD
-	 *
-	 */
-	protected function extraCallOnSucessOperation() {}
-
-	protected function login() {
-		if (empty($_POST['email']) || empty($_POST['senha'])) {
-			$this->show();
-			printErrorMessage('Erro, preencha os campos login e senha !');
+	protected function deletar() {
+		$pgConnect = new PostgresConnection();
+		$functionName = $this->getEntity() . 'Excluir'; // ex: usuarioCadastrar
+		if ($this->getEntity() == 'projeto') {
+			$parameters = array($this->getUserId(), $_POST['deletar']);
 		}
 		else {
-			$user = $this->createUser();
-			$pgConnect = new PostgresConnection();
-			$functionName = 'logar';
-			$parameters = array($user->getEmail(), $user->getSenha());
-			$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
-			$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
-			$result = $pgConnect->getResult($retval);
+			$parameters = array($this->getUserId(), $this->getProjectId(), $_POST['deletar']);
+		}
+		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+		$result = $pgConnect->getArrayOfResultsFromSelect($retval);
+		$pgConnect->closeConnection();
+		
+		if (current($result)[strtolower($functionName)] != 0) {
+			printSuccessMessage(ucfirst($this->getEntity()) . ' deletado com sucesso');
+		}
+		else {
+			printErrorMessage(ucfirst($this->getEntity()) . ' não pode ser removido');
+		}
+		$this->listar();
+	}
 
-			$id = current(current($result));
+	protected function listar() {
+		?>
+		<div class="row-fluid">
+			<div class="span7 collapse-group accordion-group" id="<?php echo $this->getEntity();?>">
+				<table class="table table-hover-mod">
+					<caption>
+						<a data-toggle="collapse" data-target="<?php echo '#' . $this->getEntity();?>">
+							<h2><?php echo ucfirst($this->getEntity());?></h2>
+						</a>
+					</caption>
+					<thead>
+						<?php
+						echo '<tr>';
+						foreach ($this->getListarNames() as $colName) {
+							echo '<td>' . ucfirst($colName) . '</td>';
+						}
+						echo '</tr>';
+						?>
+					</thead>
+					<tbody>
+						<?php
+						foreach($this->getListarData() as $row) {
+							echo '<tr class="list">';
+								foreach ($row as $colVal) {
+									$siglaId = 'id_' . $this->getEntity();
+									echo '<td>';
+									echo '<a href="' . $this->getEntity() . '.php?exibir=' . $row[$siglaId] . '">' . $colVal . '</a>';									
+									echo '</td>';
+								}
+							echo '</tr>';
+						}
+						?>
+					</tbody>
+				</table>
+			</div>
+			<div class="span5">
+				<a class="btn btn-primary btn-large" href="<?php echo $this->getEntity();?>.php?novo=true">Cadastrar
+					novo <?php echo $this->getEntity();?></a>
+						<?php $this->extraFunctionOnListar();?>
+			</div>
+		
+		</div>
+		<?php
+	}
+	
+	protected function extraFunctionOnListar() {}
 
-			$pgConnect->closeConnection();
+	protected function getListarData() {
+		$entity = strtolower(str_replace('Page_', '', get_called_class()));
+		$functionName = $entity . 'Listar';
+		if ($entity == 'projeto') {
+			$parameters = array($this->getUserId());
+		}
+		else {
+			$parameters = array($this->getUserId(), $this->getProjectId());
+		}
+		$pgConnect = new PostgresConnection();
+		$prepare = $pgConnect->prepareFunctionStatementSelect($functionName, count($parameters));
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+		$result = $pgConnect->getResult($retval);
+		$pgConnect->closeConnection();
+		return $result;
+	}
+	
+	protected function getListarNames() {
+		$entity = strtolower(str_replace('Page_', '', get_called_class()));
+		$functionName = $entity . 'Listar';
+		if ($entity == 'projeto') {
+			$parameters = array($this->getUserId());
+		}
+		else {
+			$parameters = array($this->getUserId(), $this->getProjectId());
+		}
+		
+		$pgConnect = new PostgresConnection();
+		$prepare = $pgConnect->prepareFunctionStatementSelect($functionName, count($parameters));
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+		$result = $pgConnect->getNames($retval);
+		$pgConnect->closeConnection();
+		return $result;
+	}
 
-			if (isset($id) && $id > 0) {
-				$this->storeloginOnSession($id);
-				redirect('logged/index.php');
+	protected function salvar() {
+		$entity = $this->getEntity();
+		$parameters = array();
+		
+		foreach ($_POST as $fieldName => $fieldValue) {
+			if ($fieldName == 'salvar' || $fieldName == 'alterar') {
+				break;
+			}
+			else if ($fieldValue == '') {
+				$fieldValue = null;
+			}
+			$parameters[] = $fieldValue;
+		}
+		
+		if ($this->getEntity() == 'cadastro') {
+
+		}
+		else if ($entity == 'projeto'){
+			if (!isset($_POST['alterar'])) {
+				$parameters = array_merge(array($this->getUserId()), $parameters);
 			}
 			else {
-				unset($_POST);
-				$this->show();
-				printErrorMessage('Erro, login e/ou senha inválidos !');
+				$parameters = array_merge(array($this->getUserId(), $_POST['alterar']), $parameters);
 			}
 		}
-	}
-
-	protected function createUser() {
-		$user = new Usuario();
-		$user->setEmail($_POST['email']);
-		$user->setSenha($_POST['senha']);
-		return $user;
-	}
-
-	protected function storeloginOnSession($id) {
-		if ($id !== false) {
-			$_SESSION['userId'] = $id;
-			var_dump($_SESSION);
-		}
 		else {
-			unset($_SESSION['userId']);
-			unset($_SESSION['projectId']);
+			if (!isset($_POST['alterar'])) {
+				$parameters = array_merge(array($this->getUserId(), $this->getProjectId()), $parameters);
+			}
+			else {
+				$parameters = array_merge(array($this->getUserId(), $this->getProjectId(), $_POST['alterar']), $parameters);
+			}			
 		}
+
+		if ($this->getEntity() == 'cadastro') {
+			$functionName = 'usuarioCadastrar';
+		}
+		else if (!isset($_POST['alterar'])) {
+			$functionName = $this->getEntity() . 'Cadastrar';
+		}
+		else {			
+			$functionName = $this->getEntity() . 'Atualizar';
+		}
+	
+		$pgConnect = new PostgresConnection();
+		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+		$result = $pgConnect->getResult($retval);
+		
+		if ($result != 0)
+			printSuccessMessage('Sucesso ao salvar ' . $entity);
+		else
+			printErrorMessage('Erro ao tentar salvar ' . $entity);
+	}
+	
+	protected function setTitle($title) {
+		$this->title = $title;
 	}
 
-	private function checkLogin() {
-		$pgConnect = new PostgresConnection();
+	protected function setExtraHeader($extraHeader) {
+		$this->extraHeader = $extraHeader;
+	}
 
-		$functionName = 'isLogado';
+	public function getUserId() {
 		global $userId;
-		$parameters = array($userId);
+		return isset($userId) ? $userId : null;
+	}
 
-		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
+	public function getProjectId() {
+		global $projectId;
+		return isset($projectId) ? $projectId : null;
+	}
 
-		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
-
-		$result = $pgConnect->getResult($retval);
-
-		$result = current(current($result));
-
-		$pgConnect->closeConnection();
-		return  $result;
+	protected function getEntity() {
+		return strtolower(str_replace('Page_', '', get_called_class()));
 	}
 
 	protected function getRole() {
 		$pgConnect = new PostgresConnection();
-		global $projectId;
-		global $userId;
-		$entity = strtolower(str_replace('Page_', '', get_called_class()));
 		$parameters = null;
-		if ($entity == 'projeto') {
+		if ($this->getEntity() == 'projeto') {
 			if (isset($_GET['exibir'])) {
-				$parameters = array($userId, $_GET['exibir']);
+				$parameters = array($this->getUserId(), $_GET['exibir']);
 			}
 			else if (isset($_GET['alterar'])) {
-				$parameters = array($userId, $_GET['alterar']);
+				$parameters = array($this->getUserId(), $_GET['alterar']);
 			}
 			else {
 				return '';
 			}
 		}
 		else {
-			if (isset($_GET['exibir'])) {
-				$parameters = array($userId, $projectId, $_GET['exibir']);
-			}
-			else if (isset($_GET['alterar'])) {
-				$parameters = array($userId, $projectId, $_GET['alterar']);
-			}
-			else {
-				return '';
-			}
+			$parameters = array($this->getUserId(), $this->getProjectId());
 		}
+		
 		$functionName = 'getRole';
 		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
 		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
 		$result = $pgConnect->getResult($retval);
-
 		$role = current($result);
 		$role = $role['getrole'];
 
 		$pgConnect->closeConnection();
 
+
 		return $role;
-	}
-
-	protected function delete() {
-		$entity = strtolower(str_replace('Page_', '', get_called_class()));
-		$pgConnect = new PostgresConnection();
-		$functionName = $entity . 'Excluir'; // ex: usuarioCadastrar
-		global $userId;
-		global $projectId;
-
-		if ($entity == 'projeto')
-			$parameters = array($userId, $_POST['delete']);
-		else
-			$parameters = array($userId, $projectId, $_POST['delete']);
-
-		$prepare = $pgConnect->prepareFunctionStatement($functionName, count($parameters));
-		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
-		$result = $pgConnect->getArrayOfResultsFromSelect($retval);
-		$pgConnect->closeConnection();
-
-		$this->listar();
-		if (current($result)[strtolower($functionName)] != 0) {
-			printSuccessMessage('[SUCESSO]' . ucfirst($entity) . 'deletado com sucesso');
-		}
-		else {
-			printErrorMessage('[ERRO]' . ucfirst($entity) . ' não pode ser removido');
-		}
-
 	}
 }

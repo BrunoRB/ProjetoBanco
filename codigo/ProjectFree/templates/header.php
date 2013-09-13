@@ -126,7 +126,7 @@ class Header{
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/projeto.php">Projetos</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/mensagem.php">Mensagens</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/nota.php">Notas</a></li>
-				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/">Convites</a></li>
+				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/convite.php">Convites</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/logged/perfil.php">Perfil</a></li>
 				<li><a href="/ProjetoBanco/codigo/ProjectFree/application/login.php?logout=true">Logout</a></li>
 			</ul>

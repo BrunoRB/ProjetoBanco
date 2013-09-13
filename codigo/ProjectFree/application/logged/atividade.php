@@ -13,4 +13,17 @@ class Page_Atividade extends Main {
 		parent::novo(array('gerente' => $gerente));
 	}
 
+		
+	protected function getListarNames() {
+		$entity = strtolower(str_replace('Page_', '', get_called_class()));
+		$functionName = 'atividadeIncompletaListarGerente';
+		$parameters = array($this->getUserId(), $this->getProjectId());
+		
+		$pgConnect = new PostgresConnection();
+		$prepare = $pgConnect->prepareFunctionStatementSelect($functionName, count($parameters));
+		$retval = $pgConnect->executeFunctionStatement($functionName, $parameters);
+		$result = $pgConnect->getNames($retval);
+		$pgConnect->closeConnection();
+		return $result;
+	}
 } new Page_Atividade();

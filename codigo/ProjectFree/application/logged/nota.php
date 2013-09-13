@@ -2,12 +2,12 @@
 
 require_once 'main.php';
 
-class Mensagem extends Main {
+class Page_Nota extends Main {
 	public function __construct() {
-		$this->setTitle('Mensagem');
+		$this->setTitle('Nota');
 		parent::__construct();
 	}
 	
 	
 
-} new Mensagem();
+} new Page_Nota();

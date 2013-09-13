@@ -44,4 +44,14 @@ $(document).ready(function() {
 		$(this).css('background-color', 'white');
 	});
 	
+	$(function() {
+		var members = [
+		    'asdf', 'asdf'
+		];
+	
+		$('input[data-type="text-autocomplete-membros"]').autocomplete({
+	      source: members
+	    });
+	});
+	
 });

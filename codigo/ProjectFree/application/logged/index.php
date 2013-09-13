@@ -21,22 +21,7 @@ class Index extends Main {
 	private function noProjectSelected() {
 		?>
 		<div class="pagination-centered">
-			<div class="row-fluid">
-				<div class="span6">
-					<h3>Meus projetos</h3>
-				</div>
-				<div class="span6">
-					<h3>Últimas atividades</h3>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span6">
-					<h3>Mensagens recebidas</h3>
-				</div>
-				<div class="span6">
-					<h3>Convites</h3>
-				</div>
-			</div>
+			<h2>Bem-vindo</h2>
 		</div>
 		<?php
 	}
