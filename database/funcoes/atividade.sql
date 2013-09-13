@@ -316,7 +316,7 @@ CREATE OR REPLACE FUNCTION atividadeExibir (
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
-			IF NOT isInAtividade(idUsuario, idProjeto, idAtividade)
+			IF NOT isInAtividade(idUsuario, idProjeto, idAtividade) THEN
 				RETURN;
 			END IF;
 		END IF;
