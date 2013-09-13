@@ -308,3 +308,24 @@ CREATE OR REPLACE FUNCTION atividadeCompletaListarMembro (
 			FROM atividade_completa_membroView WHERE projeto =' || idProjeto || 'AND membro =' || idUsuario;
 	END;
 $$ LANGUAGE PLPGSQL;
+
+
+CREATE OR REPLACE FUNCTION atividadeExibir (
+	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, OUT nome_atividade VARCHAR, OUT inicio_atividade TIMESTAMP,
+	OUT limite_atividade TIMESTAMP, OUT predecessora VARCHAR, OUT nome VARCHAR
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			IF NOT isInAtividade(idUsuario, idProjeto, idAtividade)
+				RETURN;
+			END IF;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT atividade.nome_atividade AS atividade, atividade.descricao_atividade AS descricao, 
+			atividade.inicio_atividade AS inicio, atividade.limite_atividade AS limite, 
+			atividade_1.nome_atividade AS predecessora, fase.nome AS fase
+		FROM ((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
+			WHERE projeto =' || idProjeto || 'AND atividade =' || idAtividade;
+	END;
+$$ LANGUAGE PLPGSQL;
