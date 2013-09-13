@@ -310,9 +310,9 @@ CREATE OR REPLACE FUNCTION atividadeCompletaListarMembro (
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION atividadeExibir (
-	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, OUT nome_atividade VARCHAR, OUT descricao_atividade VARCHAR, 
-		OUT inicio_atividade TIMESTAMP,	OUT limite_atividade TIMESTAMP, OUT predecessora VARCHAR, OUT nome VARCHAR
+CREATE OR REPLACE FUNCTION atividadeExibirGerente (
+	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, OUT nome_atividade VARCHAR, OUT descricao_atividade TEXT, 
+	OUT inicio_atividade TIMESTAMP, OUT limite_atividade TIMESTAMP, OUT predecessora VARCHAR, OUT fase VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
@@ -321,11 +321,12 @@ CREATE OR REPLACE FUNCTION atividadeExibir (
 			END IF;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT atividade.nome_atividade AS atividade, atividade.descricao_atividade AS descricao, 
-			atividade.inicio_atividade AS inicio, atividade.limite_atividade AS limite, 
-			atividade_1.nome_atividade AS predecessora, fase.nome AS fase
+		RETURN QUERY EXECUTE 'SELECT atividade.nome_atividade, atividade.descricao_atividade, 
+			atividade.inicio_atividade, atividade.limite_atividade, 
+			atividade_1.nome_atividade, fase.nome 
 		FROM ((atividade LEFT JOIN atividade atividade_1 ON atividade.fk_predecessora = atividade_1.id_atividade) 
+		INNER JOIN projeto ON atividade.fk_projeto = id_projeto  
 		INNER JOIN fase ON atividade.fk_fase = fase.id_fase)
-			WHERE projeto =' || idProjeto || 'AND atividade =' || idAtividade;
+			WHERE id_projeto = ' || idProjeto || ' AND atividade.id_atividade = ' || idAtividade;
 	END;
 $$ LANGUAGE PLPGSQL;

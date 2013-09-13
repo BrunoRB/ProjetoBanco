@@ -28,8 +28,18 @@ $(document).ready(function() {
 	 * Autocomplete settings and initialization
 	 */
 	$('input[data-type="text-autocomplete"]').autocomplete({
-	    source: ['Bruno (bruno@hotmail.com)', 'Fabricio (fabricio@hotmail.com)', 
-	             'Maikon (maikon@hotmail.com', 'Roberto (roberto@hotmail.com)', 'Ebara (ebara@migue.com)']
+	    source: [
+'uMembro1',
+'KMembro2',
+'HMembro3',
+'wGerente',
+'GMembro1',
+'BMembro2',
+'CMembro3',
+'0Gerente',
+'iMembro1',
+
+	             ]
 	});
 	
 	/*
@@ -46,7 +56,15 @@ $(document).ready(function() {
 	
 	$(function() {
 		var members = [
-		    'asdf', 'asdf'
+		    'uMembro1',
+		    'KMembro2',
+		    'HMembro3',
+		    'wGerente',
+		    'GMembro1',
+		    'BMembro2',
+		    'CMembro3',
+		    '0Gerente',
+		    'iMembro1',
 		];
 	
 		$('input[data-type="text-autocomplete-membros"]').autocomplete({

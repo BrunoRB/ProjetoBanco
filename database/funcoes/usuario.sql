@@ -161,8 +161,12 @@ $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION buscarUsuarios(letras TEXT, OUT id_usuario INTEGER, OUT nome VARCHAR, OUT email VARCHAR) RETURNS SETOF RECORD AS $$
 	BEGIN
+		IF (LENGTH(LETRAS) < 2) THEN
+			RAISE NOTICE 'Ao menos 2 letras precisam ser utilizadas';
+			RETURN;
+		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT id_usuario, nome, email FROM usuario WHERE inativo != true AND LOWER(nome) LIKE LOWER(' || E'\'' ||  letras || '%'') ORDER BY nome ASC';
+		RETURN QUERY EXECUTE 'SELECT id_usuario, nome, email FROM usuario WHERE inativo != true AND LOWER(nome) LIKE LOWER(' || E'\'' ||  letras || '%'') LIMIT 50';
 	END;
 $$ LANGUAGE PLPGSQL;
 

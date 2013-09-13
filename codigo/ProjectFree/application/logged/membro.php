@@ -8,11 +8,16 @@ class Page_Membro extends Main {
 		parent::__construct();
 	}
 	
+	protected function listar() {
+		$this->renderCadastrar = false;
+		parent::listar();
+	}
+	
 	protected function extraFunctionOnListar() {
 		?>
-		<br><br><br><br><br>
 		Convidar membro: 
-		<input data-type="text-autocomplete-membros" type="text" />
+		<input data-type="text-autocomplete-membros" type="text" /> <br>
+		<button class="btn btn-large btn-primary">Convidar</button>
 		<?php
 	}
 	

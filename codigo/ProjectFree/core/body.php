@@ -19,6 +19,8 @@ class Body {
 	private $header;
 	private $title;
 	private $extraHeader;
+	protected $renderCadastrar = true;
+	protected $listarCaption;
 
 	public function __construct() {
 		$this->header = new Header();
@@ -218,13 +220,16 @@ FOOT;
 				<table class="table table-hover-mod">
 					<caption>
 						<a data-toggle="collapse" data-target="<?php echo '#' . $this->getEntity();?>">
-							<h2><?php echo ucfirst($this->getEntity());?></h2>
+							<h2><?php echo isset($this->listarCaption) ? $this->listarCaption : ucfirst($this->getEntity());?></h2>
 						</a>
 					</caption>
 					<thead>
 						<?php
 						echo '<tr>';
 						foreach ($this->getListarNames() as $colName) {
+							if ($colName == 'id_' . $this->getEntity()) {
+								continue;
+							}
 							echo '<td>' . ucfirst($colName) . '</td>';
 						}
 						echo '</tr>';
@@ -234,7 +239,10 @@ FOOT;
 						<?php
 						foreach($this->getListarData() as $row) {
 							echo '<tr class="list">';
-								foreach ($row as $colVal) {
+								foreach ($row as $colKey => $colVal) {
+									if ($colKey == 'id_' . $this->getEntity()) {
+										continue;
+									}
 									$siglaId = 'id_' . $this->getEntity();
 									echo '<td>';
 									echo '<a href="' . $this->getEntity() . '.php?exibir=' . $row[$siglaId] . '">' . $colVal . '</a>';									
@@ -247,9 +255,11 @@ FOOT;
 				</table>
 			</div>
 			<div class="span5">
+			<?php if (isset($this->renderCadastrar) && $this->renderCadastrar == true) {?>
 				<a class="btn btn-primary btn-large" href="<?php echo $this->getEntity();?>.php?novo=true">Cadastrar
 					novo <?php echo $this->getEntity();?></a>
-						<?php $this->extraFunctionOnListar();?>
+			<?php }?>
+				<?php $this->extraFunctionOnListar();?>
 			</div>
 		
 		</div>
