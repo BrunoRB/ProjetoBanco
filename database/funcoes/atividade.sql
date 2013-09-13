@@ -182,11 +182,11 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION atividadeFinalizar(idUsuario INTEGER, idProjeto INTEGER, id INTEGER)
 RETURNS INTEGER AS $$
 	BEGIN
-		IF NOT isMembro(idUsuario, idProjeto) THEN
+		IF NOT isMembro(idUsuario, idProjeto) AND NOT isGerente(idUsuario, idProjeto) THEN
 			RETURN 0;
 		END IF;	
 
-		IF NOT isInAtividade(idUsuario, idProjeto, id) THEN
+		IF NOT isInAtividade(idUsuario, idProjeto, id) AND NOT isGerente(idUsuario, idProjeto)  THEN
 			RETURN 0;
 		END IF;
 
@@ -258,8 +258,8 @@ CREATE OR REPLACE FUNCTION atividadeIncompletaListarGerente (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, predecessora, fase 
-			FROM atividade_incompleta_gerenteView WHERE projeto =' || idProjeto;
+		RETURN QUERY EXECUTE 'SELECT idAtividade, atividade, inicio, limite, predecessora, fase 
+			FROM atividade_incompleta_gerenteView WHERE projeto =' || idProjeto || ' ORDER BY predecessora DESC';
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -274,8 +274,8 @@ CREATE OR REPLACE FUNCTION atividadecompletaListarGerente (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, fim, predecessora, fase 
-			FROM atividade_completa_gerenteView WHERE projeto =' || idProjeto;
+		RETURN QUERY EXECUTE 'SELECT idAtividade, atividade, inicio, limite, fim, predecessora, fase 
+			FROM atividade_completa_gerenteView WHERE projeto =' || idProjeto || ' ORDER BY predecessora DESC';
 	END;
 $$ LANGUAGE PLPGSQL;
 
@@ -289,7 +289,7 @@ CREATE OR REPLACE FUNCTION atividadeIncompletaListarMembro (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, predecessora, fase 
+		RETURN QUERY EXECUTE 'SELECT idAtividade, atividade, inicio, limite, predecessora, fase 
 			FROM atividade_incompleta_membroView WHERE projeto =' || idProjeto || 'AND membro =' || idUsuario;
 	END;
 $$ LANGUAGE PLPGSQL;
