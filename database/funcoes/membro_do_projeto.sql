@@ -68,8 +68,22 @@ $$ LANGUAGE PLPGSQL;
 
 --SELECTS;
 
+
+CREATE OR REPLACE FUNCTION membroExibirGerente(
+	idUsuario INTEGER, idProjeto INTEGER, idMembro INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR
+) RETURNS SETOF RECORD AS $$
+	BEGIN		
+		IF NOT isGerente(idUsuario, idProjeto) THEN
+			RETURN;
+		END IF;
+		SET ROLE retrieve;
+		RETURN QUERY EXECUTE 'SELECT usuario.nome, funcao FROM projeto INNER JOIN membro_do_projeto ON fk_projeto = id_projeto INNER JOIN
+			usuario ON id_usuario = fk_usuario WHERE id_projeto = ' || idProjeto || ' AND id_usuario = ' || idMembro;
+	END;
+$$ LANGUAGE PLPGSQL;
+
 CREATE OR REPLACE FUNCTION membroListar(
-	idUsuario INTEGER, idProjeto INTEGER, OUT id_usuario INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR, OUT qtd_atividade INTEGER		
+	idUsuario INTEGER, idProjeto INTEGER, OUT id_membro INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR, OUT qtd_atividade BIGINT		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
