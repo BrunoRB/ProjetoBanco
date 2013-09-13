@@ -258,7 +258,7 @@ CREATE OR REPLACE FUNCTION atividadeIncompletaListarGerente (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT id_projeto, atividade, inicio, limite, predecessora, fase 
+		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, predecessora, fase 
 			FROM atividade_incompleta_gerenteView WHERE projeto =' || idProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -274,7 +274,7 @@ CREATE OR REPLACE FUNCTION atividadecompletaListarGerente (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT id_projeto, atividade, inicio, limite, fim, predecessora, fase 
+		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, fim, predecessora, fase 
 			FROM atividade_completa_gerenteView WHERE projeto =' || idProjeto;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -289,7 +289,7 @@ CREATE OR REPLACE FUNCTION atividadeIncompletaListarMembro (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT id_projeto, atividade, inicio, limite, predecessora, fase 
+		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, predecessora, fase 
 			FROM atividade_incompleta_membroView WHERE projeto =' || idProjeto || 'AND membro =' || idUsuario;
 	END;
 $$ LANGUAGE PLPGSQL;
@@ -304,7 +304,7 @@ CREATE OR REPLACE FUNCTION atividadeCompletaListarMembro (
 			RETURN;
 		END IF;
 		SET ROLE retrieve;
-		RETURN QUERY EXECUTE 'SELECT id_projeto, atividade, inicio, limite, predecessora, fase 
+		RETURN QUERY EXECUTE 'SELECT projeto, atividade, inicio, limite, predecessora, fase 
 			FROM atividade_completa_membroView WHERE projeto =' || idProjeto || 'AND membro =' || idUsuario;
 	END;
 $$ LANGUAGE PLPGSQL;
