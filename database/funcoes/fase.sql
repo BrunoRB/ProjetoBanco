@@ -221,6 +221,6 @@ CREATE OR REPLACE FUNCTION faseExibirGerente(
 		SET ROLE retrieve;
 		RETURN QUERY EXECUTE 'SELECT fase.nome, fase.descricao, fase_1.nome AS predecessora 
 		FROM (fase LEFT JOIN fase fase_1 ON fase.fk_predecessora = fase_1.id_fase) 
-		WHERE fase.fk_projeto =' || idProjeto || 'AND fase.id_fase =' || idFase;
+		WHERE fase.fk_projeto =' || idProjeto || 'AND fase.id_fase =' || id_fase;
 	END;
 $$ LANGUAGE PLPGSQL;

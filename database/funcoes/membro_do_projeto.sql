@@ -69,7 +69,7 @@ $$ LANGUAGE PLPGSQL;
 --SELECTS;
 
 CREATE OR REPLACE FUNCTION membroListar(
-	idUsuario INTEGER, idProjeto INTEGER, OUT id_usuario INTEGER, nome VARCHAR, OUT funcao VARCHAR, OUT qtd_atividade INTEGER		
+	idUsuario INTEGER, idProjeto INTEGER, OUT id_usuario INTEGER, OUT nome VARCHAR, OUT funcao VARCHAR, OUT qtd_atividade INTEGER		
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
