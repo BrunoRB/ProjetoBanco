@@ -311,8 +311,8 @@ $$ LANGUAGE PLPGSQL;
 
 
 CREATE OR REPLACE FUNCTION atividadeExibir (
-	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, OUT nome_atividade VARCHAR, OUT inicio_atividade TIMESTAMP,
-	OUT limite_atividade TIMESTAMP, OUT predecessora VARCHAR, OUT nome VARCHAR
+	idUsuario INTEGER, idProjeto INTEGER, idAtividade INTEGER, OUT nome_atividade VARCHAR, OUT descricao_atividade, 
+		OUT inicio_atividade TIMESTAMP,	OUT limite_atividade TIMESTAMP, OUT predecessora VARCHAR, OUT nome VARCHAR
 ) RETURNS SETOF RECORD AS $$
 	BEGIN		
 		IF NOT isGerente(idUsuario, idProjeto) THEN
